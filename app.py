@@ -7,4 +7,5 @@ if os.path.exists(dotenv_path):
 
 from bluelog import create_app  # noqa
 
-app = create_app('production')
+config_name = os.getenv('FLASK_CONFIG', 'development')
+app = create_app(config_name)
