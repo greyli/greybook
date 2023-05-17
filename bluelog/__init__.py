@@ -8,9 +8,9 @@ from flask_login import current_user
 from flask_sqlalchemy import get_debug_queries
 from flask_wtf.csrf import CSRFError
 
-from bluelog.blueprints.admin import admin_bp
-from bluelog.blueprints.auth import auth_bp
-from bluelog.blueprints.blog import blog_bp
+from bluelog.views.admin import admin_bp
+from bluelog.views.auth import auth_bp
+from bluelog.views.blog import blog_bp
 from bluelog.extensions import bootstrap, db, login_manager, csrf, ckeditor, mail, moment, toolbar, migrate
 from bluelog.models import Admin, Post, Category, Comment, Link
 from bluelog.settings import config
@@ -18,10 +18,7 @@ from bluelog.settings import config
 basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 
 
-def create_app(config_name=None):
-    if config_name is None:
-        config_name = os.getenv('FLASK_CONFIG', 'development')
-
+def create_app(config_name):
     app = Flask('bluelog')
     app.config.from_object(config[config_name])
 
