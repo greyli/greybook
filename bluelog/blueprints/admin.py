@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-    :author: Grey Li (李辉)
-    :url: http://greyli.com
-    :copyright: © 2018 Grey Li <withlihui@gmail.com>
-    :license: MIT, see LICENSE for more details.
-"""
 import os
 
 from flask import render_template, flash, redirect, url_for, request, current_app, Blueprint, send_from_directory
