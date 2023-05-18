@@ -1,5 +1,7 @@
 from datetime import datetime
 
+from sqlalchemy import Column, Integer, String, Text, ForeignKey, Boolean, DateTime
+from sqlalchemy.orm import relationship
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -7,13 +9,13 @@ from bluelog.extensions import db
 
 
 class Admin(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(20))
-    password_hash = db.Column(db.String(128))
-    blog_title = db.Column(db.String(60))
-    blog_sub_title = db.Column(db.String(100))
-    name = db.Column(db.String(30))
-    about = db.Column(db.Text)
+    id = Column(Integer, primary_key=True)
+    username = Column(String(20))
+    password_hash = Column(String(128))
+    blog_title = Column(String(60))
+    blog_sub_title = Column(String(100))
+    name = Column(String(30))
+    about = Column(Text)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -23,10 +25,10 @@ class Admin(db.Model, UserMixin):
 
 
 class Category(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(30), unique=True)
+    id = Column(Integer, primary_key=True)
+    name = Column(String(30), unique=True)
 
-    posts = db.relationship('Post', back_populates='category')
+    posts = relationship('Post', back_populates='category')
 
     def delete(self):
         default_category = Category.query.get(1)
@@ -38,40 +40,40 @@ class Category(db.Model):
 
 
 class Post(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(60))
-    body = db.Column(db.Text)
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
-    can_comment = db.Column(db.Boolean, default=True)
+    id = Column(Integer, primary_key=True)
+    title = Column(String(60))
+    body = Column(Text)
+    timestamp = Column(DateTime, default=datetime.utcnow, index=True)
+    can_comment = Column(Boolean, default=True)
 
-    category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
+    category_id = Column(Integer, ForeignKey('category.id'))
 
-    category = db.relationship('Category', back_populates='posts')
-    comments = db.relationship('Comment', back_populates='post', cascade='all, delete-orphan')
+    category = relationship('Category', back_populates='posts')
+    comments = relationship('Comment', back_populates='post', cascade='all, delete-orphan')
 
 
 class Comment(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    author = db.Column(db.String(30))
-    email = db.Column(db.String(254))
-    site = db.Column(db.String(255))
-    body = db.Column(db.Text)
-    from_admin = db.Column(db.Boolean, default=False)
-    reviewed = db.Column(db.Boolean, default=False)
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
+    id = Column(Integer, primary_key=True)
+    author = Column(String(30))
+    email = Column(String(254))
+    site = Column(String(255))
+    body = Column(Text)
+    from_admin = Column(Boolean, default=False)
+    reviewed = Column(Boolean, default=False)
+    timestamp = Column(DateTime, default=datetime.utcnow, index=True)
 
-    replied_id = db.Column(db.Integer, db.ForeignKey('comment.id'))
-    post_id = db.Column(db.Integer, db.ForeignKey('post.id'))
+    replied_id = Column(Integer, ForeignKey('comment.id'))
+    post_id = Column(Integer, ForeignKey('post.id'))
 
-    post = db.relationship('Post', back_populates='comments')
-    replies = db.relationship('Comment', back_populates='replied', cascade='all, delete-orphan')
-    replied = db.relationship('Comment', back_populates='replies', remote_side=[id])
+    post = relationship('Post', back_populates='comments')
+    replies = relationship('Comment', back_populates='replied', cascade='all, delete-orphan')
+    replied = relationship('Comment', back_populates='replies', remote_side=[id])
     # Same with:
-    # replies = db.relationship('Comment', backref=db.backref('replied', remote_side=[id]),
+    # replies = relationship('Comment', backref=backref('replied', remote_side=[id]),
     # cascade='all,delete-orphan')
 
 
 class Link(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(30))
-    url = db.Column(db.String(255))
+    id = Column(Integer, primary_key=True)
+    name = Column(String(30))
+    url = Column(String(255))
