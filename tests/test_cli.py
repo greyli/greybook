@@ -10,16 +10,16 @@ class CLITestCase(BaseTestCase):
         db.drop_all()
 
     def test_initdb_command(self):
-        result = self.runner.invoke(args=['initdb'])
+        result = self.cli_runner.invoke(args=['initdb'])
         self.assertIn('Initialized database.', result.output)
 
     def test_initdb_command_with_drop(self):
-        result = self.runner.invoke(args=['initdb', '--drop'], input='y\n')
+        result = self.cli_runner.invoke(args=['initdb', '--drop'], input='y\n')
         self.assertIn('This operation will delete the database, do you want to continue?', result.output)
         self.assertIn('Drop tables.', result.output)
 
     def test_init_command(self):
-        result = self.runner.invoke(args=['init', '--username', 'grey', '--password', '123'])
+        result = self.cli_runner.invoke(args=['init', '--username', 'grey', '--password', '123'])
         self.assertIn('Creating the temporary administrator account...', result.output)
         self.assertIn('Creating the default category...', result.output)
         self.assertIn('Done.', result.output)
@@ -28,8 +28,8 @@ class CLITestCase(BaseTestCase):
         self.assertEqual(Category.query.first().name, 'Default')
 
     def test_init_command_with_update(self):
-        self.runner.invoke(args=['init', '--username', 'grey', '--password', '123'])
-        result = self.runner.invoke(args=['init', '--username', 'new grey', '--password', '123'])
+        self.cli_runner.invoke(args=['init', '--username', 'grey', '--password', '123'])
+        result = self.cli_runner.invoke(args=['init', '--username', 'new grey', '--password', '123'])
         self.assertIn('The administrator already exists, updating...', result.output)
         self.assertNotIn('Creating the temporary administrator account...', result.output)
         self.assertEqual(Admin.query.count(), 1)
@@ -37,7 +37,7 @@ class CLITestCase(BaseTestCase):
         self.assertEqual(Category.query.first().name, 'Default')
 
     def test_forge_command(self):
-        result = self.runner.invoke(args=['forge'])
+        result = self.cli_runner.invoke(args=['forge'])
 
         self.assertEqual(Admin.query.count(), 1)
         self.assertIn('Generating the administrator...', result.output)
@@ -55,7 +55,7 @@ class CLITestCase(BaseTestCase):
         self.assertIn('Done.', result.output)
 
     def test_forge_command_with_count(self):
-        result = self.runner.invoke(args=['forge', '--category', '5', '--post', '20', '--comment', '100'])
+        result = self.cli_runner.invoke(args=['forge', '--category', '5', '--post', '20', '--comment', '100'])
         self.assertEqual(Admin.query.count(), 1)
         self.assertIn('Generating the administrator...', result.output)
 

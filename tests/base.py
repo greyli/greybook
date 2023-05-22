@@ -1,7 +1,5 @@
 import unittest
 
-from flask import url_for
-
 from bluelog import create_app
 from bluelog.extensions import db
 from bluelog.models import Admin
@@ -10,11 +8,11 @@ from bluelog.models import Admin
 class BaseTestCase(unittest.TestCase):
 
     def setUp(self):
-        app = create_app('testing')
-        self.context = app.test_request_context()
+        self.app = create_app('testing')
+        self.context = self.app.app_context()
         self.context.push()
-        self.client = app.test_client()
-        self.runner = app.test_cli_runner()
+        self.client = self.app.test_client()
+        self.cli_runner = self.app.test_cli_runner()
 
         db.create_all()
         user = Admin(name='Grey Li', username='grey', about='I am test', blog_title='Testlog', blog_sub_title='a test')
@@ -31,10 +29,10 @@ class BaseTestCase(unittest.TestCase):
             username = 'grey'
             password = '123'
 
-        return self.client.post(url_for('auth.login'), data=dict(
+        return self.client.post('/auth/login', data=dict(
             username=username,
             password=password
         ), follow_redirects=True)
 
     def logout(self):
-        return self.client.get(url_for('auth.logout'), follow_redirects=True)
+        return self.client.get('/auth/logout', follow_redirects=True)
