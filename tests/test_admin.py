@@ -1,5 +1,3 @@
-from flask import url_for
-
 from bluelog.models import Post, Category, Link, Comment
 from bluelog.extensions import db
 
@@ -20,11 +18,11 @@ class AdminTestCase(BaseTestCase):
         db.session.commit()
 
     def test_new_post(self):
-        response = self.client.get(url_for('admin.new_post'))
+        response = self.client.get('/admin/post/new')
         data = response.get_data(as_text=True)
         self.assertIn('New Post', data)
 
-        response = self.client.post(url_for('admin.new_post'), data=dict(
+        response = self.client.post('/admin/post/new', data=dict(
             title='Something',
             category=1,
             body='Hello, world.'
@@ -35,13 +33,13 @@ class AdminTestCase(BaseTestCase):
         self.assertIn('Hello, world.', data)
 
     def test_edit_post(self):
-        response = self.client.get(url_for('admin.edit_post', post_id=1))
+        response = self.client.get('/admin/post/1/edit')
         data = response.get_data(as_text=True)
         self.assertIn('Edit Post', data)
         self.assertIn('Hello', data)
         self.assertIn('Blah...', data)
 
-        response = self.client.post(url_for('admin.edit_post', post_id=1), data=dict(
+        response = self.client.post('/admin/post/1/edit', data=dict(
             title='Something Edited',
             category=1,
             body='New post body.'
@@ -52,22 +50,22 @@ class AdminTestCase(BaseTestCase):
         self.assertNotIn('Blah...', data)
 
     def test_delete_post(self):
-        response = self.client.get(url_for('admin.delete_post', post_id=1), follow_redirects=True)
+        response = self.client.get('/admin/post/1/delete', follow_redirects=True)
         data = response.get_data(as_text=True)
         self.assertNotIn('Post deleted.', data)
         self.assertIn('405 Method Not Allowed', data)
 
-        response = self.client.post(url_for('admin.delete_post', post_id=1), follow_redirects=True)
+        response = self.client.post('/admin/post/1/delete', follow_redirects=True)
         data = response.get_data(as_text=True)
         self.assertIn('Post deleted.', data)
 
     def test_delete_comment(self):
-        response = self.client.get(url_for('admin.delete_comment', comment_id=1), follow_redirects=True)
+        response = self.client.get('/admin/comment/1/delete', follow_redirects=True)
         data = response.get_data(as_text=True)
         self.assertNotIn('Comment deleted.', data)
         self.assertIn('405 Method Not Allowed', data)
 
-        response = self.client.post(url_for('admin.delete_comment', comment_id=1), follow_redirects=True)
+        response = self.client.post('/admin/comment/1/delete', follow_redirects=True)
         data = response.get_data(as_text=True)
         self.assertIn('Comment deleted.', data)
         self.assertNotIn('A comment', data)
@@ -77,26 +75,26 @@ class AdminTestCase(BaseTestCase):
         post.can_comment = False
         db.session.commit()
 
-        response = self.client.post(url_for('admin.set_comment', post_id=1), follow_redirects=True)
+        response = self.client.post('/admin/post/1/set-comment', follow_redirects=True)
         data = response.get_data(as_text=True)
         self.assertIn('Comment enabled.', data)
 
-        response = self.client.post(url_for('blog.show_post', post_id=1))
+        response = self.client.post('/post/1')
         data = response.get_data(as_text=True)
         self.assertIn('<div id="comment-form">', data)
 
     def test_disable_comment(self):
-        response = self.client.post(url_for('admin.set_comment', post_id=1), follow_redirects=True)
+        response = self.client.post('/admin/post/1/set-comment', follow_redirects=True)
         data = response.get_data(as_text=True)
         self.assertIn('Comment disabled.', data)
 
-        response = self.client.post(url_for('blog.show_post', post_id=1))
+        response = self.client.post('/post/1')
         data = response.get_data(as_text=True)
         self.assertNotIn('<div id="comment-form">', data)
 
     def test_approve_comment(self):
         self.logout()
-        response = self.client.post(url_for('blog.show_post', post_id=1), data=dict(
+        response = self.client.post('/post/1', data=dict(
             author='Guest',
             email='a@b.com',
             site='http://greyli.com',
@@ -108,25 +106,25 @@ class AdminTestCase(BaseTestCase):
         self.assertNotIn('I am a guest comment.', data)
 
         self.login()
-        response = self.client.post(url_for('admin.approve_comment', comment_id=2), follow_redirects=True)
+        response = self.client.post('/admin/comment/2/approve', follow_redirects=True)
         data = response.get_data(as_text=True)
         self.assertIn('Comment published.', data)
 
-        response = self.client.post(url_for('blog.show_post', post_id=1))
+        response = self.client.post('/post/1')
         data = response.get_data(as_text=True)
         self.assertIn('I am a guest comment.', data)
 
     def test_new_category(self):
-        response = self.client.get(url_for('admin.new_category'))
+        response = self.client.get('/admin/category/new')
         data = response.get_data(as_text=True)
         self.assertIn('New Category', data)
 
-        response = self.client.post(url_for('admin.new_category'), data=dict(name='Tech'), follow_redirects=True)
+        response = self.client.post('/admin/category/new', data=dict(name='Tech'), follow_redirects=True)
         data = response.get_data(as_text=True)
         self.assertIn('Category created.', data)
         self.assertIn('Tech', data)
 
-        response = self.client.post(url_for('admin.new_category'), data=dict(name='Tech'), follow_redirects=True)
+        response = self.client.post('/admin/category/new', data=dict(name='Tech'), follow_redirects=True)
         data = response.get_data(as_text=True)
         self.assertIn('Name already in use.', data)
 
@@ -134,12 +132,12 @@ class AdminTestCase(BaseTestCase):
         post = Post(title='Post Title', category=category)
         db.session.add(post)
         db.session.commit()
-        response = self.client.get(url_for('blog.show_category', category_id=1))
+        response = self.client.get('/category/1')
         data = response.get_data(as_text=True)
         self.assertIn('Post Title', data)
 
     def test_edit_category(self):
-        response = self.client.post(url_for('admin.edit_category', category_id=1),
+        response = self.client.post('/admin/category/1/edit',
                                     data=dict(name='Default edited'), follow_redirects=True)
         data = response.get_data(as_text=True)
         self.assertNotIn('Category updated.', data)
@@ -147,17 +145,17 @@ class AdminTestCase(BaseTestCase):
         self.assertNotIn('Default edited', data)
         self.assertIn('You can not edit the default category', data)
 
-        response = self.client.post(url_for('admin.new_category'), data=dict(name='Tech'), follow_redirects=True)
+        response = self.client.post('/admin/category/new', data=dict(name='Tech'), follow_redirects=True)
         data = response.get_data(as_text=True)
         self.assertIn('Category created.', data)
         self.assertIn('Tech', data)
 
-        response = self.client.get(url_for('admin.edit_category', category_id=2))
+        response = self.client.get('/admin/category/2/edit')
         data = response.get_data(as_text=True)
         self.assertIn('Edit Category', data)
         self.assertIn('Tech', data)
 
-        response = self.client.post(url_for('admin.edit_category', category_id=2),
+        response = self.client.post('/admin/category/2/edit',
                                     data=dict(name='Life'), follow_redirects=True)
         data = response.get_data(as_text=True)
         self.assertIn('Category updated.', data)
@@ -171,29 +169,29 @@ class AdminTestCase(BaseTestCase):
         db.session.add(post)
         db.session.commit()
 
-        response = self.client.get(url_for('admin.delete_category', category_id=1), follow_redirects=True)
+        response = self.client.get('/admin/category/1/delete', follow_redirects=True)
         data = response.get_data(as_text=True)
         self.assertNotIn('Category deleted.', data)
         self.assertIn('405 Method Not Allowed', data)
 
-        response = self.client.post(url_for('admin.delete_category', category_id=1), follow_redirects=True)
+        response = self.client.post('/admin/category/1/delete', follow_redirects=True)
         data = response.get_data(as_text=True)
         self.assertIn('You can not delete the default category.', data)
         self.assertNotIn('Category deleted.', data)
         self.assertIn('Default', data)
 
-        response = self.client.post(url_for('admin.delete_category', category_id=2), follow_redirects=True)
+        response = self.client.post('/admin/category/2/delete', follow_redirects=True)
         data = response.get_data(as_text=True)
         self.assertIn('Category deleted.', data)
         self.assertIn('Default', data)
         self.assertNotIn('Tech', data)
 
     def test_new_link(self):
-        response = self.client.get(url_for('admin.new_link'))
+        response = self.client.get('/admin/link/new')
         data = response.get_data(as_text=True)
         self.assertIn('New Link', data)
 
-        response = self.client.post(url_for('admin.new_link'), data=dict(
+        response = self.client.post('/admin/link/new', data=dict(
             name='HelloFlask',
             url='http://helloflask.com'
         ), follow_redirects=True)
@@ -202,13 +200,13 @@ class AdminTestCase(BaseTestCase):
         self.assertIn('HelloFlask', data)
 
     def test_edit_link(self):
-        response = self.client.get(url_for('admin.edit_link', link_id=1))
+        response = self.client.get('/admin/link/1/edit')
         data = response.get_data(as_text=True)
         self.assertIn('Edit Link', data)
         self.assertIn('GitHub', data)
         self.assertIn('https://github.com/greyli', data)
 
-        response = self.client.post(url_for('admin.edit_link', link_id=1), data=dict(
+        response = self.client.post('/admin/link/1/edit', data=dict(
             name='Github',
             url='https://github.com/helloflask'
         ), follow_redirects=True)
@@ -217,37 +215,37 @@ class AdminTestCase(BaseTestCase):
         self.assertIn('https://github.com/helloflask', data)
 
     def test_delete_link(self):
-        response = self.client.get(url_for('admin.delete_link', link_id=1), follow_redirects=True)
+        response = self.client.get('/admin/link/1/delete', follow_redirects=True)
         data = response.get_data(as_text=True)
         self.assertNotIn('Link deleted.', data)
         self.assertIn('405 Method Not Allowed', data)
 
-        response = self.client.post(url_for('admin.delete_link', link_id=1), follow_redirects=True)
+        response = self.client.post('/admin/link/1/delete', follow_redirects=True)
         data = response.get_data(as_text=True)
         self.assertIn('Link deleted.', data)
 
     def test_manage_post_page(self):
-        response = self.client.get(url_for('admin.manage_post'))
+        response = self.client.get('/admin/post/manage')
         data = response.get_data(as_text=True)
         self.assertIn('Manage Posts', data)
 
     def test_manage_comment_page(self):
-        response = self.client.get(url_for('admin.manage_comment'))
+        response = self.client.get('/admin/comment/manage')
         data = response.get_data(as_text=True)
         self.assertIn('Manage Comments', data)
 
     def test_manage_category_page(self):
-        response = self.client.get(url_for('admin.manage_category'))
+        response = self.client.get('/admin/category/manage')
         data = response.get_data(as_text=True)
         self.assertIn('Manage Categories', data)
 
     def test_manage_link_page(self):
-        response = self.client.get(url_for('admin.manage_link'))
+        response = self.client.get('/admin/link/manage')
         data = response.get_data(as_text=True)
         self.assertIn('Manage Links', data)
 
     def test_blog_setting(self):
-        response = self.client.post(url_for('admin.settings'), data=dict(
+        response = self.client.post('/admin/settings', data=dict(
             name='Grey Li',
             blog_title='My Blog',
             blog_sub_title='Just some raw ideas.',
@@ -258,11 +256,11 @@ class AdminTestCase(BaseTestCase):
         self.assertIn('Setting updated.', data)
         self.assertIn('My Blog', data)
 
-        response = self.client.get(url_for('admin.settings'))
+        response = self.client.get('/admin/settings')
         data = response.get_data(as_text=True)
         self.assertIn('Grey Li', data)
         self.assertIn('My Blog', data)
 
-        response = self.client.get(url_for('blog.about'), follow_redirects=True)
+        response = self.client.get('/about', follow_redirects=True)
         data = response.get_data(as_text=True)
         self.assertIn('Example about page', data)

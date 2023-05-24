@@ -1,5 +1,3 @@
-from flask import url_for
-
 from tests.base import BaseTestCase
 
 
@@ -22,6 +20,6 @@ class AuthTestCase(BaseTestCase):
         self.assertIn('Logout success.', data)
 
     def test_login_protect(self):
-        response = self.client.get(url_for('admin.settings'), follow_redirects=True)
+        response = self.client.get('/admin/settings', follow_redirects=True)
         data = response.get_data(as_text=True)
         self.assertIn('Please log in to access this page.', data)
