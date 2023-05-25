@@ -3,10 +3,10 @@ from bluelog.extensions import db
 from tests.base import BaseTestCase
 
 
-class CLITestCase(BaseTestCase):
+class CommandTestCase(BaseTestCase):
 
     def setUp(self):
-        super(CLITestCase, self).setUp()
+        super(CommandTestCase, self).setUp()
         db.drop_all()
 
     def test_initdb_command(self):
@@ -36,37 +36,58 @@ class CLITestCase(BaseTestCase):
         self.assertEqual(Admin.query.first().username, 'new grey')
         self.assertEqual(Category.query.first().name, 'Default')
 
-    def test_forge_command(self):
-        result = self.cli_runner.invoke(args=['forge'])
+    def test_fake_command(self):
+        default_post_count = 50
+        default_category_count = 10
+        default_comment_count = 500
+        default_reply_count = 50
+
+        result = self.cli_runner.invoke(args=['fake'])
 
         self.assertEqual(Admin.query.count(), 1)
         self.assertIn('Generating the administrator...', result.output)
 
-        self.assertEqual(Post.query.count(), 50)
-        self.assertIn('Generating 50 posts...', result.output)
+        self.assertEqual(Post.query.count(), default_post_count)
+        self.assertIn(f'Generating {default_post_count} posts...', result.output)
 
-        self.assertEqual(Category.query.count(), 10 + 1)
-        self.assertIn('Generating 10 categories...', result.output)
+        self.assertEqual(Category.query.count(), default_category_count)
+        self.assertIn(f'Generating {default_category_count} categories...', result.output)
 
-        self.assertEqual(Comment.query.count(), 500 + 50 + 50 + 50)
-        self.assertIn('Generating 500 comments...', result.output)
+        self.assertEqual(Comment.query.count(), default_comment_count + default_reply_count)
+        self.assertIn(f'Generating {default_comment_count} comments...', result.output)
+        self.assertIn(f'Generating {default_reply_count} replies...', result.output)
 
         self.assertIn('Generating links...', result.output)
         self.assertIn('Done.', result.output)
 
-    def test_forge_command_with_count(self):
-        result = self.cli_runner.invoke(args=['forge', '--category', '5', '--post', '20', '--comment', '100'])
+    def test_fake_command_with_custom_count(self):
+        category_count = 5
+        post_count = 20
+        comment_count = 100
+        reply_count = 20
+
+        result = self.cli_runner.invoke(
+            args=[
+                'fake',
+                '--category', category_count,
+                '--post', post_count,
+                '--comment', comment_count,
+                '--reply', reply_count
+            ]
+        )
+
         self.assertEqual(Admin.query.count(), 1)
         self.assertIn('Generating the administrator...', result.output)
 
-        self.assertEqual(Post.query.count(), 20)
-        self.assertIn('Generating 20 posts...', result.output)
+        self.assertEqual(Category.query.count(), category_count)
+        self.assertIn(f'Generating {category_count} categories...', result.output)
 
-        self.assertEqual(Category.query.count(), 5 + 1)
-        self.assertIn('Generating 5 categories...', result.output)
+        self.assertEqual(Post.query.count(), post_count)
+        self.assertIn(f'Generating {post_count} posts...', result.output)
 
-        self.assertEqual(Comment.query.count(), 100 + 10 + 10 + 10)
-        self.assertIn('Generating 100 comments...', result.output)
+        self.assertEqual(Comment.query.count(), comment_count + reply_count)
+        self.assertIn(f'Generating {comment_count} comments...', result.output)
+        self.assertIn(f'Generating {reply_count} replies...', result.output)
 
         self.assertIn('Generating links...', result.output)
         self.assertIn('Done.', result.output)
