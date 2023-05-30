@@ -2,6 +2,7 @@ import random
 
 from faker import Faker
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy import select, func
 
 from bluelog.extensions import db
 from bluelog.models import Admin, Category, Post, Comment, Link
@@ -39,10 +40,11 @@ def fake_categories(count=10):
 
 def fake_posts(count=50):
     for _ in range(count):
+        category_count = db.session.execute(select(func.count(Category.id))).scalars().one()
         post = Post(
             title=fake.sentence(),
             body=fake.text(2000),
-            category=Category.query.get(random.randint(1, Category.query.count())),
+            category=db.session.get(Category, random.randint(1, category_count)),
             timestamp=fake.date_time_this_year()
         )
 
@@ -52,6 +54,7 @@ def fake_posts(count=50):
 
 def fake_comments(count=500):
     for _ in range(count):
+        post_count = db.session.execute(select(func.count(Post.id))).scalars().one()
         comment = Comment(
             author=fake.name(),
             email=fake.email(),
@@ -60,7 +63,7 @@ def fake_comments(count=500):
             timestamp=fake.date_time_this_year(),
             reviewed=random.choice([True, True, True, True, False]),
             from_admin=random.choice([False, False, False, False, True]),
-            post=Post.query.get(random.randint(1, Post.query.count()))
+            post=db.session.get(Post, random.randint(1, post_count))
         )
         db.session.add(comment)
     db.session.commit()
@@ -68,6 +71,8 @@ def fake_comments(count=500):
 
 def fake_replies(count=50):
     for _ in range(count):
+        comment_count = db.session.execute(select(func.count(Comment.id))).scalars().one()
+        post_count = db.session.execute(select(func.count(Post.id))).scalars().one()
         comment = Comment(
             author=fake.name(),
             email=fake.email(),
@@ -75,8 +80,8 @@ def fake_replies(count=50):
             body=fake.sentence(),
             timestamp=fake.date_time_this_year(),
             reviewed=True,
-            replied=Comment.query.get(random.randint(1, Comment.query.count())),
-            post=Post.query.get(random.randint(1, Post.query.count()))
+            replied=db.session.get(Comment, random.randint(1, comment_count)),
+            post=db.session.get(Post, random.randint(1, post_count))
         )
         db.session.add(comment)
     db.session.commit()

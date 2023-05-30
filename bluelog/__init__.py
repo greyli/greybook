@@ -5,8 +5,9 @@ from logging.handlers import SMTPHandler, RotatingFileHandler
 import click
 from flask import Flask, render_template, request
 from flask_login import current_user
-from flask_sqlalchemy import get_debug_queries
+from flask_sqlalchemy.record_queries import get_recorded_queries
 from flask_wtf.csrf import CSRFError
+from sqlalchemy import select, func
 
 from bluelog.views.admin import admin_bp
 from bluelog.views.auth import auth_bp
@@ -94,11 +95,17 @@ def register_shell_context(app):
 def register_template_context(app):
     @app.context_processor
     def make_template_context():
-        admin = Admin.query.first()
-        categories = Category.query.order_by(Category.name).all()
-        links = Link.query.order_by(Link.name).all()
+        admin = db.session.execute(select(Admin)).scalar()
+        categories = db.session.execute(
+            select(Category).order_by(Category.name)
+        ).scalars().all()
+        links = db.session.execute(
+            select(Link).order_by(Link.name)
+        ).scalars().all()
         if current_user.is_authenticated:
-            unread_comments = Comment.query.filter_by(reviewed=False).count()
+            unread_comments = db.session.execute(
+                select(func.count(Comment.id)).filter_by(reviewed=False)
+            )
         else:
             unread_comments = None
         return dict(
@@ -146,7 +153,7 @@ def register_commands(app):
         click.echo('Initializing the database...')
         db.create_all()
 
-        admin = Admin.query.first()
+        admin = db.session.execute(select(Admin)).scalar()
         if admin is not None:
             click.echo('The administrator already exists, updating...')
             admin.username = username
@@ -163,7 +170,7 @@ def register_commands(app):
             admin.set_password(password)
             db.session.add(admin)
 
-        category = Category.query.first()
+        category = db.session.execute(select(Category)).scalar()
         if category is None:
             click.echo('Creating the default category...')
             category = Category(name='Default')
@@ -208,7 +215,7 @@ def register_commands(app):
 def register_request_handlers(app):
     @app.after_request
     def query_profiler(response):
-        for q in get_debug_queries():
+        for q in get_recorded_queries():
             if q.duration >= app.config['BLUELOG_SLOW_QUERY_THRESHOLD']:
                 app.logger.warning(
                     'Slow query: Duration: %fs\n Context: %s\nQuery: %s\n '

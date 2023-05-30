@@ -1,3 +1,5 @@
+from sqlalchemy import select, func
+
 from bluelog.models import Admin, Post, Category, Comment
 from bluelog.extensions import db
 from tests.base import BaseTestCase
@@ -23,18 +25,18 @@ class CommandTestCase(BaseTestCase):
         self.assertIn('Creating the temporary administrator account...', result.output)
         self.assertIn('Creating the default category...', result.output)
         self.assertIn('Done.', result.output)
-        self.assertEqual(Admin.query.count(), 1)
-        self.assertEqual(Admin.query.first().username, 'grey')
-        self.assertEqual(Category.query.first().name, 'Default')
+        self.assertEqual(db.session.execute(select(func.count(Admin.id))).scalars().one(), 1)
+        self.assertEqual(db.session.execute(select(Admin)).scalar().username, 'grey')
+        self.assertEqual(db.session.execute(select(Category)).scalar().name, 'Default')
 
     def test_init_command_with_update(self):
         self.cli_runner.invoke(args=['init', '--username', 'grey', '--password', '123'])
         result = self.cli_runner.invoke(args=['init', '--username', 'new grey', '--password', '123'])
         self.assertIn('The administrator already exists, updating...', result.output)
         self.assertNotIn('Creating the temporary administrator account...', result.output)
-        self.assertEqual(Admin.query.count(), 1)
-        self.assertEqual(Admin.query.first().username, 'new grey')
-        self.assertEqual(Category.query.first().name, 'Default')
+        self.assertEqual(db.session.execute(select(func.count(Admin.id))).scalars().one(), 1)
+        self.assertEqual(db.session.execute(select(Admin)).scalar().username, 'new grey')
+        self.assertEqual(db.session.execute(select(Category)).scalar().name, 'Default')
 
     def test_fake_command(self):
         default_post_count = 50
@@ -44,16 +46,16 @@ class CommandTestCase(BaseTestCase):
 
         result = self.cli_runner.invoke(args=['fake'])
 
-        self.assertEqual(Admin.query.count(), 1)
+        self.assertEqual(db.session.execute(select(func.count(Admin.id))).scalars().one(), 1)
         self.assertIn('Generating the administrator...', result.output)
 
-        self.assertEqual(Post.query.count(), default_post_count)
+        self.assertEqual(db.session.execute(select(func.count(Post.id))).scalars().one(), default_post_count)
         self.assertIn(f'Generating {default_post_count} posts...', result.output)
 
-        self.assertEqual(Category.query.count(), default_category_count)
+        self.assertEqual(db.session.execute(select(func.count(Category.id))).scalars().one(), default_category_count)
         self.assertIn(f'Generating {default_category_count} categories...', result.output)
 
-        self.assertEqual(Comment.query.count(), default_comment_count + default_reply_count)
+        self.assertEqual(db.session.execute(select(func.count(Comment.id))).scalars().one(), default_comment_count + default_reply_count)
         self.assertIn(f'Generating {default_comment_count} comments...', result.output)
         self.assertIn(f'Generating {default_reply_count} replies...', result.output)
 
@@ -76,16 +78,16 @@ class CommandTestCase(BaseTestCase):
             ]
         )
 
-        self.assertEqual(Admin.query.count(), 1)
+        self.assertEqual(db.session.execute(select(func.count(Admin.id))).scalars().one(), 1)
         self.assertIn('Generating the administrator...', result.output)
 
-        self.assertEqual(Category.query.count(), category_count)
+        self.assertEqual(db.session.execute(select(func.count(Category.id))).scalars().one(), category_count)
         self.assertIn(f'Generating {category_count} categories...', result.output)
 
-        self.assertEqual(Post.query.count(), post_count)
+        self.assertEqual(db.session.execute(select(func.count(Post.id))).scalars().one(), post_count)
         self.assertIn(f'Generating {post_count} posts...', result.output)
 
-        self.assertEqual(Comment.query.count(), comment_count + reply_count)
+        self.assertEqual(db.session.execute(select(func.count(Comment.id))).scalars().one(), comment_count + reply_count)
         self.assertIn(f'Generating {comment_count} comments...', result.output)
         self.assertIn(f'Generating {reply_count} replies...', result.output)
 
