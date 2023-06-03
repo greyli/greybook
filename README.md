@@ -10,25 +10,32 @@ Demo: http://bluelog.helloflask.com
 
 ## Installation
 
-clone:
-```
-$ git clone https://github.com/greyli/bluelog.git
-$ cd bluelog
-```
-create & activate virtual env then install dependency:
+Clone the repo:
 
-with venv/virtualenv + pip:
 ```
-$ python -m venv env  # use `virtualenv env` for Python2, use `python3 ...` for Python3 on Linux & macOS
-$ source env/bin/activate  # use `env\Scripts\activate` on Windows
+$ git clone https://github.com/greyli/new-bluelog.git
+$ cd new-bluelog
+```
+
+Create & activate virtual env then install dependency:
+
+with venv + pip:
+
+```
+$ python3 -m venv .venv  # use `python ...` on Windows
+$ source .venv/bin/activate  # use `.venv\Scripts\activate` on Windows
 $ pip install -r requirements.txt
 ```
-or with Pipenv:
+
+or with PDM (you need to [install PDM](https://pdm.fming.dev/latest/#installation) first):
+
 ```
-$ pipenv install --dev
-$ pipenv shell
+$ pdm install
+$ source .venv/bin/activate  # use `.venv\Scripts\activate` on Windows
 ```
-generate fake data then run:
+
+Generate fake data then run the application:
+
 ```
 $ flask fake
 $ flask run
