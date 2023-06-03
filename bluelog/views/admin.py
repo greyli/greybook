@@ -3,6 +3,7 @@ import os
 from flask import render_template, flash, redirect, url_for, request, current_app, Blueprint, send_from_directory
 from flask_login import login_required, current_user
 from flask_ckeditor import upload_success, upload_fail
+from sqlalchemy import select
 
 from bluelog.extensions import db
 from bluelog.forms import SettingForm, PostForm, CategoryForm, LinkForm
@@ -35,8 +36,11 @@ def settings():
 @login_required
 def manage_post():
     page = request.args.get('page', 1, type=int)
-    pagination = Post.query.order_by(Post.timestamp.desc()).paginate(
-        page=page, per_page=current_app.config['BLUELOG_MANAGE_POST_PER_PAGE'])
+    pagination = db.paginate(
+        select(Post).order_by(Post.timestamp.desc()),
+        page=page,
+        per_page=current_app.config['BLUELOG_MANAGE_POST_PER_PAGE'],
+    )
     posts = pagination.items
     return render_template('admin/manage_post.html', page=page, pagination=pagination, posts=posts)
 
@@ -48,11 +52,8 @@ def new_post():
     if form.validate_on_submit():
         title = form.title.data
         body = form.body.data
-        category = Category.query.get(form.category.data)
-        post = Post(title=title, body=body, category=category)
-        # same with:
-        # category_id = form.category.data
-        # post = Post(title=title, body=body, category_id=category_id)
+        category_id = form.category.data
+        post = Post(title=title, body=body, category_id=category_id) 
         db.session.add(post)
         db.session.commit()
         flash('Post created.', 'success')
@@ -64,11 +65,11 @@ def new_post():
 @login_required
 def edit_post(post_id):
     form = PostForm()
-    post = Post.query.get_or_404(post_id)
+    post = db.get_or_404(Post, post_id)
     if form.validate_on_submit():
         post.title = form.title.data
         post.body = form.body.data
-        post.category = Category.query.get(form.category.data)
+        post.category = db.session.get(Category, form.category.data)
         db.session.commit()
         flash('Post updated.', 'success')
         return redirect(url_for('blog.show_post', post_id=post.id))
@@ -81,7 +82,7 @@ def edit_post(post_id):
 @admin_bp.route('/post/<int:post_id>/delete', methods=['POST'])
 @login_required
 def delete_post(post_id):
-    post = Post.query.get_or_404(post_id)
+    post = db.get_or_404(Post, post_id)
     db.session.delete(post)
     db.session.commit()
     flash('Post deleted.', 'success')
@@ -91,7 +92,7 @@ def delete_post(post_id):
 @admin_bp.route('/post/<int:post_id>/set-comment', methods=['POST'])
 @login_required
 def set_comment(post_id):
-    post = Post.query.get_or_404(post_id)
+    post = db.get_or_404(Post, post_id)
     if post.can_comment:
         post.can_comment = False
         flash('Comment disabled.', 'success')
@@ -108,14 +109,19 @@ def manage_comment():
     filter_rule = request.args.get('filter', 'all')  # 'all', 'unreviewed', 'admin'
     page = request.args.get('page', 1, type=int)
     per_page = current_app.config['BLUELOG_COMMENT_PER_PAGE']
+    
     if filter_rule == 'unread':
-        filtered_comments = Comment.query.filter_by(reviewed=False)
+        filtered_comments = select(Comment).filter_by(reviewed=False)
     elif filter_rule == 'admin':
-        filtered_comments = Comment.query.filter_by(from_admin=True)
+        filtered_comments = select(Comment).filter_by(from_admin=True)
     else:
-        filtered_comments = Comment.query
+        filtered_comments = select(Comment)
 
-    pagination = filtered_comments.order_by(Comment.timestamp.desc()).paginate(page=page, per_page=per_page)
+    pagination = db.paginate(
+        filtered_comments.order_by(Comment.timestamp.desc()),
+        page=page,
+        per_page=per_page,
+    )
     comments = pagination.items
     return render_template('admin/manage_comment.html', comments=comments, pagination=pagination)
 
@@ -123,7 +129,7 @@ def manage_comment():
 @admin_bp.route('/comment/<int:comment_id>/approve', methods=['POST'])
 @login_required
 def approve_comment(comment_id):
-    comment = Comment.query.get_or_404(comment_id)
+    comment = db.get_or_404(Comment, comment_id)
     comment.reviewed = True
     db.session.commit()
     flash('Comment published.', 'success')
@@ -133,7 +139,7 @@ def approve_comment(comment_id):
 @admin_bp.route('/comment/<int:comment_id>/delete', methods=['POST'])
 @login_required
 def delete_comment(comment_id):
-    comment = Comment.query.get_or_404(comment_id)
+    comment = db.get_or_404(Comment, comment_id)
     db.session.delete(comment)
     db.session.commit()
     flash('Comment deleted.', 'success')
@@ -164,7 +170,7 @@ def new_category():
 @login_required
 def edit_category(category_id):
     form = CategoryForm()
-    category = Category.query.get_or_404(category_id)
+    category = db.get_or_404(Category, category_id)
     if category.id == 1:
         flash('You can not edit the default category.', 'warning')
         return redirect(url_for('blog.index'))
@@ -181,7 +187,7 @@ def edit_category(category_id):
 @admin_bp.route('/category/<int:category_id>/delete', methods=['POST'])
 @login_required
 def delete_category(category_id):
-    category = Category.query.get_or_404(category_id)
+    category = db.get_or_404(Category, category_id)
     if category.id == 1:
         flash('You can not delete the default category.', 'warning')
         return redirect(url_for('blog.index'))
@@ -215,7 +221,7 @@ def new_link():
 @login_required
 def edit_link(link_id):
     form = LinkForm()
-    link = Link.query.get_or_404(link_id)
+    link = db.get_or_404(Link, link_id)
     if form.validate_on_submit():
         link.name = form.name.data
         link.url = form.url.data
@@ -230,7 +236,7 @@ def edit_link(link_id):
 @admin_bp.route('/link/<int:link_id>/delete', methods=['POST'])
 @login_required
 def delete_link(link_id):
-    link = Link.query.get_or_404(link_id)
+    link = db.get_or_404(Link, link_id)
     db.session.delete(link)
     db.session.commit()
     flash('Link deleted.', 'success')

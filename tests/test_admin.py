@@ -71,7 +71,7 @@ class AdminTestCase(BaseTestCase):
         self.assertNotIn('A comment', data)
 
     def test_enable_comment(self):
-        post = Post.query.get(1)
+        post = db.session.get(Post, 1)
         post.can_comment = False
         db.session.commit()
 
@@ -99,7 +99,7 @@ class AdminTestCase(BaseTestCase):
             email='a@b.com',
             site='http://greyli.com',
             body='I am a guest comment.',
-            post=Post.query.get(1),
+            post=db.session.get(Post, 1),
         ), follow_redirects=True)
         data = response.get_data(as_text=True)
         self.assertIn('Thanks, your comment will be published after reviewed.', data)
@@ -128,7 +128,7 @@ class AdminTestCase(BaseTestCase):
         data = response.get_data(as_text=True)
         self.assertIn('Name already in use.', data)
 
-        category = Category.query.get(1)
+        category = db.session.get(Category, 1)
         post = Post(title='Post Title', category=category)
         db.session.add(post)
         db.session.commit()

@@ -59,7 +59,6 @@ class BlogTestCase(BaseTestCase):
     def test_new_admin_comment(self):
         response = self.client.post('/post/1', data=dict(
             body='I am an admin comment.',
-            post=Post.query.get(1),
         ), follow_redirects=True)
         data = response.get_data(as_text=True)
         self.assertIn('Comment published.', data)
@@ -72,7 +71,6 @@ class BlogTestCase(BaseTestCase):
             email='a@b.com',
             site='http://greyli.com',
             body='I am a guest comment.',
-            post=Post.query.get(1),
         ), follow_redirects=True)
         data = response.get_data(as_text=True)
         self.assertIn('Thanks, your comment will be published after reviewed.', data)
@@ -84,7 +82,7 @@ class BlogTestCase(BaseTestCase):
         self.assertIn('Reply to', data)
         self.assertIn('Cancel', data)
 
-        post = Post.query.get(1)
+        post = db.session.get(Post, 1)
         post.can_comment = False
         db.session.commit()
 
@@ -97,7 +95,6 @@ class BlogTestCase(BaseTestCase):
     def test_new_admin_reply(self):
         response = self.client.post('/post/1' + '?reply=1', data=dict(
             body='I am an admin reply comment.',
-            post=Post.query.get(1),
         ), follow_redirects=True)
         data = response.get_data(as_text=True)
         self.assertIn('Comment published.', data)
@@ -111,7 +108,6 @@ class BlogTestCase(BaseTestCase):
             email='a@b.com',
             site='http://greyli.com',
             body='I am a guest comment.',
-            post=Post.query.get(1),
         ), follow_redirects=True)
         data = response.get_data(as_text=True)
         self.assertIn('Thanks, your comment will be published after reviewed.', data)

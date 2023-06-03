@@ -3,8 +3,10 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, SelectField, TextAreaField, ValidationError, HiddenField, \
     BooleanField, PasswordField
 from wtforms.validators import DataRequired, Email, Length, Optional, URL
+from sqlalchemy import select
 
 from bluelog.models import Category
+from bluelog.extensions import db
 
 
 class LoginForm(FlaskForm):
@@ -30,8 +32,11 @@ class PostForm(FlaskForm):
 
     def __init__(self, *args, **kwargs):
         super(PostForm, self).__init__(*args, **kwargs)
-        self.category.choices = [(category.id, category.name)
-                                 for category in Category.query.order_by(Category.name).all()]
+        self.category.choices = [
+            (category.id, category.name)
+            for category in db.session.execute(
+                select(Category).order_by(Category.name)
+            ).scalars()]
 
 
 class CategoryForm(FlaskForm):
@@ -39,7 +44,7 @@ class CategoryForm(FlaskForm):
     submit = SubmitField()
 
     def validate_name(self, field):
-        if Category.query.filter_by(name=field.data).first():
+        if db.session.execute(select(Category).filter_by(name=field.data)).scalar():
             raise ValidationError('Name already in use.')
 
 

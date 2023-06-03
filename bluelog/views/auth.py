@@ -1,9 +1,11 @@
 from flask import render_template, flash, redirect, url_for, Blueprint
 from flask_login import login_user, logout_user, login_required, current_user
+from sqlalchemy import select
 
 from bluelog.forms import LoginForm
 from bluelog.models import Admin
 from bluelog.utils import redirect_back
+from bluelog.extensions import db
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -18,7 +20,7 @@ def login():
         username = form.username.data
         password = form.password.data
         remember = form.remember.data
-        admin = Admin.query.first()
+        admin = db.session.execute(select(Admin)).scalar()
         if admin:
             if username == admin.username and admin.validate_password(password):
                 login_user(admin, remember)
