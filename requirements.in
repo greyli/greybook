@@ -1,6 +1,6 @@
 flask
 flask-login
-flask-mail
+flask-mailman
 flask-wtf
 flask-sqlalchemy
 flask-migrate

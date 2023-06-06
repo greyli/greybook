@@ -10,7 +10,6 @@ blinker==1.6.2
     # via
     #   flask
     #   flask-debugtoolbar
-    #   flask-mail
 bootstrap-flask==2.2.0
     # via -r requirements.in
 build==0.10.0
@@ -38,7 +37,7 @@ flask==2.3.2
     #   flask-ckeditor
     #   flask-debugtoolbar
     #   flask-login
-    #   flask-mail
+    #   flask-mailman
     #   flask-migrate
     #   flask-moment
     #   flask-sqlalchemy
@@ -49,7 +48,7 @@ flask-debugtoolbar==0.13.1
     # via -r requirements.in
 flask-login==0.6.2
     # via -r requirements.in
-flask-mail==0.9.1
+flask-mailman==0.3.0
     # via -r requirements.in
 flask-migrate==4.0.4
     # via -r requirements.in
@@ -61,6 +60,8 @@ flask-sqlalchemy==3.0.3
     #   flask-migrate
 flask-wtf==1.1.1
     # via -r requirements.in
+greenlet==2.0.2
+    # via sqlalchemy
 idna==3.4
     # via email-validator
 iniconfig==2.0.0
@@ -82,6 +83,8 @@ markupsafe==2.1.2
     #   wtforms
 mccabe==0.7.0
     # via flake8
+mkdocs-material-extensions==1.1.1
+    # via flask-mailman
 packaging==23.1
     # via
     #   build
