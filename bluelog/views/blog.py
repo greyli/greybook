@@ -59,7 +59,7 @@ def show_post(post_id):
     if current_user.is_authenticated:
         form = AdminCommentForm()
         form.author.data = current_user.name
-        form.email.data = current_app.config['BLUELOG_EMAIL']
+        form.email.data = current_app.config['BLUELOG_ADMIN_EMAIL']
         form.site.data = url_for('.index')
         from_admin = True
         reviewed = True
