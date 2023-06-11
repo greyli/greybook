@@ -1,4 +1,4 @@
-from flask_bootstrap import Bootstrap
+from flask_bootstrap import Bootstrap5
 from flask_ckeditor import CKEditor
 from flask_login import LoginManager
 from flask_mailman import Mail
@@ -8,7 +8,7 @@ from flask_wtf import CSRFProtect
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_migrate import Migrate
 
-bootstrap = Bootstrap()
+bootstrap = Bootstrap5()
 db = SQLAlchemy()
 login_manager = LoginManager()
 csrf = CSRFProtect()
@@ -22,7 +22,7 @@ migrate = Migrate()
 @login_manager.user_loader
 def load_user(user_id):
     from bluelog.models import Admin
-    user = db.get(Admin, int(user_id))
+    user = db.session.get(Admin, int(user_id))
     return user
 
 

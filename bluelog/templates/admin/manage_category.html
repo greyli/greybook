@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% from 'bootstrap/form.html' import render_form %}
+{% from 'bootstrap5/form.html' import render_form %}
 
 {% block title %}Manage Categories{% endblock %}
 
@@ -7,7 +7,7 @@
     <div class="page-header">
         <h1>Categories
             <small class="text-muted">{{ categories|length }}</small>
-            <span class="float-right"><a class="btn btn-primary btn-sm"
+            <span class="float-end"><a class="btn btn-primary btn-sm"
                                          href="{{ url_for('.new_category') }}">New Category</a></span>
         </h1>
     </div>
@@ -29,13 +29,13 @@
                     <td>{{ category.posts|length }}</td>
                     <td>
                         {% if category.id != 1 %}
-                            <a class="btn btn-info btn-sm"
+                            <a class="btn btn-outline-info btn-sm"
                                href="{{ url_for('.edit_category', category_id=category.id) }}">Edit</a>
 
                             <form class="inline" method="post"
                                   action="{{ url_for('.delete_category', category_id=category.id) }}">
                                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-                                <button type="submit" class="btn btn-danger btn-sm"
+                                <button type="submit" class="btn btn-outline-danger btn-sm"
                                         onclick="return confirm('Are you sure?');">Delete
                                 </button>
                             </form>

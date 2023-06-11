@@ -1,19 +1,19 @@
 {% extends 'base.html' %}
-{% from 'bootstrap/form.html' import render_form %}
-{% from 'bootstrap/pagination.html' import render_pagination %}
+{% from 'bootstrap5/form.html' import render_form %}
+{% from 'bootstrap5/pagination.html' import render_pagination %}
 
 {% block title %}{{ post.title }}{% endblock %}
 
 {% block content %}
     <div class="page-header">
         <h1>{{ post.title }}
-            <span class="float-right">
+            <span class="float-end">
         {% if current_user.is_authenticated %}
-            <a class="btn btn-info btn-sm" href="{{ url_for('admin.edit_post', post_id=post.id) }}">Edit</a>
+            <a class="btn btn-outline-info btn-sm" href="{{ url_for('admin.edit_post', post_id=post.id) }}">Edit</a>
             <form class="inline" method="post"
                   action="{{ url_for('admin.delete_post', post_id=post.id, next=url_for('blog.index')) }}">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?');">Delete
+                <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Are you sure?');">Delete
                 </button>
             </form>
         {% endif %}
@@ -27,9 +27,9 @@
     </div>
     <div class="row">
         <div class="col-sm-8">
-            {{ post.body|safe }}
+            <p class="post-body">{{ post.body|safe }}</p>
             <hr>
-            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target=".postLinkModal">Share
+            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target=".postLinkModal">Share
             </button>
             <div class="modal fade postLinkModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
                  aria-hidden="true">
@@ -37,9 +37,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLabel">Permalink</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
@@ -57,10 +55,11 @@
                             latest</a>
                     </small>
                     {% if current_user.is_authenticated %}
-                        <form class="float-right" method="post"
+                        <form class="float-end" method="post"
                               action="{{ url_for('admin.set_comment', post_id=post.id, next=request.full_path) }}">
                             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-                            <button type="submit" class="btn btn-warning btn-sm">
+                            <button type="submit"
+                                    class="btn {% if post.can_comment %}btn-outline-warning{% else %}btn-outline-success{% endif %} btn-sm">
                                 {% if post.can_comment %}Disable{% else %}Enable{% endif %} Comment
                             </button>
                         </form>
@@ -71,8 +70,9 @@
                         {% for comment in comments %}
                             <li class="list-group-item list-group-item-action flex-column">
                                 <div class="d-flex w-100 justify-content-between">
-                                    <h5 class="mb-1">
-                                        <a href="{% if comment.site %}{{ comment.site }}{% else %}#{% endif %}"
+                                    <h5 class="mb-1 mt-2">
+                                        <a class="text-decoration-none"
+                                           href="{% if comment.site %}{{ comment.site }}{% else %}#{% endif %}"
                                            target="_blank">
                                             {% if comment.from_admin %}
                                                 {{ admin.name }}
@@ -80,11 +80,10 @@
                                                 {{ comment.author }}
                                             {% endif %}
                                         </a>
-                                        {% if comment.from_admin %}
-                                            <span class="badge badge-primary">Author</span>{% endif %}
-                                        {% if comment.replied %}<span class="badge badge-light">Reply</span>{% endif %}
+                                        {% if comment.from_admin %}<span class="badge bg-primary">Author</span>{% endif %}
+                                        {% if comment.replied %}<span class="badge bg-light">Reply</span>{% endif %}
                                     </h5>
-                                    <small data-toggle="tooltip" data-placement="top" data-delay="500"
+                                    <small data-bs-toggle="tooltip" data-bs-placement="top" data-delay="500"
                                            data-timestamp="{{ comment.timestamp.strftime('%Y-%m-%dT%H:%M:%SZ') }}">
                                         {{ moment(comment.timestamp).fromNow() }}
                                     </small>
@@ -95,15 +94,15 @@
                                     </p>
                                 {%- endif -%}
                                 <p class="mb-1">{{ comment.body }}</p>
-                                <div class="float-right">
+                                <div class="float-end">
                                     <a class="btn btn-light btn-sm"
                                        href="{{ url_for('.reply_comment', comment_id=comment.id) }}">Reply</a>
                                     {% if current_user.is_authenticated %}
-                                        <a class="btn btn-light btn-sm" href="mailto:{{ comment.email }}">Email</a>
+                                        <a class="btn btn-outline-info btn-sm" href="mailto:{{ comment.email }}">Email</a>
                                         <form class="inline" method="post"
                                               action="{{ url_for('admin.delete_comment', comment_id=comment.id, next=request.full_path) }}">
                                             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-                                            <button type="submit" class="btn btn-danger btn-sm"
+                                            <button type="submit" class="btn btn-outline-danger btn-sm"
                                                     onclick="return confirm('Are you sure?');">Delete
                                             </button>
                                         </form>
@@ -122,7 +121,7 @@
             {% if request.args.get('reply') %}
                 <div class="alert alert-dark">
                     Reply to <strong>{{ request.args.get('author') }}</strong>:
-                    <a class="float-right" href="{{ url_for('.show_post', post_id=post.id) }}">Cancel</a>
+                    <a class="float-end" href="{{ url_for('.show_post', post_id=post.id) }}">Cancel</a>
                 </div>
             {% endif %}
             {% if post.can_comment %}
