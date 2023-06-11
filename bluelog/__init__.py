@@ -105,7 +105,7 @@ def register_template_context(app):
         if current_user.is_authenticated:
             unread_comments = db.session.execute(
                 select(func.count(Comment.id)).filter_by(reviewed=False)
-            )
+            ).scalars().one()
         else:
             unread_comments = None
         return dict(

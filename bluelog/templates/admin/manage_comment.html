@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% from 'bootstrap/pagination.html' import render_pagination %}
+{% from 'bootstrap5/pagination.html' import render_pagination %}
 
 {% block title %}Manage Comments{% endblock %}
 
@@ -20,7 +20,7 @@
             <li class="nav-item">
                 <a class="nav-link {% if request.args.get('filter') == 'unread' %}active{% endif %}"
                    href="{{ url_for('admin.manage_comment', filter='unread') }}">Unread {% if unread_comments %}<span
-                        class="badge badge-success">{{ unread_comments }}</span>{% endif %}</a>
+                        class="badge text-bg-success rounded-pill">{{ unread_comments }}</span>{% endif %}</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {% if request.args.get('filter') == 'admin' %}active{% endif %}"
@@ -53,7 +53,7 @@
                         <a href="mailto:{{ comment.email }}">{{ comment.email }}</a>
 
                         {% if comment.from_admin %}
-                            <span class="badge badge-primary">Author</span>
+                            <span class="badge text-bg-primary rounded-pill">Author</span>
                         {% endif %}
                     </td>
                     <td>{{ comment.body }}</td>
@@ -63,14 +63,14 @@
                             <form class="inline" method="post"
                                   action="{{ url_for('.approve_comment', comment_id=comment.id, next=request.full_path) }}">
                                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-                                <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                                <button type="submit" class="btn btn-outline-success btn-sm">Approve</button>
                             </form>
                         {% endif %}
-                        <a class="btn btn-info btn-sm" href="{{ url_for('blog.show_post', post_id=comment.post.id) }}">Post</a>
+                        <a class="btn btn-outline-info btn-sm" href="{{ url_for('blog.show_post', post_id=comment.post.id) }}">Post</a>
                         <form class="inline" method="post"
                               action="{{ url_for('.delete_comment', comment_id=comment.id, next=request.full_path) }}">
                             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-                            <button type="submit" class="btn btn-danger btn-sm"
+                            <button type="submit" class="btn btn-outline-danger btn-sm"
                                     onclick="return confirm('Are you sure?');">Delete
                             </button>
                         </form>

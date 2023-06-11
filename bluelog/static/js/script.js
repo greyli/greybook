@@ -1,8 +1,4 @@
-$(function () {
-    function render_time() {
-        return moment($(this).data('timestamp')).format('lll')
-    }
-    $('[data-toggle="tooltip"]').tooltip(
-        {title: render_time}
-    );
-});
+var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl)
+})

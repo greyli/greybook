@@ -20,6 +20,10 @@ img {
     margin: 20px 0;
 }
 
+.post-body {
+    margin-bottom: 30px;
+}
+
 .reply-body {
     margin-top: 10px;
 }
