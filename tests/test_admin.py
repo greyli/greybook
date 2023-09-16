@@ -39,6 +39,9 @@ class AdminTestCase(BaseTestCase):
         self.assertIn('Hello', data)
         self.assertIn('Blah...', data)
 
+        post = db.session.get(Post, 1)
+        updated_at_before = post.updated_at
+
         response = self.client.post('/admin/post/1/edit', data=dict(
             title='Something Edited',
             category=1,
@@ -48,6 +51,9 @@ class AdminTestCase(BaseTestCase):
         self.assertIn('Post updated.', data)
         self.assertIn('New post body.', data)
         self.assertNotIn('Blah...', data)
+
+        updated_post = db.session.get(Post, 1)
+        self.assertNotEqual(updated_at_before, updated_post.updated_at)
 
     def test_delete_post(self):
         response = self.client.get('/admin/post/1/delete', follow_redirects=True)

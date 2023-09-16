@@ -17,7 +17,7 @@ def index():
     page = request.args.get('page', 1, type=int)
     per_page = current_app.config['BLUELOG_POST_PER_PAGE']
     pagination = db.paginate(
-        select(Post).order_by(Post.timestamp.desc()),
+        select(Post).order_by(Post.created_at.desc()),
         page=page,
         per_page=per_page,
     )
@@ -36,7 +36,7 @@ def show_category(category_id):
     page = request.args.get('page', 1, type=int)
     per_page = current_app.config['BLUELOG_POST_PER_PAGE']
     pagination = db.paginate(
-        select(Post).filter(with_parent(category, Category.posts)).order_by(Post.timestamp.desc()),
+        select(Post).filter(with_parent(category, Category.posts)).order_by(Post.created_at.desc()),
         page=page,
         per_page=per_page,
     )
@@ -50,7 +50,7 @@ def show_post(post_id):
     page = request.args.get('page', 1, type=int)
     per_page = current_app.config['BLUELOG_COMMENT_PER_PAGE']
     pagination = db.paginate(
-        select(Comment).filter(with_parent(post, Post.comments)).filter_by(reviewed=True).order_by(Comment.timestamp.asc()),
+        select(Comment).filter(with_parent(post, Post.comments)).filter_by(reviewed=True).order_by(Comment.created_at.asc()),
         page=page,
         per_page=per_page,
     )
