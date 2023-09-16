@@ -43,7 +43,8 @@ class Post(db.Model):
     id = Column(Integer, primary_key=True)
     title = Column(String(60))
     body = Column(Text)
-    timestamp = Column(DateTime, default=datetime.utcnow, index=True)
+    created_at = Column(DateTime, default=datetime.utcnow, index=True)
+    updated_at = Column(DateTime, onupdate=datetime.utcnow)
     can_comment = Column(Boolean, default=True)
 
     category_id = Column(Integer, ForeignKey('category.id'))
@@ -60,7 +61,7 @@ class Comment(db.Model):
     body = Column(Text)
     from_admin = Column(Boolean, default=False)
     reviewed = Column(Boolean, default=False)
-    timestamp = Column(DateTime, default=datetime.utcnow, index=True)
+    created_at = Column(DateTime, default=datetime.utcnow, index=True)
 
     replied_id = Column(Integer, ForeignKey('comment.id'))
     post_id = Column(Integer, ForeignKey('post.id'))

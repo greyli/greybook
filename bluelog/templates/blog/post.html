@@ -19,15 +19,15 @@
         {% endif %}
       </span>
         </h1>
-        <small>
-            Category: <a
-                href="{{ url_for('.show_category', category_id=post.category.id) }}">{{ post.category.name }}</a><br>
-            Date: {{ moment(post.timestamp).format('LL') }}
-        </small>
     </div>
     <div class="row">
         <div class="col-sm-8">
             <p class="post-body">{{ post.body|safe }}</p>
+            <small>
+                Created at <u>{{ moment(post.created_at).format('LL') }}</u>,
+                last updated at <u>{{ moment(post.updated_at).format('LL') }}</u>, belongs to the <a
+                href="{{ url_for('.show_category', category_id=post.category.id) }}">{{ post.category.name }}</a> category.
+            </small>
             <hr>
             <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target=".postLinkModal">Share
             </button>
@@ -84,8 +84,8 @@
                                         {% if comment.replied %}<span class="badge bg-light">Reply</span>{% endif %}
                                     </h5>
                                     <small data-bs-toggle="tooltip" data-bs-placement="top" data-delay="500"
-                                           data-timestamp="{{ comment.timestamp.strftime('%Y-%m-%dT%H:%M:%SZ') }}">
-                                        {{ moment(comment.timestamp).fromNow() }}
+                                           data-timestamp="{{ comment.created_at.strftime('%Y-%m-%dT%H:%M:%SZ') }}">
+                                        {{ moment(comment.created_at).fromNow() }}
                                     </small>
                                 </div>
                                 {% if comment.replied %}

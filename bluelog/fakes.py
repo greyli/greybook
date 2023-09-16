@@ -41,13 +41,14 @@ def fake_categories(count=10):
 def fake_posts(count=50):
     for _ in range(count):
         category_count = db.session.execute(select(func.count(Category.id))).scalars().one()
+        fake_date = fake.date_time_this_year()
         post = Post(
             title=fake.sentence(),
             body=fake.text(2000),
             category=db.session.get(Category, random.randint(1, category_count)),
-            timestamp=fake.date_time_this_year()
+            created_at=fake_date,
+            updated_at=fake_date
         )
-
         db.session.add(post)
     db.session.commit()
 
@@ -60,7 +61,7 @@ def fake_comments(count=500):
             email=fake.email(),
             site=fake.url(),
             body=fake.sentence(),
-            timestamp=fake.date_time_this_year(),
+            created_at=fake.date_time_this_year(),
             reviewed=random.choice([True, True, True, True, False]),
             from_admin=random.choice([False, False, False, False, True]),
             post=db.session.get(Post, random.randint(1, post_count))
@@ -78,7 +79,7 @@ def fake_replies(count=50):
             email=fake.email(),
             site=fake.url(),
             body=fake.sentence(),
-            timestamp=fake.date_time_this_year(),
+            created_at=fake.date_time_this_year(),
             reviewed=True,
             replied=db.session.get(Comment, random.randint(1, comment_count)),
             post=db.session.get(Post, random.randint(1, post_count))

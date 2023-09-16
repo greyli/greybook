@@ -37,7 +37,7 @@ def settings():
 def manage_post():
     page = request.args.get('page', 1, type=int)
     pagination = db.paginate(
-        select(Post).order_by(Post.timestamp.desc()),
+        select(Post).order_by(Post.created_at.desc()),
         page=page,
         per_page=current_app.config['BLUELOG_MANAGE_POST_PER_PAGE'],
     )
@@ -118,7 +118,7 @@ def manage_comment():
         filtered_comments = select(Comment)
 
     pagination = db.paginate(
-        filtered_comments.order_by(Comment.timestamp.desc()),
+        filtered_comments.order_by(Comment.created_at.desc()),
         page=page,
         per_page=per_page,
     )
