@@ -53,7 +53,7 @@ def new_post():
         title = form.title.data
         body = form.body.data
         category_id = form.category.data
-        post = Post(title=title, body=body, category_id=category_id) 
+        post = Post(title=title, body=body, category_id=category_id)
         db.session.add(post)
         db.session.commit()
         flash('Post created.', 'success')
@@ -109,7 +109,7 @@ def manage_comment():
     filter_rule = request.args.get('filter', 'all')  # 'all', 'unreviewed', 'admin'
     page = request.args.get('page', 1, type=int)
     per_page = current_app.config['BLUELOG_COMMENT_PER_PAGE']
-    
+
     if filter_rule == 'unread':
         filtered_comments = select(Comment).filter_by(reviewed=False)
     elif filter_rule == 'admin':
@@ -133,6 +133,19 @@ def approve_comment(comment_id):
     comment.reviewed = True
     db.session.commit()
     flash('Comment published.', 'success')
+    return redirect_back()
+
+
+@admin_bp.route('/comments/approve', methods=['POST'])
+@login_required
+def approve_all_comment():
+    comments = db.session.execute(
+        select(Comment).filter_by(reviewed=False)
+    ).scalars().all()
+    for comment in comments:
+        comment.reviewed = True
+    db.session.commit()
+    flash('All comments published.', 'success')
     return redirect_back()
 
 

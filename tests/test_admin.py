@@ -120,6 +120,32 @@ class AdminTestCase(BaseTestCase):
         data = response.get_data(as_text=True)
         self.assertIn('I am a guest comment.', data)
 
+    def test_approve_all_comment(self):
+        comment1 = Comment(
+            author='Guest',
+            email='a@b.com',
+            body='Test comment 1.',
+            post=db.session.get(Post, 1),
+        )
+        comment2 = Comment(
+            author='Guest',
+            email='a@b.com',
+            body='Test comment 2.',
+            post=db.session.get(Post, 1),
+        )
+        db.session.add(comment1)
+        db.session.add(comment2)
+        db.session.commit()
+
+        response = self.client.post('/admin/comments/approve', follow_redirects=True)
+        data = response.get_data(as_text=True)
+        self.assertIn('All comments published.', data)
+
+        response = self.client.post('/post/1')
+        data = response.get_data(as_text=True)
+        self.assertIn('Test comment 1.', data)
+        self.assertIn('Test comment 2.', data)
+
     def test_new_category(self):
         response = self.client.get('/admin/category/new')
         data = response.get_data(as_text=True)

@@ -1,4 +1,5 @@
 import random
+from datetime import datetime
 
 from faker import Faker
 from sqlalchemy.exc import IntegrityError
@@ -41,13 +42,20 @@ def fake_categories(count=10):
 def fake_posts(count=50):
     for _ in range(count):
         category_count = db.session.execute(select(func.count(Category.id))).scalars().one()
-        fake_date = fake.date_time_this_year()
+        created_date = fake.date_time_between_dates(
+            datetime_start=datetime(2010, 1, 1),
+            datetime_end=datetime(2020, 1, 1)
+        )
+        updated_date = fake.date_time_between_dates(
+            datetime_start=datetime(2020, 1, 2),
+            datetime_end=datetime(2022, 12, 31)
+        )
         post = Post(
             title=fake.sentence(),
             body=fake.text(2000),
             category=db.session.get(Category, random.randint(1, category_count)),
-            created_at=fake_date,
-            updated_at=fake_date
+            created_at=created_date,
+            updated_at=updated_date
         )
         db.session.add(post)
     db.session.commit()
@@ -61,11 +69,13 @@ def fake_comments(count=500):
             email=fake.email(),
             site=fake.url(),
             body=fake.sentence(),
-            created_at=fake.date_time_this_year(),
+            created_at=fake.date_time_this_year(before_now=True, after_now=False),
             reviewed=random.choice([True, True, True, True, False]),
             from_admin=random.choice([False, False, False, False, True]),
             post=db.session.get(Post, random.randint(1, post_count))
         )
+        if comment.from_admin:
+            comment.reviewed = True
         db.session.add(comment)
     db.session.commit()
 
@@ -73,16 +83,16 @@ def fake_comments(count=500):
 def fake_replies(count=50):
     for _ in range(count):
         comment_count = db.session.execute(select(func.count(Comment.id))).scalars().one()
-        post_count = db.session.execute(select(func.count(Post.id))).scalars().one()
+        replied = db.session.get(Comment, random.randint(1, comment_count))
         comment = Comment(
             author=fake.name(),
             email=fake.email(),
             site=fake.url(),
             body=fake.sentence(),
-            created_at=fake.date_time_this_year(),
+            created_at=fake.date_time_this_year(before_now=False, after_now=True),
             reviewed=True,
-            replied=db.session.get(Comment, random.randint(1, comment_count)),
-            post=db.session.get(Post, random.randint(1, post_count))
+            replied=replied,
+            post=replied.post
         )
         db.session.add(comment)
     db.session.commit()
