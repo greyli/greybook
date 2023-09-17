@@ -102,8 +102,12 @@
 
 {% block scripts %}
     <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/customParseFormat.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/relativeTime.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/utc.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/localizedFormat.js"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/script.js') }}"></script>
-    {{ moment.include_moment(local_js=url_for('static', filename='js/moment-with-locales.min.js')) }}
 {% endblock %}
 </body>
 </html>

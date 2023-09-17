@@ -39,7 +39,6 @@ flask==2.3.2
     #   flask-login
     #   flask-mailman
     #   flask-migrate
-    #   flask-moment
     #   flask-sqlalchemy
     #   flask-wtf
 flask-ckeditor==0.4.6
@@ -51,8 +50,6 @@ flask-login==0.6.2
 flask-mailman==0.3.0
     # via -r requirements.in
 flask-migrate==4.0.4
-    # via -r requirements.in
-flask-moment==1.0.5
     # via -r requirements.in
 flask-sqlalchemy==3.0.3
     # via
@@ -88,7 +85,6 @@ mkdocs-material-extensions==1.1.1
 packaging==23.1
     # via
     #   build
-    #   flask-moment
     #   pytest
 pip-tools==6.13.0
     # via -r requirements.in

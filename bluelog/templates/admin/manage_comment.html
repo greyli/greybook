@@ -57,7 +57,7 @@
                         {% endif %}
                     </td>
                     <td>{{ comment.body }}</td>
-                    <td>{{ moment(comment.created_at).format('LL') }}</td>
+                    <td class="dayjs">{{ comment.created_at }}</td>
                     <td>
                         {% if not comment.reviewed %}
                             <form class="inline" method="post"

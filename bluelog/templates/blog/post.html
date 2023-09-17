@@ -22,10 +22,10 @@
     </div>
     <div class="row">
         <div class="col-sm-8">
-            <p class="post-body">{{ post.body|safe }}</p>
+            <div class="post-body">{{ post.body|safe }}</div>
             <small>
-                Created at <u>{{ moment(post.created_at).format('LL') }}</u>,
-                last updated at <u>{{ moment(post.updated_at).format('LL') }}</u>, belongs to the <a
+                Created at <u class="dayjs">{{ post.created_at }}</u>,
+                last updated at <u class="dayjs">{{ post.updated_at }}</u>, belongs to the <a
                 href="{{ url_for('.show_category', category_id=post.category.id) }}">{{ post.category.name }}</a> category.
             </small>
             <hr>
@@ -83,9 +83,9 @@
                                         {% if comment.from_admin %}<span class="badge bg-primary">Author</span>{% endif %}
                                         {% if comment.replied %}<span class="badge bg-light">Reply</span>{% endif %}
                                     </h5>
-                                    <small data-bs-toggle="tooltip" data-bs-placement="top" data-delay="500"
+                                    <small class="dayjs-tooltip" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay="500"
                                            data-timestamp="{{ comment.created_at.strftime('%Y-%m-%dT%H:%M:%SZ') }}">
-                                        {{ moment(comment.created_at).fromNow() }}
+                                        <span class="dayjs-from-now">{{ comment.created_at }}</span>
                                     </small>
                                 </div>
                                 {% if comment.replied %}
