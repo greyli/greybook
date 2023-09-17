@@ -11,7 +11,7 @@
             Comments: <a href="{{ url_for('.show_post', post_id=post.id) }}#comments">{{ post.comments|length }}</a>&nbsp;&nbsp;
             Category: <a
                 href="{{ url_for('.show_category', category_id=post.category.id) }}">{{ post.category.name }}</a>
-            <span class="float-end">{{ moment(post.created_at).format('LL') }}</span>
+            <span class="float-end dayjs">{{ post.created_at }}</span>
         </small>
         {% if not loop.last %}
             <hr>

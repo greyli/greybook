@@ -102,8 +102,12 @@
 
 {% block scripts %}
     <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/script.js') }}"></script>
-    {{ moment.include_moment(local_js=url_for('static', filename='js/moment-with-locales.min.js')) }}
+    <script type="text/javascript" src="{{ url_for('static', filename='js/dayjs/dayjs.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/dayjs/plugin/customParseFormat.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/dayjs/plugin/relativeTime.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/dayjs/plugin/utc.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/dayjs/plugin/localizedFormat.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/main.js') }}"></script>
 {% endblock %}
 </body>
 </html>

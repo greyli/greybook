@@ -12,7 +12,7 @@ from sqlalchemy import select, func
 from bluelog.views.admin import admin_bp
 from bluelog.views.auth import auth_bp
 from bluelog.views.blog import blog_bp
-from bluelog.extensions import bootstrap, db, login_manager, csrf, ckeditor, mail, moment, toolbar, migrate
+from bluelog.extensions import bootstrap, db, login_manager, csrf, ckeditor, mail, toolbar, migrate
 from bluelog.models import Admin, Post, Category, Comment, Link
 from bluelog.settings import config
 
@@ -75,7 +75,6 @@ def register_extensions(app):
     csrf.init_app(app)
     ckeditor.init_app(app)
     mail.init_app(app)
-    moment.init_app(app)
     toolbar.init_app(app)
     migrate.init_app(app, db)
 

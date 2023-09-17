@@ -6,7 +6,6 @@ flask-sqlalchemy
 flask-migrate
 flask-debugtoolbar
 bootstrap-flask
-flask-moment
 flask-ckeditor
 email-validator
 python-dotenv
