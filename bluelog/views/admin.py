@@ -86,7 +86,7 @@ def delete_post(post_id):
     db.session.delete(post)
     db.session.commit()
     flash('Post deleted.', 'success')
-    return redirect_back()
+    return redirect(url_for('.manage_post'))
 
 
 @admin_bp.route('/post/<int:post_id>/set-comment', methods=['POST'])
@@ -133,7 +133,7 @@ def approve_comment(comment_id):
     comment.reviewed = True
     db.session.commit()
     flash('Comment published.', 'success')
-    return redirect_back()
+    return redirect(url_for('.manage_comment'))
 
 
 @admin_bp.route('/comments/approve', methods=['POST'])
@@ -146,7 +146,7 @@ def approve_all_comment():
         comment.reviewed = True
     db.session.commit()
     flash('All comments published.', 'success')
-    return redirect_back()
+    return redirect(url_for('.manage_comment'))
 
 
 @admin_bp.route('/comment/<int:comment_id>/delete', methods=['POST'])
@@ -156,7 +156,7 @@ def delete_comment(comment_id):
     db.session.delete(comment)
     db.session.commit()
     flash('Comment deleted.', 'success')
-    return redirect_back()
+    return redirect(url_for('.manage_comment'))
 
 
 @admin_bp.route('/category/manage')
