@@ -52,6 +52,9 @@ class Post(db.Model):
     category = relationship('Category', back_populates='posts')
     comments = relationship('Comment', back_populates='post', cascade='all, delete-orphan')
 
+    @property
+    def reviewed_comments_count(self):
+        return len([comment for comment in self.comments if comment.reviewed])
 
 class Comment(db.Model):
     id = Column(Integer, primary_key=True)
