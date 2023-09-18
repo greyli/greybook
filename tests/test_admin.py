@@ -1,3 +1,6 @@
+import os
+from unittest.mock import patch, call
+
 from bluelog.models import Post, Category, Link, Comment
 from bluelog.extensions import db
 
@@ -75,6 +78,21 @@ class AdminTestCase(BaseTestCase):
         response = self.client.post('/admin/post/1/delete', follow_redirects=True)
         data = response.get_data(as_text=True)
         self.assertIn('Post deleted.', data)
+
+    @patch('os.remove')
+    @patch('os.path.exists')
+    def test_delete_post_with_images(self, mock_exists, mock_remove):
+        post = db.session.get(Post, 1)
+        post.body = '<img src="/uploads/test.png"> <img alt="" src="/uploads/test2.png">'
+        db.session.commit()
+
+        image_path = os.path.join(self.app.config['BLUELOG_UPLOAD_PATH'], 'test.png')
+        image_path2 = os.path.join(self.app.config['BLUELOG_UPLOAD_PATH'], 'test2.png')
+
+        mock_exists.return_value = True
+        self.client.post('/admin/post/1/delete')
+        self.assertEqual(os.remove.call_count, 2)
+        mock_remove.assert_has_calls([call(image_path), call(image_path2)])
 
     def test_delete_comment(self):
         response = self.client.get('/admin/comment/1/delete', follow_redirects=True)
@@ -228,6 +246,9 @@ class AdminTestCase(BaseTestCase):
         self.assertIn('Category deleted.', data)
         self.assertIn('Default', data)
         self.assertNotIn('Tech', data)
+
+        post = db.session.get(Post, 2)
+        self.assertEqual(post.category_id, 1)
 
     def test_new_link(self):
         response = self.client.get('/admin/link/new')

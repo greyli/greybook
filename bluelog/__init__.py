@@ -3,7 +3,7 @@ import os
 from logging.handlers import SMTPHandler, RotatingFileHandler
 
 import click
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, current_app
 from flask_login import current_user
 from flask_sqlalchemy.record_queries import get_recorded_queries
 from flask_wtf.csrf import CSRFError
@@ -176,6 +176,12 @@ def register_commands(app):
             db.session.add(category)
 
         db.session.commit()
+
+        upload_path = os.path.join(basedir, current_app.config['BLUELOG_UPLOAD_PATH'])
+        if not os.path.exists(upload_path):
+            click.echo('Creating the upload folder...')
+            os.makedirs(upload_path)
+
         click.echo('Done.')
 
     @app.cli.command()

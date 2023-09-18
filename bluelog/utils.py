@@ -1,3 +1,6 @@
+import os
+import uuid
+
 try:
     from urlparse import urlparse, urljoin
 except ImportError:
@@ -24,3 +27,9 @@ def redirect_back(default='blog.index', **kwargs):
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in current_app.config['BLUELOG_ALLOWED_IMAGE_EXTENSIONS']
+
+
+def random_filename(old_filename):
+    ext = os.path.splitext(old_filename)[1]
+    new_filename = uuid.uuid4().hex + ext
+    return new_filename
