@@ -25,10 +25,11 @@ def settings():
         db.session.commit()
         flash('Setting updated.', 'success')
         return redirect(url_for('blog.index'))
-    form.name.data = current_user.name
-    form.blog_title.data = current_user.blog_title
-    form.blog_sub_title.data = current_user.blog_sub_title
-    form.about.data = current_user.about
+    if request.method == 'GET':
+        form.name.data = current_user.name
+        form.blog_title.data = current_user.blog_title
+        form.blog_sub_title.data = current_user.blog_sub_title
+        form.about.data = current_user.about
     return render_template('admin/settings.html', form=form)
 
 
@@ -73,9 +74,10 @@ def edit_post(post_id):
         db.session.commit()
         flash('Post updated.', 'success')
         return redirect(url_for('blog.show_post', post_id=post.id))
-    form.title.data = post.title
-    form.body.data = post.body
-    form.category.data = post.category_id
+    if request.method == 'GET':
+        form.title.data = post.title
+        form.body.data = post.body
+        form.category.data = post.category_id
     return render_template('admin/edit_post.html', form=form)
 
 
@@ -193,7 +195,8 @@ def edit_category(category_id):
         flash('Category updated.', 'success')
         return redirect(url_for('.manage_category'))
 
-    form.name.data = category.name
+    if request.method == 'GET':
+        form.name.data = category.name
     return render_template('admin/edit_category.html', form=form)
 
 
@@ -241,8 +244,9 @@ def edit_link(link_id):
         db.session.commit()
         flash('Link updated.', 'success')
         return redirect(url_for('.manage_link'))
-    form.name.data = link.name
-    form.url.data = link.url
+    if request.method == 'GET':
+        form.name.data = link.name
+        form.url.data = link.url
     return render_template('admin/edit_link.html', form=form)
 
 

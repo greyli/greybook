@@ -55,6 +55,17 @@ class AdminTestCase(BaseTestCase):
         updated_post = db.session.get(Post, 1)
         self.assertNotEqual(updated_at_before, updated_post.updated_at)
 
+    def test_save_edited_post_when_validation_failed(self):
+        response = self.client.post('/admin/post/1/edit', data=dict(
+            title='Something Edited',
+            category=1,
+            body='  '
+        ), follow_redirects=True)
+        data = response.get_data(as_text=True)
+        self.assertIn('Edit Post', data)
+        self.assertIn('This field is required', data)
+        self.assertIn('Something Edited', data)
+
     def test_delete_post(self):
         response = self.client.get('/admin/post/1/delete', follow_redirects=True)
         data = response.get_data(as_text=True)
