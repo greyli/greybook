@@ -1,6 +1,6 @@
 import os
 
-from flask import render_template, flash, redirect, url_for, request, current_app, Blueprint, send_from_directory
+from flask import render_template, flash, redirect, url_for, request, current_app, Blueprint
 from flask_login import login_required, current_user
 from flask_ckeditor import upload_success, upload_fail
 from sqlalchemy import select
@@ -8,7 +8,7 @@ from sqlalchemy import select
 from bluelog.extensions import db
 from bluelog.forms import SettingForm, PostForm, CategoryForm, LinkForm
 from bluelog.models import Post, Category, Comment, Link
-from bluelog.utils import redirect_back, allowed_file
+from bluelog.utils import redirect_back, allowed_file, random_filename
 
 admin_bp = Blueprint('admin', __name__)
 
@@ -85,8 +85,7 @@ def edit_post(post_id):
 @login_required
 def delete_post(post_id):
     post = db.get_or_404(Post, post_id)
-    db.session.delete(post)
-    db.session.commit()
+    post.delete()
     flash('Post deleted.', 'success')
     return redirect(url_for('.manage_post'))
 
@@ -260,16 +259,13 @@ def delete_link(link_id):
     return redirect(url_for('.manage_link'))
 
 
-@admin_bp.route('/uploads/<path:filename>')
-def get_image(filename):
-    return send_from_directory(current_app.config['BLUELOG_UPLOAD_PATH'], filename)
-
-
 @admin_bp.route('/upload', methods=['POST'])
+@login_required
 def upload_image():
     f = request.files.get('upload')
     if not allowed_file(f.filename):
         return upload_fail('Image only!')
-    f.save(os.path.join(current_app.config['BLUELOG_UPLOAD_PATH'], f.filename))
-    url = url_for('.get_image', filename=f.filename)
-    return upload_success(url, f.filename)
+    filename = random_filename(f.filename)
+    f.save(os.path.join(current_app.config['BLUELOG_UPLOAD_PATH'], filename))
+    url = url_for('blog.get_image', filename=filename)
+    return upload_success(url, filename)

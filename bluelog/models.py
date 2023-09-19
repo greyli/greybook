@@ -1,9 +1,12 @@
+import os
+import re
 from datetime import datetime
 
 from sqlalchemy import Column, Integer, String, Text, ForeignKey, Boolean, DateTime
 from sqlalchemy.orm import relationship
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask import current_app, url_for
 
 from bluelog.extensions import db
 
@@ -55,6 +58,16 @@ class Post(db.Model):
     @property
     def reviewed_comments_count(self):
         return len([comment for comment in self.comments if comment.reviewed])
+
+    def delete(self):
+        upload_path = current_app.config['BLUELOG_UPLOAD_PATH']
+        upload_url = url_for('blog.get_image', filename='')
+        images = re.findall(rf'<img.*?src="{upload_url}(.*?)"', self.body)
+        for image in images:
+            file_path = os.path.join(upload_path, image)
+            if os.path.exists(file_path):
+                os.remove(file_path)
+
 
 class Comment(db.Model):
     id = Column(Integer, primary_key=True)

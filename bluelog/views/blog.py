@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for, request, current_app, Blueprint, abort, make_response
+from flask import render_template, flash, redirect, url_for, request, current_app, Blueprint, abort, make_response, send_from_directory
 from flask_login import current_user
 from sqlalchemy import select
 from sqlalchemy.orm import with_parent
@@ -110,3 +110,8 @@ def change_theme(theme_name):
     response = make_response(redirect_back())
     response.set_cookie('theme', theme_name, max_age=30 * 24 * 60 * 60)
     return response
+
+
+@blog_bp.route('/uploads/<path:filename>')
+def get_image(filename):
+    return send_from_directory(current_app.config['BLUELOG_UPLOAD_PATH'], filename)
