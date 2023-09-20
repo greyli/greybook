@@ -11,7 +11,8 @@ function renderAllDatetime() {
   const elements = document.querySelectorAll('.dayjs')
   elements.forEach(elem => {
     const date = dayjs.utc(elem.innerHTML)
-    elem.innerHTML = date.format('LL')
+    const format = elem.dataset.format ?? 'LL'
+    elem.innerHTML = date.format(format)
   })
   // render from now time
   const fromNowElements = document.querySelectorAll('.dayjs-from-now')
@@ -23,7 +24,8 @@ function renderAllDatetime() {
   const toolTipElements = document.querySelectorAll('.dayjs-tooltip')
   toolTipElements.forEach(elem => {
     const date = dayjs.utc(elem.dataset.timestamp)
-    elem.dataset.bsTitle = date.local().format('LLL')
+    const format = elem.dataset.format ?? 'LLL'
+    elem.dataset.bsTitle = date.local().format(format)
     const tooltip = new bootstrap.Tooltip(elem)
   })
 }
