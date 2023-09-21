@@ -1,5 +1,5 @@
 from bluelog.models import Post, Category, Link, Comment
-from bluelog.extensions import db
+from bluelog.core.extensions import db
 
 from tests.base import BaseTestCase
 

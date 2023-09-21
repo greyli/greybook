@@ -2,7 +2,7 @@ import os
 from unittest.mock import patch, call
 
 from bluelog.models import Post, Category, Link, Comment
-from bluelog.extensions import db
+from bluelog.core.extensions import db
 
 from tests.base import BaseTestCase
 

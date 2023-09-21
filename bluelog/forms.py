@@ -1,12 +1,12 @@
 from flask_ckeditor import CKEditorField
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, SelectField, TextAreaField, ValidationError, HiddenField, \
-    BooleanField, PasswordField
+from wtforms import StringField, SubmitField, SelectField, TextAreaField, \
+    ValidationError, HiddenField, BooleanField, PasswordField
 from wtforms.validators import DataRequired, Email, Length, Optional, URL
 from sqlalchemy import select
 
 from bluelog.models import Category
-from bluelog.extensions import db
+from bluelog.core.extensions import db
 
 
 class LoginForm(FlaskForm):
@@ -31,7 +31,7 @@ class PostForm(FlaskForm):
     submit = SubmitField()
 
     def __init__(self, *args, **kwargs):
-        super(PostForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.category.choices = [
             (category.id, category.name)
             for category in db.session.execute(

@@ -2,13 +2,14 @@ import os
 import re
 from datetime import datetime
 
-from sqlalchemy import Column, Integer, String, Text, ForeignKey, Boolean, DateTime
+from sqlalchemy import Column, Integer, String, Text, ForeignKey, \
+    Boolean, DateTime
 from sqlalchemy.orm import relationship
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import current_app, url_for
 
-from bluelog.extensions import db
+from bluelog.core.extensions import db
 
 
 class Admin(db.Model, UserMixin):

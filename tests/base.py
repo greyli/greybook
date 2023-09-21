@@ -1,7 +1,7 @@
 import unittest
 
 from bluelog import create_app
-from bluelog.extensions import db
+from bluelog.core.extensions import db
 from bluelog.models import Admin
 
 
