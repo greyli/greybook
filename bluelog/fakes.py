@@ -5,7 +5,7 @@ from faker import Faker
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import select, func
 
-from bluelog.extensions import db
+from bluelog.core.extensions import db
 from bluelog.models import Admin, Category, Post, Comment, Link
 
 fake = Faker()

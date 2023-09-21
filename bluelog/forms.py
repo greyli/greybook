@@ -6,7 +6,7 @@ from wtforms.validators import DataRequired, Email, Length, Optional, URL
 from sqlalchemy import select
 
 from bluelog.models import Category
-from bluelog.extensions import db
+from bluelog.core.extensions import db
 
 
 class LoginForm(FlaskForm):

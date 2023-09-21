@@ -6,7 +6,7 @@ from flask_login import login_required, current_user
 from flask_ckeditor import upload_success, upload_fail
 from sqlalchemy import select
 
-from bluelog.extensions import db
+from bluelog.core.extensions import db
 from bluelog.forms import SettingForm, PostForm, CategoryForm, LinkForm
 from bluelog.models import Post, Category, Comment, Link
 from bluelog.utils import redirect_back, allowed_file, random_filename

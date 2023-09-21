@@ -5,7 +5,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import with_parent
 
 from bluelog.emails import send_new_comment_email, send_new_reply_email
-from bluelog.extensions import db
+from bluelog.core.extensions import db
 from bluelog.forms import CommentForm, AdminCommentForm
 from bluelog.models import Post, Category, Comment
 from bluelog.utils import redirect_back
