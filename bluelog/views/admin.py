@@ -1,6 +1,7 @@
 import os
 
-from flask import render_template, flash, redirect, url_for, request, current_app, Blueprint
+from flask import render_template, flash, redirect, url_for, request, \
+    current_app, Blueprint
 from flask_login import login_required, current_user
 from flask_ckeditor import upload_success, upload_fail
 from sqlalchemy import select
@@ -107,7 +108,7 @@ def set_comment(post_id):
 @admin_bp.route('/comment/manage')
 @login_required
 def manage_comment():
-    filter_rule = request.args.get('filter', 'all')  # 'all', 'unreviewed', 'admin'
+    filter_rule = request.args.get('filter', 'all')  # 'all', 'unread', 'admin'
     page = request.args.get('page', 1, type=int)
     per_page = current_app.config['BLUELOG_COMMENT_PER_PAGE']
 

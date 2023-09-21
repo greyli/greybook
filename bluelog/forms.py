@@ -1,7 +1,7 @@
 from flask_ckeditor import CKEditorField
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, SelectField, TextAreaField, ValidationError, HiddenField, \
-    BooleanField, PasswordField
+from wtforms import StringField, SubmitField, SelectField, TextAreaField, \
+    ValidationError, HiddenField, BooleanField, PasswordField
 from wtforms.validators import DataRequired, Email, Length, Optional, URL
 from sqlalchemy import select
 

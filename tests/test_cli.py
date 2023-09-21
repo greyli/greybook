@@ -49,13 +49,22 @@ class CommandTestCase(BaseTestCase):
         self.assertEqual(db.session.execute(select(func.count(Admin.id))).scalars().one(), 1)
         self.assertIn('Generating the administrator...', result.output)
 
-        self.assertEqual(db.session.execute(select(func.count(Post.id))).scalars().one(), default_post_count)
+        self.assertEqual(
+            db.session.execute(select(func.count(Post.id))).scalars().one(),
+            default_post_count
+        )
         self.assertIn(f'Generating {default_post_count} posts...', result.output)
 
-        self.assertEqual(db.session.execute(select(func.count(Category.id))).scalars().one(), default_category_count)
+        self.assertEqual(db.session.execute(
+            select(func.count(Category.id))).scalars().one(),
+            default_category_count
+        )
         self.assertIn(f'Generating {default_category_count} categories...', result.output)
 
-        self.assertEqual(db.session.execute(select(func.count(Comment.id))).scalars().one(), default_comment_count + default_reply_count)
+        self.assertEqual(
+            db.session.execute(select(func.count(Comment.id))).scalars().one(),
+            default_comment_count + default_reply_count
+        )
         self.assertIn(f'Generating {default_comment_count} comments...', result.output)
         self.assertIn(f'Generating {default_reply_count} replies...', result.output)
 
@@ -87,7 +96,10 @@ class CommandTestCase(BaseTestCase):
         self.assertEqual(db.session.execute(select(func.count(Post.id))).scalars().one(), post_count)
         self.assertIn(f'Generating {post_count} posts...', result.output)
 
-        self.assertEqual(db.session.execute(select(func.count(Comment.id))).scalars().one(), comment_count + reply_count)
+        self.assertEqual(
+            db.session.execute(select(func.count(Comment.id))).scalars().one(),
+            comment_count + reply_count
+        )
         self.assertIn(f'Generating {comment_count} comments...', result.output)
         self.assertIn(f'Generating {reply_count} replies...', result.output)
 

@@ -1,4 +1,5 @@
-from flask import render_template, flash, redirect, url_for, request, current_app, Blueprint, abort, make_response, send_from_directory
+from flask import render_template, flash, redirect, url_for, request, \
+    current_app, Blueprint, abort, make_response, send_from_directory
 from flask_login import current_user
 from sqlalchemy import select
 from sqlalchemy.orm import with_parent
@@ -50,7 +51,10 @@ def show_post(post_id):
     page = request.args.get('page', 1, type=int)
     per_page = current_app.config['BLUELOG_COMMENT_PER_PAGE']
     pagination = db.paginate(
-        select(Comment).filter(with_parent(post, Post.comments)).filter_by(reviewed=True).order_by(Comment.created_at.asc()),
+        select(Comment)
+        .filter(with_parent(post, Post.comments))
+        .filter_by(reviewed=True)
+        .order_by(Comment.created_at.asc()),
         page=page,
         per_page=per_page,
     )
@@ -99,7 +103,13 @@ def reply_comment(comment_id):
         flash('Comment is disabled.', 'warning')
         return redirect(url_for('.show_post', post_id=comment.post.id))
     return redirect(
-        url_for('.show_post', post_id=comment.post_id, reply=comment_id, author=comment.author) + '#comment-form')
+        url_for(
+            '.show_post',
+            post_id=comment.post_id,
+            reply=comment_id,
+            author=comment.author
+        ) + '#comment-form'
+    )
 
 
 @blog_bp.route('/change-theme/<theme_name>')
