@@ -40,7 +40,7 @@ def register_logging(app):
         def format(self, record):
             record.url = request.url
             record.remote_addr = request.remote_addr
-            return super(RequestFormatter, self).format(record)
+            return super().format(record)
 
     request_formatter = RequestFormatter(
         '[%(asctime)s] %(remote_addr)s requested %(url)s\n'
@@ -199,16 +199,16 @@ def register_commands(app):
         click.echo('Generating the administrator...')
         fake_admin()
 
-        click.echo('Generating %d categories...' % category)
+        click.echo(f'Generating {category} categories...')
         fake_categories(category)
 
-        click.echo('Generating %d posts...' % post)
+        click.echo(f'Generating {post} posts...')
         fake_posts(post)
 
-        click.echo('Generating %d comments...' % comment)
+        click.echo(f'Generating {comment} comments...')
         fake_comments(comment)
 
-        click.echo('Generating %d replies...' % reply)
+        click.echo(f'Generating {reply} replies...')
         fake_replies(reply)
 
         click.echo('Generating links...')
@@ -223,7 +223,7 @@ def register_request_handlers(app):
         for q in get_recorded_queries():
             if q.duration >= app.config['BLUELOG_SLOW_QUERY_THRESHOLD']:
                 app.logger.warning(
-                    'Slow query: Duration: %fs\n Context: %s\nQuery: %s\n '
-                    % (q.duration, q.context, q.statement)
+                    'Slow query: Duration: '
+                    f'{q.duration:f}s\n Context: {q.context}\nQuery: {q.statement}\n'
                 )
         return response
