@@ -99,9 +99,9 @@ def fake_replies(count=50):
 
 
 def fake_links():
-    twitter = Link(name='Twitter', url='https://twitter.com')
-    facebook = Link(name='Facebook', url='https://facebook.com')
-    linkedin = Link(name='LinkedIn', url='https://linkedin.com')
-    google = Link(name='Google', url='https://google.com')
+    facebook = Link(name='GitHub', url='https://github.com/greyli')
+    twitter = Link(name='Twitter', url='https://twitter.com/greylihui')
+    linkedin = Link(name='LinkedIn', url='https://www.linkedin.com/in/greyli/')
+    google = Link(name='Stack Overflow', url='https://stackoverflow.com/users/5511849/grey-li')
     db.session.add_all([twitter, facebook, linkedin, google])
     db.session.commit()
