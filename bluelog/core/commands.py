@@ -16,9 +16,10 @@ def register_commands(app):
         if drop:
             click.confirm('This operation will delete the database, do you want to continue?', abort=True)
             db.drop_all()
-            click.echo('Drop tables.')
+            click.echo('Dropped tables.')
         db.create_all()
-        click.echo('Initialized database.')
+        click.echo('Initialized the database.')
+
 
     @app.cli.command()
     @click.option('--username', prompt=True, help='The username used to login.')
@@ -27,16 +28,15 @@ def register_commands(app):
     def init(username, password):
         """Building Bluelog, just for you."""
 
-        click.echo('Initializing the database...')
         db.create_all()
+        click.echo('Initialized the database.')
 
         admin = db.session.execute(select(Admin)).scalar()
         if admin is not None:
-            click.echo('The administrator already exists, updating...')
             admin.username = username
             admin.set_password(password)
+            click.echo('Updated the existing administrator account.')
         else:
-            click.echo('Creating the temporary administrator account...')
             admin = Admin(
                 username=username,
                 blog_title='Bluelog',
@@ -46,21 +46,21 @@ def register_commands(app):
             )
             admin.set_password(password)
             db.session.add(admin)
+            click.echo('Created the temporary administrator account.')
 
         category = db.session.execute(select(Category)).scalar()
         if category is None:
-            click.echo('Creating the default category...')
             category = Category(name='Default')
             db.session.add(category)
+            click.echo('Created the default category.')
 
         db.session.commit()
 
         upload_path = os.path.join(current_app.config['BLUELOG_UPLOAD_PATH'])
         if not os.path.exists(upload_path):
-            click.echo('Creating the upload folder...')
             os.makedirs(upload_path)
+            click.echo('Created the upload folder.')
 
-        click.echo('Done.')
 
     @app.cli.command()
     @click.option('--category', default=10, help='Quantity of categories, default is 10.')
@@ -75,22 +75,20 @@ def register_commands(app):
         db.drop_all()
         db.create_all()
 
-        click.echo('Generating the administrator...')
+        click.echo('Generated the administrator.')
         fake_admin()
 
-        click.echo(f'Generating {category} categories...')
         fake_categories(category)
+        click.echo(f'Generated {category} categories.')
 
-        click.echo(f'Generating {post} posts...')
         fake_posts(post)
+        click.echo(f'Generated {post} posts.')
 
-        click.echo(f'Generating {comment} comments...')
         fake_comments(comment)
+        click.echo(f'Generated {comment} comments.')
 
-        click.echo(f'Generating {reply} replies...')
         fake_replies(reply)
+        click.echo(f'Generated {reply} replies.')
 
-        click.echo('Generating links...')
         fake_links()
-
-        click.echo('Done.')
+        click.echo('Generated links.')
