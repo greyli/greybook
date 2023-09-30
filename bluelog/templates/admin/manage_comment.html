@@ -9,10 +9,11 @@
     <small class="text-muted">{{ pagination.total }}</small>
     {% if request.args.get('filter') == 'unread' %}
     <span class="float-end">
-      <form class="inline" method="post"
-        action="{{ url_for('.approve_all_comment') }}">
+      <form class="inline" method="post" action="{{ url_for('.approve_all_comment') }}">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-        <button type="submit" class="btn btn-outline-success btn-sm" onclick="return confirm('Are you sure?');">Approve All
+        <button type="submit" class="btn btn-outline-success btn-sm"
+            onclick="return confirm('Are you sure?');">
+          Approve All
         </button>
       </form>
     </span>
@@ -28,12 +29,20 @@
     </li>
     <li class="nav-item">
       <a class="nav-link {% if request.args.get('filter') == 'unread' %}active{% endif %}"
-        href="{{ url_for('admin.manage_comment', filter='unread') }}">Unread {% if unread_comments %}<span
-          class="badge text-bg-success rounded-pill">{{ unread_comments }}</span>{% endif %}</a>
+          href="{{ url_for('admin.manage_comment', filter='unread') }}">
+        Unread
+        {% if unread_comments %}
+        <span class="badge text-bg-success rounded-pill">
+          {{ unread_comments }}
+        </span>
+        {% endif %}
+      </a>
     </li>
     <li class="nav-item">
       <a class="nav-link {% if request.args.get('filter') == 'admin' %}active{% endif %}"
-        href="{{ url_for('admin.manage_comment', filter='admin') }}">From Admin</a>
+          href="{{ url_for('admin.manage_comment', filter='admin') }}">
+        From Admin
+      </a>
     </li>
   </ul>
 </div>
@@ -73,18 +82,25 @@
         <button type="submit" class="btn btn-outline-success btn-sm">Approve</button>
       </form>
       {% endif %}
-      <a class="btn btn-outline-info btn-sm" href="{{ url_for('blog.show_post', post_id=comment.post.id) }}">Post</a>
+      <a class="btn btn-outline-info btn-sm"
+          href="{{ url_for('blog.show_post', post_id=comment.post.id) }}">
+          Post
+      </a>
       <form class="inline" method="post"
-        action="{{ url_for('.delete_comment', comment_id=comment.id, next=request.full_path) }}">
+          action="{{ url_for('.delete_comment', comment_id=comment.id, next=request.full_path) }}">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-        <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Are you sure?');">Delete
+        <button type="submit" class="btn btn-outline-danger btn-sm"
+            onclick="return confirm('Are you sure?');">
+          Delete
         </button>
       </form>
     </td>
   </tr>
   {% endfor %}
 </table>
-<div class="page-footer">{{ render_pagination(pagination) }}</div>
+<div class="page-footer">
+  {{ render_pagination(pagination) }}
+</div>
 {% else %}
 <div class="tip">
   <h5>No comments.</h5>

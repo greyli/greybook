@@ -4,7 +4,9 @@
   <ul class="list-group list-group-flush">
     {% for link in links %}
     <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-      <a class="text-decoration-none" href="{{ link.url }}" target="_blank">{{ link.name }}</a>
+      <a class="text-decoration-none" href="{{ link.url }}" target="_blank">
+        {{ link.name }}
+      </a>
     </li>
     {% endfor %}
   </ul>
@@ -16,7 +18,8 @@
   <ul class="list-group list-group-flush">
     {% for category in categories %}
     <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-      <a class="text-decoration-none" href="{{ url_for('blog.show_category', category_id=category.id) }}">
+      <a class="text-decoration-none"
+          href="{{ url_for('blog.show_category', category_id=category.id) }}">
         {{ category.name }}
       </a>
       <span class="badge text-bg-primary rounded-pill"> {{ category.posts|length }}</span>
@@ -26,15 +29,19 @@
 </div>
 {% endif %}
 <div class="dropdown">
-  <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown"
-    aria-haspopup="true" aria-expanded="false">
+  <button class="btn btn-light dropdown-toggle" type="button"
+      id="dropdownMenuButton" data-bs-toggle="dropdown"
+      aria-haspopup="true" aria-expanded="false">
     Change Theme
   </button>
   <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
     {% for theme_name, display_name in config.BLUELOG_THEMES.items() %}
-    <li><a class="dropdown-item"
-        href="{{ url_for('blog.change_theme', theme_name=theme_name, next=request.full_path) }}">
-        {{ display_name }}</a></li>
+    <li>
+      <a class="dropdown-item"
+          href="{{ url_for('blog.change_theme', theme_name=theme_name, next=request.full_path) }}">
+        {{ display_name }}
+      </a>
+    </li>
     {% endfor %}
   </ul>
 </div>

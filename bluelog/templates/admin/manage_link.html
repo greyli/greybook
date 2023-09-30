@@ -28,10 +28,13 @@
     <td>{{ link.name }}</td>
     <td><a href="{{ link.url }}" target="_blank">{{ link.url }}</a></td>
     <td>
-      <a class="btn btn-outline-info btn-sm" href="{{ url_for('.edit_link', link_id=link.id) }}">Edit</a>
+      <a class="btn btn-outline-info btn-sm"
+          href="{{ url_for('.edit_link', link_id=link.id) }}">Edit</a>
       <form class="inline" method="post" action="{{ url_for('.delete_link', link_id=link.id) }}">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-        <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Are you sure?');">Delete
+        <button type="submit" class="btn btn-outline-danger btn-sm"
+            onclick="return confirm('Are you sure?');">
+          Delete
         </button>
       </form>
     </td>

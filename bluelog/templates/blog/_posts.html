@@ -1,15 +1,25 @@
 {% if posts %}
 {% for post in posts %}
 <h3 class="text-primary">
-  <a class="text-decoration-none" href="{{ url_for('.show_post', post_id=post.id) }}">{{ post.title }}</a>
+  <a class="text-decoration-none" href="{{ url_for('.show_post', post_id=post.id) }}">
+    {{ post.title }}
+  </a>
 </h3>
 <p>
   {{ post.body|striptags|truncate }}
-  <small><a href="{{ url_for('.show_post', post_id=post.id) }}">Read More</a></small>
+  <small>
+    <a href="{{ url_for('.show_post', post_id=post.id) }}">Read More</a>
+  </small>
 </p>
 <small>
-  Comments: <a href="{{ url_for('.show_post', post_id=post.id) }}#comments">{{ post.reviewed_comments_count }}</a>&nbsp;&nbsp;
-  Category: <a href="{{ url_for('.show_category', category_id=post.category.id) }}">{{ post.category.name }}</a>
+  Comments:
+  <a href="{{ url_for('.show_post', post_id=post.id) }}#comments">
+    {{ post.reviewed_comments_count }}
+  </a>&nbsp;&nbsp;
+  Category:
+  <a href="{{ url_for('.show_category', category_id=post.category.id) }}">
+    {{ post.category.name }}
+  </a>
   <span class="float-end dayjs">{{ post.created_at }}</span>
 </small>
 {% if not loop.last %}

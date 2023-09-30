@@ -1,7 +1,6 @@
 {% from 'bootstrap5/nav.html' import render_nav_item %}
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   {% block head %}
   <meta charset="utf-8">
@@ -9,19 +8,17 @@
   <title>{% block title %}{% endblock title %} - {{ admin.blog_title|default('Blog Title') }}</title>
   <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
   <link rel="stylesheet"
-    href="{{ url_for('static', filename='css/%s.min.css' % request.cookies.get('theme', 'perfect_blue')) }}"
-    type="text/css">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css">
+      href="{{ url_for('static', filename='css/%s.min.css' % request.cookies.get('theme', 'perfect_blue')) }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   {% endblock head %}
 </head>
-
 <body>
   {% block nav %}
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container">
       <a class="navbar-brand" href="{{ url_for('blog.index') }}">{{ admin.blog_title }}</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar"
-        aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+          aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbar">
@@ -32,8 +29,8 @@
         <ul class="nav navbar-nav navbar-right">
           {% if current_user.is_authenticated %}
           <li class="nav-item dropdown">
-            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true"
-              aria-expanded="false">
+            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
+                role="button" aria-haspopup="true" aria-expanded="false">
               New <span class="caret"></span>
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -43,8 +40,8 @@
             </div>
           </li>
           <li class="nav-item dropdown">
-            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true"
-              aria-expanded="false">
+            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
+                role="button" aria-haspopup="true" aria-expanded="false">
               Manage <span class="caret"></span>
               {% if unread_comments %}
               <span class="badge text-bg-success rounded-pill">new</span>
@@ -80,9 +77,10 @@
     {% block footer %}
     <footer>
       <p class="float-start">
-        <small> &copy; 2023 <a href="https://greyli.com/en" title="Written by Grey Li">Grey Li</a> -
-          <a href="https://github.com/greyli/bluelog" title="Fork me on GitHub">GitHub</a> -
-          <a href="https://helloflask.com" title="A HelloFlask project">HelloFlask</a>
+        <small>
+          &copy; 2023 <a href="https://greyli.com">Grey Li</a> -
+          <a href="https://github.com/greyli/bluelog">GitHub</a> -
+          <a href="https://helloflask.com">HelloFlask</a>
         </small>
       </p>
       <p class="float-end">
@@ -98,15 +96,12 @@
     {% endblock footer %}
   </main>
   {% block scripts %}
-  <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='js/dayjs/dayjs.min.js') }}"></script>
-  <script type="text/javascript"
-    src="{{ url_for('static', filename='js/dayjs/plugin/customParseFormat.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='js/dayjs/plugin/relativeTime.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='js/dayjs/plugin/utc.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='js/dayjs/plugin/localizedFormat.js') }}"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='js/main.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/dayjs/dayjs.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/dayjs/plugin/relativeTime.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/dayjs/plugin/utc.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/dayjs/plugin/localizedFormat.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
   {% endblock %}
 </body>
-
 </html>
