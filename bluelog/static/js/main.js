@@ -1,4 +1,3 @@
-dayjs.extend(window.dayjs_plugin_customParseFormat)
 dayjs.extend(window.dayjs_plugin_relativeTime)
 dayjs.extend(window.dayjs_plugin_utc)
 dayjs.extend(window.dayjs_plugin_localizedFormat)
@@ -12,7 +11,7 @@ function renderAllDatetime() {
   elements.forEach(elem => {
     const date = dayjs.utc(elem.innerHTML)
     const format = elem.dataset.format ?? 'LL'
-    elem.innerHTML = date.format(format)
+    elem.innerHTML = date.local().format(format)
   })
   // render from now time
   const fromNowElements = document.querySelectorAll('.dayjs-from-now')
