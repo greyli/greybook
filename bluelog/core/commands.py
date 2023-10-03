@@ -14,7 +14,10 @@ def register_commands(app):
     def initdb(drop):
         """Initialize the database."""
         if drop:
-            click.confirm('This operation will delete the database, do you want to continue?', abort=True)
+            click.confirm(
+                'This operation will delete the database, do you want to continue?',
+                abort=True
+            )
             db.drop_all()
             click.echo('Dropped tables.')
         db.create_all()
@@ -23,8 +26,13 @@ def register_commands(app):
 
     @app.cli.command()
     @click.option('--username', prompt=True, help='The username used to login.')
-    @click.option('--password', prompt=True, hide_input=True,
-                  confirmation_prompt=True, help='The password used to login.')
+    @click.option(
+        '--password',
+        prompt=True,
+        hide_input=True,
+        confirmation_prompt=True,
+        help='The password used to login.'
+    )
     def init(username, password):
         """Building Bluelog, just for you."""
 
@@ -34,17 +42,17 @@ def register_commands(app):
         admin = db.session.execute(select(Admin)).scalar()
         if admin is not None:
             admin.username = username
-            admin.set_password(password)
+            admin.password = password
             click.echo('Updated the existing administrator account.')
         else:
             admin = Admin(
                 username=username,
+                password=password,
                 blog_title='Bluelog',
                 blog_sub_title="No, I'm the real thing.",
                 name='Admin',
                 about='Anything about you.'
             )
-            admin.set_password(password)
             db.session.add(admin)
             click.echo('Created the temporary administrator account.')
 

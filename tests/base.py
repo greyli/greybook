@@ -15,8 +15,14 @@ class BaseTestCase(unittest.TestCase):
         self.cli_runner = self.app.test_cli_runner()
 
         db.create_all()
-        user = Admin(name='Grey Li', username='grey', about='I am test', blog_title='Testlog', blog_sub_title='a test')
-        user.set_password('123')
+        user = Admin(
+            name='Grey Li',
+            username='admin',
+            password='helloflask',
+            about='I am test blog',
+            blog_title='Testlog',
+            blog_sub_title='a test blog'
+        )
         db.session.add(user)
         db.session.commit()
 
@@ -24,15 +30,12 @@ class BaseTestCase(unittest.TestCase):
         db.drop_all()
         self.context.pop()
 
-    def login(self, username=None, password=None):
-        if username is None and password is None:
-            username = 'grey'
-            password = '123'
-
-        return self.client.post('/auth/login', data=dict(
-            username=username,
-            password=password
-        ), follow_redirects=True)
+    def login(self, username='admin', password='helloflask'):
+        return self.client.post(
+            '/auth/login',
+            data=dict(username=username, password=password),
+            follow_redirects=True
+        )
 
     def logout(self):
         return self.client.get('/auth/logout', follow_redirects=True)

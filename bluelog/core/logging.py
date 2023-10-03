@@ -3,6 +3,7 @@ import os
 from logging.handlers import SMTPHandler, RotatingFileHandler
 
 from flask import request
+from flask.logging import default_handler
 
 from bluelog.settings import basedir
 
@@ -39,3 +40,6 @@ def register_logging(app):
     if not app.debug:
         app.logger.addHandler(mail_handler)
         app.logger.addHandler(file_handler)
+    else:
+        app.logger.setLevel(logging.DEBUG)
+        app.logger.addHandler(default_handler)

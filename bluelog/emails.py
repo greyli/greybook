@@ -10,6 +10,12 @@ def _send_async_mail(app, message):
 
 
 def send_mail(subject, body, to):
+    if current_app.debug:
+        current_app.logger.debug('Skip sending email in debug mode.')
+        current_app.logger.debug(f'To: {to}')
+        current_app.logger.debug(f'Subject: {subject}')
+        current_app.logger.debug(f'Body: {body}')
+        return
     app = current_app._get_current_object()
     message = EmailMessage(subject, body=body, to=[to])
     message.content_subtype = 'html'

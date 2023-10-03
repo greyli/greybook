@@ -45,11 +45,15 @@ class AdminTestCase(BaseTestCase):
         post = db.session.get(Post, 1)
         updated_at_before = post.updated_at
 
-        response = self.client.post('/admin/post/1/edit', data=dict(
-            title='Something Edited',
-            category=1,
-            body='New post body.'
-        ), follow_redirects=True)
+        response = self.client.post(
+            '/admin/post/1/edit',
+            data=dict(
+                title='Something Edited',
+                category=1,
+                body='New post body.'
+            ),
+            follow_redirects=True
+        )
         data = response.get_data(as_text=True)
         self.assertIn('Post updated.', data)
         self.assertIn('New post body.', data)
@@ -180,12 +184,20 @@ class AdminTestCase(BaseTestCase):
         data = response.get_data(as_text=True)
         self.assertIn('New Category', data)
 
-        response = self.client.post('/admin/category/new', data=dict(name='Tech'), follow_redirects=True)
+        response = self.client.post(
+            '/admin/category/new',
+            data=dict(name='Tech'),
+            follow_redirects=True
+        )
         data = response.get_data(as_text=True)
         self.assertIn('Category created.', data)
         self.assertIn('Tech', data)
 
-        response = self.client.post('/admin/category/new', data=dict(name='Tech'), follow_redirects=True)
+        response = self.client.post(
+            '/admin/category/new',
+            data=dict(name='Tech'),
+            follow_redirects=True
+        )
         data = response.get_data(as_text=True)
         self.assertIn('Name already in use.', data)
 
@@ -198,15 +210,22 @@ class AdminTestCase(BaseTestCase):
         self.assertIn('Post Title', data)
 
     def test_edit_category(self):
-        response = self.client.post('/admin/category/1/edit',
-                                    data=dict(name='Default edited'), follow_redirects=True)
+        response = self.client.post(
+            '/admin/category/1/edit',
+            data=dict(name='Default edited'),
+            follow_redirects=True
+        )
         data = response.get_data(as_text=True)
         self.assertNotIn('Category updated.', data)
         self.assertIn('Default', data)
         self.assertNotIn('Default edited', data)
         self.assertIn('You can not edit the default category', data)
 
-        response = self.client.post('/admin/category/new', data=dict(name='Tech'), follow_redirects=True)
+        response = self.client.post(
+            '/admin/category/new',
+            data=dict(name='Tech'),
+            follow_redirects=True
+        )
         data = response.get_data(as_text=True)
         self.assertIn('Category created.', data)
         self.assertIn('Tech', data)
@@ -216,8 +235,11 @@ class AdminTestCase(BaseTestCase):
         self.assertIn('Edit Category', data)
         self.assertIn('Tech', data)
 
-        response = self.client.post('/admin/category/2/edit',
-                                    data=dict(name='Life'), follow_redirects=True)
+        response = self.client.post(
+            '/admin/category/2/edit',
+            data=dict(name='Life'),
+            follow_redirects=True
+        )
         data = response.get_data(as_text=True)
         self.assertIn('Category updated.', data)
         self.assertIn('Life', data)
@@ -309,13 +331,17 @@ class AdminTestCase(BaseTestCase):
         self.assertIn('Manage Links', data)
 
     def test_blog_setting(self):
-        response = self.client.post('/admin/settings', data=dict(
-            name='Grey Li',
-            blog_title='My Blog',
-            blog_sub_title='Just some raw ideas.',
-            bio='I am ...',
-            about='Example about page',
-        ), follow_redirects=True)
+        response = self.client.post(
+            '/admin/settings',
+            data=dict(
+                name='Grey Li',
+                blog_title='My Blog',
+                blog_sub_title='Just some raw ideas.',
+                bio='I am ...',
+                about='Example about page',
+            ),
+            follow_redirects=True
+        )
         data = response.get_data(as_text=True)
         self.assertIn('Setting updated.', data)
         self.assertIn('My Blog', data)

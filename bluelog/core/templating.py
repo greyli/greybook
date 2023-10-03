@@ -23,5 +23,8 @@ def register_template_handlers(app):
         else:
             unread_comments = None
         return dict(
-            admin=admin, categories=categories,
-            links=links, unread_comments=unread_comments)
+            admin=admin,
+            categories=categories,
+            links=links,
+            unread_comments=unread_comments
+        )
