@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% from 'bootstrap5/form.html' import render_form %}
 {% from 'bootstrap5/pagination.html' import render_pagination %}
+{% from 'macros.html' import render_inline_form %}
 
 {% block title %}{{ post.title }}{% endblock %}
 
@@ -13,14 +14,11 @@
           href="{{ url_for('admin.edit_post', post_id=post.id) }}">
         Edit
       </a>
-      <form class="inline" method="post"
-          action="{{ url_for('admin.delete_post', post_id=post.id, next=url_for('blog.index')) }}">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-        <button type="submit" class="btn btn-outline-danger btn-sm"
-            onclick="return confirm('Are you sure?');">
-          Delete
-        </button>
-      </form>
+      {{ render_inline_form(
+        action=url_for('admin.delete_post', post_id=post.id, next=url_for('blog.index')),
+        button_style='outline-danger',
+        button_text='Delete',
+      ) }}
       {% endif %}
     </span>
   </h1>
@@ -67,14 +65,14 @@
           </a>
         </small>
         {% if current_user.is_authenticated %}
-        <form class="float-end" method="post"
-          action="{{ url_for('admin.set_comment', post_id=post.id, next=request.full_path) }}">
-          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-          <button type="submit"
-            class="btn {% if post.can_comment %}btn-outline-warning{% else %}btn-outline-success{% endif %} btn-sm">
-            {% if post.can_comment %}Disable{% else %}Enable{% endif %} Comment
-          </button>
-        </form>
+        <div class="float-end">
+          {{ render_inline_form(
+            action=url_for('admin.set_comment', post_id=post.id, next=request.full_path),
+            button_style='outline-warning' if post.can_comment else 'outline-success',
+            button_text='Disable Comment' if post.can_comment else 'Enable Comment',
+            confirm=None,
+          ) }}
+        </div>
         {% endif %}
       </h3>
       {% if comments %}
@@ -107,13 +105,11 @@
                 href="{{ url_for('.reply_comment', comment_id=comment.id) }}">Reply</a>
             {% if current_user.is_authenticated %}
             <a class="btn btn-outline-info btn-sm" href="mailto:{{ comment.email }}">Email</a>
-            <form class="inline" method="post"
-                action="{{ url_for('admin.delete_comment', comment_id=comment.id, next=request.full_path) }}">
-              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-              <button type="submit" class="btn btn-outline-danger btn-sm"
-                onclick="return confirm('Are you sure?');">Delete
-              </button>
-            </form>
+            {{ render_inline_form(
+              action=url_for('admin.delete_comment', comment_id=comment.id, next=request.full_path),
+              button_style='outline-danger',
+              button_text='Delete',
+            ) }}
             {% endif %}
           </div>
         </li>

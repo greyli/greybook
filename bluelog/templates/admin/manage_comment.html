@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% from 'bootstrap5/pagination.html' import render_pagination %}
+{% from 'macros.html' import render_inline_form %}
 
 {% block title %}Manage Comments{% endblock %}
 
@@ -9,13 +10,11 @@
     <small class="text-muted">{{ pagination.total }}</small>
     {% if request.args.get('filter') == 'unread' %}
     <span class="float-end">
-      <form class="inline" method="post" action="{{ url_for('.approve_all_comment') }}">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-        <button type="submit" class="btn btn-outline-success btn-sm"
-            onclick="return confirm('Are you sure?');">
-          Approve All
-        </button>
-      </form>
+      {{ render_inline_form(
+        action=url_for('.approve_all_comment'),
+        button_style='outline-success',
+        button_text='Approve All',
+      ) }}
     </span>
     {% endif %}
   </h1>
@@ -76,24 +75,22 @@
     <td class="dayjs">{{ comment.created_at }}</td>
     <td>
       {% if not comment.reviewed %}
-      <form class="inline" method="post"
-        action="{{ url_for('.approve_comment', comment_id=comment.id, next=request.full_path) }}">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-        <button type="submit" class="btn btn-outline-success btn-sm">Approve</button>
-      </form>
+      {{ render_inline_form(
+        action=url_for('.approve_comment', comment_id=comment.id, next=request.full_path),
+        button_style='outline-success',
+        button_text='Approve',
+        confirm=None,
+      ) }}
       {% endif %}
       <a class="btn btn-outline-info btn-sm"
           href="{{ url_for('blog.show_post', post_id=comment.post.id) }}">
           Post
       </a>
-      <form class="inline" method="post"
-          action="{{ url_for('.delete_comment', comment_id=comment.id, next=request.full_path) }}">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-        <button type="submit" class="btn btn-outline-danger btn-sm"
-            onclick="return confirm('Are you sure?');">
-          Delete
-        </button>
-      </form>
+      {{ render_inline_form(
+        action=url_for('.delete_comment', comment_id=comment.id, next=request.full_path),
+        button_style='outline-danger',
+        button_text='Delete',
+      ) }}
     </td>
   </tr>
   {% endfor %}
