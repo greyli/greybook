@@ -8,7 +8,7 @@
   <title>{% block title %}{% endblock title %} - {{ admin.blog_title|default('Blog Title') }}</title>
   <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
   <link rel="stylesheet"
-      href="{{ url_for('static', filename='css/%s.min.css' % request.cookies.get('theme', 'perfect_blue')) }}">
+      href="{{ url_for('static', filename='css/%s.min.css' % request.cookies.get('theme', 'default')) }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   {% endblock head %}
 </head>
