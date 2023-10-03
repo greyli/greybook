@@ -42,7 +42,10 @@ def manage_post():
         select(Post).order_by(Post.created_at.desc()),
         page=page,
         per_page=current_app.config['BLUELOG_MANAGE_POST_PER_PAGE'],
+        error_out=False,
     )
+    if page > pagination.pages:
+        return redirect(url_for('.manage_post', page=pagination.pages))
     posts = pagination.items
     return render_template('admin/manage_post.html', page=page, pagination=pagination, posts=posts)
 
@@ -71,7 +74,7 @@ def edit_post(post_id):
     if form.validate_on_submit():
         post.title = form.title.data
         post.body = form.body.data
-        post.category = db.session.get(Category, form.category.data)
+        post.category_id = form.category.data
         db.session.commit()
         flash('Post updated.', 'success')
         return redirect(url_for('blog.show_post', post_id=post.id))
@@ -88,7 +91,7 @@ def delete_post(post_id):
     post = db.get_or_404(Post, post_id)
     post.delete()
     flash('Post deleted.', 'success')
-    return redirect(url_for('.manage_post'))
+    return redirect_back()
 
 
 @admin_bp.route('/post/<int:post_id>/set-comment', methods=['POST'])
@@ -123,7 +126,10 @@ def manage_comment():
         filtered_comments.order_by(Comment.created_at.desc()),
         page=page,
         per_page=per_page,
+        error_out=False,
     )
+    if page > pagination.pages:
+        return redirect(url_for('.manage_comment', page=pagination.pages, filter=filter_rule))
     comments = pagination.items
     return render_template('admin/manage_comment.html', comments=comments, pagination=pagination)
 
@@ -135,7 +141,7 @@ def approve_comment(comment_id):
     comment.reviewed = True
     db.session.commit()
     flash('Comment published.', 'success')
-    return redirect(url_for('.manage_comment'))
+    return redirect_back()
 
 
 @admin_bp.route('/comments/approve', methods=['POST'])
@@ -148,7 +154,7 @@ def approve_all_comment():
         comment.reviewed = True
     db.session.commit()
     flash('All comments published.', 'success')
-    return redirect(url_for('.manage_comment'))
+    return redirect_back()
 
 
 @admin_bp.route('/comment/<int:comment_id>/delete', methods=['POST'])
@@ -158,8 +164,7 @@ def delete_comment(comment_id):
     db.session.delete(comment)
     db.session.commit()
     flash('Comment deleted.', 'success')
-    return redirect(url_for('.manage_comment'))
-
+    return redirect_back()
 
 @admin_bp.route('/category/manage')
 @login_required
