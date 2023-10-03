@@ -1,0 +1,9 @@
+{% macro render_inline_form(action, button_style, button_text, confirm='Are you sure?') %}
+<form class="inline" method="post" action="{{ action }}">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+  <button type="submit" class="btn btn-{{ button_style }} btn-sm"
+      {% if confirm %}onclick="return confirm('{{ confirm }}');"{% endif %}>
+    {{ button_text }}
+  </button>
+</form>
+{% endmacro %}

@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% from 'bootstrap5/form.html' import render_form %}
+{% from 'macros.html' import render_inline_form %}
 
 {% block title %}Manage Categories{% endblock %}
 
@@ -39,14 +40,11 @@
           href="{{ url_for('.edit_category', category_id=category.id) }}">
         Edit
       </a>
-      <form class="inline" method="post"
-          action="{{ url_for('.delete_category', category_id=category.id) }}">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-        <button type="submit" class="btn btn-outline-danger btn-sm"
-            onclick="return confirm('Are you sure?');">
-          Delete
-        </button>
-      </form>
+      {{ render_inline_form(
+        action=url_for('.delete_category', category_id=category.id),
+        button_style='outline-danger',
+        button_text='Delete',
+      ) }}
       {% endif %}
     </td>
   </tr>
