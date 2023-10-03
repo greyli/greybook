@@ -17,11 +17,16 @@ class CommandTestCase(BaseTestCase):
 
     def test_initdb_command_with_drop(self):
         result = self.cli_runner.invoke(args=['initdb', '--drop'], input='y\n')
-        self.assertIn('This operation will delete the database, do you want to continue?', result.output)
+        self.assertIn(
+            'This operation will delete the database, do you want to continue?',
+            result.output
+        )
         self.assertIn('Dropped tables.', result.output)
 
     def test_init_command(self):
-        result = self.cli_runner.invoke(args=['init', '--username', 'grey', '--password', '123'])
+        result = self.cli_runner.invoke(
+            args=['init', '--username', 'grey', '--password', '123']
+        )
         self.assertIn('Created the temporary administrator account.', result.output)
         self.assertIn('Created the default category.', result.output)
         self.assertEqual(db.session.execute(select(func.count(Admin.id))).scalars().one(), 1)
@@ -30,7 +35,9 @@ class CommandTestCase(BaseTestCase):
 
     def test_init_command_with_update(self):
         self.cli_runner.invoke(args=['init', '--username', 'grey', '--password', '123'])
-        result = self.cli_runner.invoke(args=['init', '--username', 'new grey', '--password', '123'])
+        result = self.cli_runner.invoke(
+            args=['init', '--username', 'new grey', '--password', '123']
+        )
         self.assertIn('Updated the existing administrator account.', result.output)
         self.assertNotIn('Created the temporary administrator account.', result.output)
         self.assertEqual(db.session.execute(select(func.count(Admin.id))).scalars().one(), 1)
@@ -88,10 +95,16 @@ class CommandTestCase(BaseTestCase):
         self.assertEqual(db.session.execute(select(func.count(Admin.id))).scalars().one(), 1)
         self.assertIn('Generated the administrator.', result.output)
 
-        self.assertEqual(db.session.execute(select(func.count(Category.id))).scalars().one(), category_count)
+        self.assertEqual(
+            db.session.execute(select(func.count(Category.id))).scalars().one(),
+            category_count
+        )
         self.assertIn(f'Generated {category_count} categories.', result.output)
 
-        self.assertEqual(db.session.execute(select(func.count(Post.id))).scalars().one(), post_count)
+        self.assertEqual(
+            db.session.execute(select(func.count(Post.id))).scalars().one(),
+            post_count
+        )
         self.assertIn(f'Generated {post_count} posts.', result.output)
 
         self.assertEqual(

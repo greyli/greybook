@@ -32,11 +32,8 @@ class PostForm(FlaskForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.category.choices = [
-            (category.id, category.name)
-            for category in db.session.execute(
-                select(Category).order_by(Category.name)
-            ).scalars()]
+        categories = db.session.execute(select(Category).order_by(Category.name)).scalars()
+        self.category.choices = [(category.id, category.name) for category in categories]
 
 
 class CategoryForm(FlaskForm):

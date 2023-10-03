@@ -57,21 +57,27 @@ class BlogTestCase(BaseTestCase):
         self.assertIn('Hello Post', data)
 
     def test_new_admin_comment(self):
-        response = self.client.post('/post/1', data=dict(
-            body='I am an admin comment.',
-        ), follow_redirects=True)
+        response = self.client.post(
+            '/post/1',
+            data=dict(body='I am an admin comment.'),
+            follow_redirects=True
+        )
         data = response.get_data(as_text=True)
         self.assertIn('Comment published.', data)
         self.assertIn('I am an admin comment.', data)
 
     def test_new_guest_comment(self):
         self.logout()
-        response = self.client.post('/post/1', data=dict(
-            author='Guest',
-            email='a@b.com',
-            site='http://greyli.com',
-            body='I am a guest comment.',
-        ), follow_redirects=True)
+        response = self.client.post(
+            '/post/1',
+            data=dict(
+                author='Guest',
+                email='a@b.com',
+                site='http://greyli.com',
+                body='I am a guest comment.',
+            ),
+            follow_redirects=True
+        )
         data = response.get_data(as_text=True)
         self.assertIn('Thanks, your comment will be published after reviewed.', data)
         self.assertNotIn('I am a guest comment.', data)
@@ -93,9 +99,11 @@ class BlogTestCase(BaseTestCase):
         self.assertNotIn('Cancel', data)
 
     def test_new_admin_reply(self):
-        response = self.client.post('/post/1' + '?reply=1', data=dict(
-            body='I am an admin reply comment.',
-        ), follow_redirects=True)
+        response = self.client.post(
+            '/post/1' + '?reply=1',
+            data=dict(body='I am an admin reply comment.'),
+            follow_redirects=True
+        )
         data = response.get_data(as_text=True)
         self.assertIn('Comment published.', data)
         self.assertIn('I am an admin reply comment.', data)
@@ -103,12 +111,15 @@ class BlogTestCase(BaseTestCase):
 
     def test_new_guest_reply(self):
         self.logout()
-        response = self.client.post('/post/1' + '?reply=1', data=dict(
-            author='Guest',
-            email='a@b.com',
-            site='http://greyli.com',
-            body='I am a guest comment.',
-        ), follow_redirects=True)
+        response = self.client.post(
+            '/post/1' + '?reply=1', data=dict(
+                author='Guest',
+                email='a@b.com',
+                site='http://greyli.com',
+                body='I am a guest comment.',
+            ),
+            follow_redirects=True
+        )
         data = response.get_data(as_text=True)
         self.assertIn('Thanks, your comment will be published after reviewed.', data)
         self.assertNotIn('I am a guest comment.', data)
