@@ -30,7 +30,7 @@
   </thead>
   {% for post in posts %}
   <tr>
-    <td>{{ loop.index + ((page - 1) * config.BLUELOG_MANAGE_POST_PER_PAGE) }}</td>
+    <td>{{ loop.index + ((page - 1) * config.GREYBOOK_MANAGE_POST_PER_PAGE) }}</td>
     <td>
       <a href="{{ url_for('blog.show_post', post_id=post.id) }}">
         {{ post.title }}

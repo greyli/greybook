@@ -5,8 +5,8 @@ from wtforms import StringField, SubmitField, SelectField, TextAreaField, \
 from wtforms.validators import DataRequired, Email, Length, Optional, URL
 from sqlalchemy import select
 
-from bluelog.models import Category
-from bluelog.core.extensions import db
+from greybook.models import Category
+from greybook.core.extensions import db
 
 
 class LoginForm(FlaskForm):

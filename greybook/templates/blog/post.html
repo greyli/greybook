@@ -94,7 +94,7 @@
             </small>
           </div>
           {% if comment.replied %}
-          <p class="alert alert-dark reply-body">
+          <p class="alert alert-primary reply-body">
             {{ comment.replied.author }}:<br>
             {{ comment.replied.body }}
           </p>
@@ -125,7 +125,7 @@
     {{ render_pagination(pagination, fragment='#comments') }}
     {% endif %}
     {% if request.args.get('reply') %}
-    <div class="alert alert-dark">
+    <div class="alert alert-primary">
       Reply to <strong>{{ request.args.get('author') }}</strong>:
       <a class="float-end" href="{{ url_for('.show_post', post_id=post.id) }}">Cancel</a>
     </div>

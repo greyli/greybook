@@ -1,21 +1,21 @@
 from flask import Flask
 
-from bluelog.views.admin import admin_bp
-from bluelog.views.auth import auth_bp
-from bluelog.views.blog import blog_bp
-from bluelog.core.extensions import bootstrap, db, login_manager, csrf, \
+from greybook.views.admin import admin_bp
+from greybook.views.auth import auth_bp
+from greybook.views.blog import blog_bp
+from greybook.core.extensions import bootstrap, db, login_manager, csrf, \
     ckeditor, mail, toolbar, migrate
-from bluelog.models import Admin, Post, Category, Comment
-from bluelog.settings import config
-from bluelog.core.commands import register_commands
-from bluelog.core.logging import register_logging
-from bluelog.core.templating import register_template_handlers
-from bluelog.core.request import register_request_handlers
-from bluelog.core.errors import register_errors
+from greybook.models import Admin, Post, Category, Comment
+from greybook.settings import config
+from greybook.core.commands import register_commands
+from greybook.core.logging import register_logging
+from greybook.core.templating import register_template_handlers
+from greybook.core.request import register_request_handlers
+from greybook.core.errors import register_errors
 
 
 def create_app(config_name):
-    app = Flask('bluelog')
+    app = Flask('greybook')
     app.config.from_object(config[config_name])
 
     # blueprints

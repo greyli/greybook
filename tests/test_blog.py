@@ -1,5 +1,5 @@
-from bluelog.models import Post, Category, Link, Comment
-from bluelog.core.extensions import db
+from greybook.models import Post, Category, Link, Comment
+from greybook.core.extensions import db
 
 from tests.base import BaseTestCase
 
@@ -34,15 +34,15 @@ class BlogTestCase(BaseTestCase):
         self.assertIn('A comment', data)
 
     def test_change_theme(self):
+        response = self.client.get('/change-theme/default', follow_redirects=True)
+        data = response.get_data(as_text=True)
+        self.assertIn('css/default.min.css', data)
+        self.assertNotIn('css/perfect_blue.min.css', data)
+
         response = self.client.get('/change-theme/perfect_blue', follow_redirects=True)
         data = response.get_data(as_text=True)
         self.assertIn('css/perfect_blue.min.css', data)
-        self.assertNotIn('css/black_swan.min.css', data)
-
-        response = self.client.get('/change-theme/black_swan', follow_redirects=True)
-        data = response.get_data(as_text=True)
-        self.assertIn('css/black_swan.min.css', data)
-        self.assertNotIn('css/perfect_blue.min.css', data)
+        self.assertNotIn('css/default.min.css', data)
 
     def test_about_page(self):
         response = self.client.get('/about')

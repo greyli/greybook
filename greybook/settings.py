@@ -27,18 +27,21 @@ class BaseConfig:
     MAIL_USE_TLS = True
     MAIL_USERNAME = os.getenv('MAIL_USERNAME')
     MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
-    MAIL_DEFAULT_SENDER = f'Bluelog <{MAIL_USERNAME}>'
+    MAIL_DEFAULT_SENDER = f'Greybook <{MAIL_USERNAME}>'
 
-    BLUELOG_ADMIN_EMAIL = os.getenv('BLUELOG_ADMIN_EMAIL')
-    BLUELOG_POST_PER_PAGE = 10
-    BLUELOG_MANAGE_POST_PER_PAGE = 15
-    BLUELOG_COMMENT_PER_PAGE = 15
+    GREYBOOK_ADMIN_EMAIL = os.getenv('GREYBOOK_ADMIN_EMAIL')
+    GREYBOOK_POST_PER_PAGE = 10
+    GREYBOOK_MANAGE_POST_PER_PAGE = 15
+    GREYBOOK_COMMENT_PER_PAGE = 15
     # ('theme name', 'display name')
-    BLUELOG_THEMES = {'perfect_blue': 'Perfect Blue', 'black_swan': 'Black Swan'}
-    BLUELOG_SLOW_QUERY_THRESHOLD = 1
+    GREYBOOK_THEMES = {
+        'default': 'Default',
+        'perfect_blue': 'Perfect Blue'
+    }
+    GREYBOOK_SLOW_QUERY_THRESHOLD = 1
 
-    BLUELOG_UPLOAD_PATH = os.path.join(basedir, 'uploads')
-    BLUELOG_ALLOWED_IMAGE_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif']
+    GREYBOOK_UPLOAD_PATH = os.path.join(basedir, 'uploads')
+    GREYBOOK_ALLOWED_IMAGE_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif']
 
 
 class DevelopmentConfig(BaseConfig):

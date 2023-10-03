@@ -6,10 +6,10 @@ from flask_login import login_required, current_user
 from flask_ckeditor import upload_success, upload_fail
 from sqlalchemy import select
 
-from bluelog.core.extensions import db
-from bluelog.forms import SettingForm, PostForm, CategoryForm, LinkForm
-from bluelog.models import Post, Category, Comment, Link
-from bluelog.utils import redirect_back, allowed_file, random_filename
+from greybook.core.extensions import db
+from greybook.forms import SettingForm, PostForm, CategoryForm, LinkForm
+from greybook.models import Post, Category, Comment, Link
+from greybook.utils import redirect_back, allowed_file, random_filename
 
 admin_bp = Blueprint('admin', __name__)
 
@@ -41,7 +41,7 @@ def manage_post():
     pagination = db.paginate(
         select(Post).order_by(Post.created_at.desc()),
         page=page,
-        per_page=current_app.config['BLUELOG_MANAGE_POST_PER_PAGE'],
+        per_page=current_app.config['GREYBOOK_MANAGE_POST_PER_PAGE'],
         error_out=False,
     )
     if page > pagination.pages:
@@ -113,7 +113,7 @@ def set_comment(post_id):
 def manage_comment():
     filter_rule = request.args.get('filter', 'all')  # 'all', 'unread', 'admin'
     page = request.args.get('page', 1, type=int)
-    per_page = current_app.config['BLUELOG_COMMENT_PER_PAGE']
+    per_page = current_app.config['GREYBOOK_COMMENT_PER_PAGE']
 
     if filter_rule == 'unread':
         filtered_comments = select(Comment).filter_by(reviewed=False)
@@ -272,6 +272,6 @@ def upload_image():
     if not allowed_file(f.filename):
         return upload_fail('Image only!')
     filename = random_filename(f.filename)
-    f.save(os.path.join(current_app.config['BLUELOG_UPLOAD_PATH'], filename))
+    f.save(os.path.join(current_app.config['GREYBOOK_UPLOAD_PATH'], filename))
     url = url_for('blog.get_image', filename=filename)
     return upload_success(url, filename)

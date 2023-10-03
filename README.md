@@ -1,20 +1,18 @@
-# Bluelog
+# Greybook
 
-*A blue blog.*
+> Example application for *[Python Web Development with Flask](https://helloflask.com/en/book/1)* (《[Flask Web 开发实战](https://helloflask.com/book/4)》).
 
-> Example application for *[Python Web Development with Flask](https://helloflask.com/en/book/1)* (《[Flask Web 开发实战](https://helloflask.com/book/1)》).
+Demo: http://greybook.helloflask.com
 
-Demo: http://bluelog.helloflask.com
-
-![Screenshot](https://helloflask.com/screenshots/bluelog.png)
+![Screenshot](https://helloflask.com/screenshots/greybook.png)
 
 ## Installation
 
 Clone the repo:
 
 ```
-$ git clone https://github.com/greyli/new-bluelog.git
-$ cd new-bluelog
+$ git clone https://github.com/greyli/greybook.git
+$ cd greybook
 ```
 
 Create & activate virtual env then install dependency:
@@ -45,7 +43,7 @@ $ flask run
 Test account:
 
 * username: `admin`
-* password: `helloflask`
+* password: `greybook`
 
 ## License
 

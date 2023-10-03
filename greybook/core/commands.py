@@ -4,8 +4,8 @@ import click
 from flask import current_app
 from sqlalchemy import select
 
-from bluelog.core.extensions import db
-from bluelog.models import Admin, Category
+from greybook.core.extensions import db
+from greybook.models import Admin, Category
 
 
 def register_commands(app):
@@ -34,7 +34,7 @@ def register_commands(app):
         help='The password used to login.'
     )
     def init(username, password):
-        """Building Bluelog, just for you."""
+        """Initialize the blog."""
 
         db.create_all()
         click.echo('Initialized the database.')
@@ -48,8 +48,8 @@ def register_commands(app):
             admin = Admin(
                 username=username,
                 password=password,
-                blog_title='Bluelog',
-                blog_sub_title="No, I'm the real thing.",
+                blog_title='Blog Title',
+                blog_sub_title="Blog Sub Title",
                 name='Admin',
                 about='Anything about you.'
             )
@@ -64,7 +64,7 @@ def register_commands(app):
 
         db.session.commit()
 
-        upload_path = os.path.join(current_app.config['BLUELOG_UPLOAD_PATH'])
+        upload_path = os.path.join(current_app.config['GREYBOOK_UPLOAD_PATH'])
         if not os.path.exists(upload_path):
             os.makedirs(upload_path)
             click.echo('Created the upload folder.')
@@ -77,7 +77,7 @@ def register_commands(app):
     @click.option('--reply', default=50, help='Quantity of replies, default is 50.')
     def fake(category, post, comment, reply):
         """Generate fake data."""
-        from bluelog.fakes import fake_admin, fake_categories, fake_posts, \
+        from greybook.fakes import fake_admin, fake_categories, fake_posts, \
             fake_comments, fake_replies, fake_links
 
         db.drop_all()
