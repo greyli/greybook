@@ -2,10 +2,10 @@ from flask import render_template, flash, redirect, url_for, Blueprint
 from flask_login import login_user, logout_user, login_required, current_user
 from sqlalchemy import select
 
-from bluelog.forms import LoginForm
-from bluelog.models import Admin
-from bluelog.utils import redirect_back
-from bluelog.core.extensions import db
+from greybook.forms import LoginForm
+from greybook.models import Admin
+from greybook.utils import redirect_back
+from greybook.core.extensions import db
 
 auth_bp = Blueprint('auth', __name__)
 

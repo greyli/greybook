@@ -1,8 +1,8 @@
 import unittest
 
-from bluelog import create_app
-from bluelog.core.extensions import db
-from bluelog.models import Admin
+from greybook import create_app
+from greybook.core.extensions import db
+from greybook.models import Admin
 
 
 class BaseTestCase(unittest.TestCase):
@@ -18,7 +18,7 @@ class BaseTestCase(unittest.TestCase):
         user = Admin(
             name='Grey Li',
             username='admin',
-            password='helloflask',
+            password='greybook',
             about='I am test blog',
             blog_title='Testlog',
             blog_sub_title='a test blog'
@@ -30,7 +30,7 @@ class BaseTestCase(unittest.TestCase):
         db.drop_all()
         self.context.pop()
 
-    def login(self, username='admin', password='helloflask'):
+    def login(self, username='admin', password='greybook'):
         return self.client.post(
             '/auth/login',
             data=dict(username=username, password=password),

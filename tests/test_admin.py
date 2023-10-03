@@ -1,8 +1,8 @@
 import os
 from unittest.mock import patch, call
 
-from bluelog.models import Post, Category, Link, Comment
-from bluelog.core.extensions import db
+from greybook.models import Post, Category, Link, Comment
+from greybook.core.extensions import db
 
 from tests.base import BaseTestCase
 
@@ -90,8 +90,8 @@ class AdminTestCase(BaseTestCase):
         post.body = '<img src="/uploads/test.png"> <img alt="" src="/uploads/test2.png">'
         db.session.commit()
 
-        image_path = os.path.join(self.app.config['BLUELOG_UPLOAD_PATH'], 'test.png')
-        image_path2 = os.path.join(self.app.config['BLUELOG_UPLOAD_PATH'], 'test2.png')
+        image_path = os.path.join(self.app.config['GREYBOOK_UPLOAD_PATH'], 'test.png')
+        image_path2 = os.path.join(self.app.config['GREYBOOK_UPLOAD_PATH'], 'test2.png')
 
         mock_exists.return_value = True
         self.client.post('/admin/post/1/delete')

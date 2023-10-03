@@ -1,7 +1,7 @@
 from sqlalchemy import select, func
 
-from bluelog.models import Admin, Post, Category, Comment
-from bluelog.core.extensions import db
+from greybook.models import Admin, Post, Category, Comment
+from greybook.core.extensions import db
 from tests.base import BaseTestCase
 
 

@@ -31,7 +31,7 @@ def send_new_comment_email(post):
         body=f'<p>New comment in post <i>{post.title}</i>, click the link below to check:</p>'
              f'<p><a href="{post_url}">{post_url}</a></P>'
              '<p><small style="color: #868e96">Do not reply this email.</small></p>',
-        to=current_app.config['BLUELOG_ADMIN_EMAIL']
+        to=current_app.config['GREYBOOK_ADMIN_EMAIL']
     )
 
 

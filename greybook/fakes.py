@@ -5,8 +5,8 @@ from faker import Faker
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import select, func
 
-from bluelog.core.extensions import db
-from bluelog.models import Admin, Category, Post, Comment, Link
+from greybook.core.extensions import db
+from greybook.models import Admin, Category, Post, Comment, Link
 
 fake = Faker()
 
@@ -14,11 +14,12 @@ fake = Faker()
 def fake_admin():
     admin = Admin(
         username='admin',
-        password='helloflask',
-        blog_title='Bluelog',
-        blog_sub_title="No, I'm the real thing.",
-        name='Mima Kirigoe',
-        about='Um, l, Mima Kirigoe, had a fun time as a member of CHAM...'
+        password='greybook',
+        blog_title='Greybook',
+        blog_sub_title="Just some random thoughts",
+        name='Grey Li',
+        about='Hello, I am Grey Li. This is an example '
+            'Flask project for <a href="https://helloflask.com/book/4/">my book</a>.'
     )
     db.session.add(admin)
     db.session.commit()
@@ -30,7 +31,7 @@ def fake_categories(count=10):
 
     i = 0
     while i < count - 1:
-        category = Category(name=fake.word())
+        category = Category(name=fake.word().title())
         db.session.add(category)
         try:
             db.session.commit()
@@ -75,6 +76,9 @@ def fake_comments(count=500):
             post=db.session.get(Post, random.randint(1, post_count))
         )
         if comment.from_admin:
+            comment.author = 'Grey Li'
+            comment.email = 'admin@example.com'
+            comment.site = 'https://helloflask.com'
             comment.reviewed = True
         db.session.add(comment)
     db.session.commit()

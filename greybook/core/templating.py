@@ -1,8 +1,8 @@
 from flask_login import current_user
 from sqlalchemy import select, func
 
-from bluelog.core.extensions import db
-from bluelog.models import Admin, Category, Comment, Link
+from greybook.core.extensions import db
+from greybook.models import Admin, Category, Comment, Link
 
 
 def register_template_handlers(app):

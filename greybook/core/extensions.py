@@ -19,7 +19,7 @@ migrate = Migrate()
 
 @login_manager.user_loader
 def load_user(user_id):
-    from bluelog.models import Admin
+    from greybook.models import Admin
     user = db.session.get(Admin, int(user_id))
     return user
 

@@ -1,5 +1,5 @@
-from bluelog.models import Post, Category, Link, Comment
-from bluelog.core.extensions import db
+from greybook.models import Post, Category, Link, Comment
+from greybook.core.extensions import db
 
 from tests.base import BaseTestCase
 

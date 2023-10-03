@@ -4,11 +4,11 @@ from flask_login import current_user
 from sqlalchemy import select
 from sqlalchemy.orm import with_parent
 
-from bluelog.emails import send_new_comment_email, send_new_reply_email
-from bluelog.core.extensions import db
-from bluelog.forms import CommentForm, AdminCommentForm
-from bluelog.models import Post, Category, Comment
-from bluelog.utils import redirect_back
+from greybook.emails import send_new_comment_email, send_new_reply_email
+from greybook.core.extensions import db
+from greybook.forms import CommentForm, AdminCommentForm
+from greybook.models import Post, Category, Comment
+from greybook.utils import redirect_back
 
 blog_bp = Blueprint('blog', __name__)
 
@@ -16,7 +16,7 @@ blog_bp = Blueprint('blog', __name__)
 @blog_bp.route('/')
 def index():
     page = request.args.get('page', 1, type=int)
-    per_page = current_app.config['BLUELOG_POST_PER_PAGE']
+    per_page = current_app.config['GREYBOOK_POST_PER_PAGE']
     pagination = db.paginate(
         select(Post).order_by(Post.created_at.desc()),
         page=page,
@@ -35,7 +35,7 @@ def about():
 def show_category(category_id):
     category = db.get_or_404(Category, category_id)
     page = request.args.get('page', 1, type=int)
-    per_page = current_app.config['BLUELOG_POST_PER_PAGE']
+    per_page = current_app.config['GREYBOOK_POST_PER_PAGE']
     pagination = db.paginate(
         select(Post).filter(with_parent(category, Category.posts)).order_by(Post.created_at.desc()),
         page=page,
@@ -49,7 +49,7 @@ def show_category(category_id):
 def show_post(post_id):
     post = db.get_or_404(Post, post_id)
     page = request.args.get('page', 1, type=int)
-    per_page = current_app.config['BLUELOG_COMMENT_PER_PAGE']
+    per_page = current_app.config['GREYBOOK_COMMENT_PER_PAGE']
     pagination = db.paginate(
         select(Comment)
         .filter(with_parent(post, Post.comments))
@@ -63,7 +63,7 @@ def show_post(post_id):
     if current_user.is_authenticated:
         form = AdminCommentForm()
         form.author.data = current_user.name
-        form.email.data = current_app.config['BLUELOG_ADMIN_EMAIL']
+        form.email.data = current_app.config['GREYBOOK_ADMIN_EMAIL']
         form.site.data = url_for('.index')
         from_admin = True
         reviewed = True
@@ -114,7 +114,7 @@ def reply_comment(comment_id):
 
 @blog_bp.route('/change-theme/<theme_name>')
 def change_theme(theme_name):
-    if theme_name not in current_app.config['BLUELOG_THEMES']:
+    if theme_name not in current_app.config['GREYBOOK_THEMES']:
         abort(400, description='Invalid theme name.')
 
     response = make_response(redirect_back())
@@ -124,4 +124,4 @@ def change_theme(theme_name):
 
 @blog_bp.route('/uploads/<path:filename>')
 def get_image(filename):
-    return send_from_directory(current_app.config['BLUELOG_UPLOAD_PATH'], filename)
+    return send_from_directory(current_app.config['GREYBOOK_UPLOAD_PATH'], filename)

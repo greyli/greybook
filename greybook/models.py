@@ -9,7 +9,7 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import current_app, url_for
 
-from bluelog.core.extensions import db
+from greybook.core.extensions import db
 
 
 class Admin(db.Model, UserMixin):
@@ -66,7 +66,7 @@ class Post(db.Model):
         return len([comment for comment in self.comments if comment.reviewed])
 
     def delete(self):
-        upload_path = current_app.config['BLUELOG_UPLOAD_PATH']
+        upload_path = current_app.config['GREYBOOK_UPLOAD_PATH']
         upload_url = url_for('blog.get_image', filename='')
         images = re.findall(rf'<img.*?src="{upload_url}(.*?)"', self.body)
         for image in images:

@@ -35,7 +35,7 @@
     Change Theme
   </button>
   <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-    {% for theme_name, display_name in config.BLUELOG_THEMES.items() %}
+    {% for theme_name, display_name in config.GREYBOOK_THEMES.items() %}
     <li>
       <a class="dropdown-item"
           href="{{ url_for('blog.change_theme', theme_name=theme_name, next=request.full_path) }}">
