@@ -21,7 +21,12 @@ class Admin(db.Model, UserMixin):
     name = Column(String(30))
     about = Column(Text)
 
-    def set_password(self, password):
+    @property
+    def password(self):
+        raise AttributeError('Write-only property!')
+
+    @password.setter
+    def password(self, password):
         self.password_hash = generate_password_hash(password)
 
     def validate_password(self, password):
@@ -68,6 +73,8 @@ class Post(db.Model):
             file_path = os.path.join(upload_path, image)
             if os.path.exists(file_path):
                 os.remove(file_path)
+        db.session.delete(self)
+        db.session.commit()
 
 
 class Comment(db.Model):
