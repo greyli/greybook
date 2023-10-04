@@ -37,12 +37,19 @@ def show_category(category_id):
     page = request.args.get('page', 1, type=int)
     per_page = current_app.config['GREYBOOK_POST_PER_PAGE']
     pagination = db.paginate(
-        select(Post).filter(with_parent(category, Category.posts)).order_by(Post.created_at.desc()),
+        select(Post)
+        .filter(with_parent(category, Category.posts))
+        .order_by(Post.created_at.desc()),
         page=page,
         per_page=per_page,
     )
     posts = pagination.items
-    return render_template('blog/category.html', category=category, pagination=pagination, posts=posts)
+    return render_template(
+        'blog/category.html',
+        category=category,
+        pagination=pagination,
+        posts=posts
+    )
 
 
 @blog_bp.route('/post/<int:post_id>', methods=['GET', 'POST'])
@@ -78,8 +85,14 @@ def show_post(post_id):
         site = form.site.data
         body = form.body.data
         comment = Comment(
-            author=author, email=email, site=site, body=body,
-            from_admin=from_admin, post=post, reviewed=reviewed)
+            author=author,
+            email=email,
+            site=site,
+            body=body,
+            from_admin=from_admin,
+            post=post,
+            reviewed=reviewed
+        )
         replied_id = request.args.get('reply')
         if replied_id:
             replied_comment = db.get_or_404(Comment, replied_id)
@@ -93,7 +106,13 @@ def show_post(post_id):
             flash('Thanks, your comment will be published after reviewed.', 'info')
             send_new_comment_email(post)  # send notification email to admin
         return redirect(url_for('.show_post', post_id=post_id))
-    return render_template('blog/post.html', post=post, pagination=pagination, form=form, comments=comments)
+    return render_template(
+        'blog/post.html',
+        post=post,
+        pagination=pagination,
+        form=form,
+        comments=comments
+    )
 
 
 @blog_bp.route('/reply/comment/<int:comment_id>')
