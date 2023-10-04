@@ -23,6 +23,9 @@ def settings():
         current_user.blog_title = form.blog_title.data
         current_user.blog_sub_title = form.blog_sub_title.data
         current_user.about = form.about.data
+        current_user.custom_footer = form.custom_footer.data
+        current_user.custom_css = form.custom_css.data
+        current_user.custom_js = form.custom_js.data
         db.session.commit()
         flash('Setting updated.', 'success')
         return redirect(url_for('blog.index'))
@@ -31,6 +34,9 @@ def settings():
         form.blog_title.data = current_user.blog_title
         form.blog_sub_title.data = current_user.blog_sub_title
         form.about.data = current_user.about
+        form.custom_footer.data = current_user.custom_footer
+        form.custom_css.data = current_user.custom_css
+        form.custom_js.data = current_user.custom_js
     return render_template('admin/settings.html', form=form)
 
 

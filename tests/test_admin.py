@@ -339,6 +339,9 @@ class AdminTestCase(BaseTestCase):
                 blog_sub_title='Just some raw ideas.',
                 bio='I am ...',
                 about='Example about page',
+                custom_footer='Powered by Grey Li',
+                custom_css='body { color: red; }',
+                custom_js='console.log("Hello");',
             ),
             follow_redirects=True
         )
@@ -354,3 +357,10 @@ class AdminTestCase(BaseTestCase):
         response = self.client.get('/about', follow_redirects=True)
         data = response.get_data(as_text=True)
         self.assertIn('Example about page', data)
+
+        response = self.client.get('/')
+        data = response.get_data(as_text=True)
+        self.assertIn('Powered by Grey Li', data)
+        self.assertNotIn('@ 2023', data)
+        self.assertIn('body { color: red; }', data)
+        self.assertIn('console.log("Hello");', data)

@@ -21,6 +21,9 @@ class SettingForm(FlaskForm):
     blog_title = StringField('Blog Title', validators=[DataRequired(), Length(1, 60)])
     blog_sub_title = StringField('Blog Sub Title', validators=[DataRequired(), Length(1, 100)])
     about = CKEditorField('About Page', validators=[DataRequired()])
+    custom_footer = TextAreaField('Custom Footer (HTML)', validators=[Optional()])
+    custom_css = TextAreaField('Custom CSS', validators=[Optional()])
+    custom_js = TextAreaField('Custom JavaScript', validators=[Optional()])
     submit = SubmitField()
 
 
