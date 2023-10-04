@@ -20,6 +20,9 @@ class Admin(db.Model, UserMixin):
     blog_sub_title = Column(String(100))
     name = Column(String(30))
     about = Column(Text)
+    custom_footer = Column(Text)
+    custom_css = Column(Text)
+    custom_js = Column(Text)
 
     @property
     def password(self):
