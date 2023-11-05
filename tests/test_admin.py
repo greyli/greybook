@@ -1,24 +1,17 @@
 import os
 from unittest.mock import patch, call
 
-from greybook.models import Post, Category, Link, Comment
+from greybook.models import Post, Category, Comment
 from greybook.core.extensions import db
 
-from tests.base import BaseTestCase
+from tests import BaseTestCase
 
 
 class AdminTestCase(BaseTestCase):
 
     def setUp(self):
-        super(AdminTestCase, self).setUp()
+        super().setUp()
         self.login()
-
-        category = Category(name='Default')
-        post = Post(title='Hello', category=category, body='Blah...')
-        comment = Comment(body='A comment', post=post, from_admin=True)
-        link = Link(name='GitHub', url='https://github.com/greyli')
-        db.session.add_all([category, post, comment, link])
-        db.session.commit()
 
     def test_new_post(self):
         response = self.client.get('/admin/post/new')
@@ -39,8 +32,8 @@ class AdminTestCase(BaseTestCase):
         response = self.client.get('/admin/post/1/edit')
         data = response.get_data(as_text=True)
         self.assertIn('Edit Post', data)
-        self.assertIn('Hello', data)
-        self.assertIn('Blah...', data)
+        self.assertIn('Test Post Title', data)
+        self.assertIn('Test post body', data)
 
         post = db.session.get(Post, 1)
         updated_at_before = post.updated_at
@@ -57,7 +50,7 @@ class AdminTestCase(BaseTestCase):
         data = response.get_data(as_text=True)
         self.assertIn('Post updated.', data)
         self.assertIn('New post body.', data)
-        self.assertNotIn('Blah...', data)
+        self.assertNotIn('Test post body', data)
 
         updated_post = db.session.get(Post, 1)
         self.assertNotEqual(updated_at_before, updated_post.updated_at)
@@ -107,7 +100,7 @@ class AdminTestCase(BaseTestCase):
         response = self.client.post('/admin/comment/1/delete', follow_redirects=True)
         data = response.get_data(as_text=True)
         self.assertIn('Comment deleted.', data)
-        self.assertNotIn('A comment', data)
+        self.assertNotIn('Test comment body', data)
 
     def test_enable_comment(self):
         post = db.session.get(Post, 1)
@@ -212,13 +205,13 @@ class AdminTestCase(BaseTestCase):
     def test_edit_category(self):
         response = self.client.post(
             '/admin/category/1/edit',
-            data=dict(name='Default edited'),
+            data=dict(name='Edited'),
             follow_redirects=True
         )
         data = response.get_data(as_text=True)
         self.assertNotIn('Category updated.', data)
-        self.assertIn('Default', data)
-        self.assertNotIn('Default edited', data)
+        self.assertIn('Test Category', data)
+        self.assertNotIn('Edited', data)
         self.assertIn('You can not edit the default category', data)
 
         response = self.client.post(
@@ -261,12 +254,12 @@ class AdminTestCase(BaseTestCase):
         data = response.get_data(as_text=True)
         self.assertIn('You can not delete the default category.', data)
         self.assertNotIn('Category deleted.', data)
-        self.assertIn('Default', data)
+        self.assertIn('Test Category', data)
 
         response = self.client.post('/admin/category/2/delete', follow_redirects=True)
         data = response.get_data(as_text=True)
         self.assertIn('Category deleted.', data)
-        self.assertIn('Default', data)
+        self.assertIn('Test Category', data)
         self.assertNotIn('Tech', data)
 
         post = db.session.get(Post, 2)
@@ -277,10 +270,14 @@ class AdminTestCase(BaseTestCase):
         data = response.get_data(as_text=True)
         self.assertIn('New Link', data)
 
-        response = self.client.post('/admin/link/new', data=dict(
-            name='HelloFlask',
-            url='http://helloflask.com'
-        ), follow_redirects=True)
+        response = self.client.post(
+            '/admin/link/new',
+            data=dict(
+                name='HelloFlask',
+                url='http://helloflask.com'
+            ),
+            follow_redirects=True
+        )
         data = response.get_data(as_text=True)
         self.assertIn('Link created.', data)
         self.assertIn('HelloFlask', data)
@@ -289,13 +286,17 @@ class AdminTestCase(BaseTestCase):
         response = self.client.get('/admin/link/1/edit')
         data = response.get_data(as_text=True)
         self.assertIn('Edit Link', data)
-        self.assertIn('GitHub', data)
-        self.assertIn('https://github.com/greyli', data)
+        self.assertIn('Test Link', data)
+        self.assertIn('http://example.com', data)
 
-        response = self.client.post('/admin/link/1/edit', data=dict(
-            name='Github',
-            url='https://github.com/helloflask'
-        ), follow_redirects=True)
+        response = self.client.post(
+            '/admin/link/1/edit',
+            data=dict(
+                name='Github',
+                url='https://github.com/helloflask'
+            ),
+            follow_redirects=True
+        )
         data = response.get_data(as_text=True)
         self.assertIn('Link updated.', data)
         self.assertIn('https://github.com/helloflask', data)

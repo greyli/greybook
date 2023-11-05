@@ -2,13 +2,13 @@ from sqlalchemy import select, func
 
 from greybook.models import Admin, Post, Category, Comment
 from greybook.core.extensions import db
-from tests.base import BaseTestCase
+from tests import BaseTestCase
 
 
 class CommandTestCase(BaseTestCase):
 
     def setUp(self):
-        super(CommandTestCase, self).setUp()
+        super().setUp()
         db.drop_all()
 
     def test_initdb_command(self):

@@ -1,6 +1,6 @@
 from flask import current_app
 
-from tests.base import BaseTestCase
+from tests import BaseTestCase
 
 
 class BasicTestCase(BaseTestCase):
