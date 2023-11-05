@@ -46,7 +46,6 @@
 <table class="table table-striped">
   <thead>
     <tr>
-      <th>No.</th>
       <th>Author</th>
       <th>Body</th>
       <th>Date</th>
@@ -55,7 +54,6 @@
   </thead>
   {% for comment in comments %}
   <tr {% if not comment.reviewed %}class="table-warning" {% endif %}>
-    <td>{{ loop.index + ((pagination.page - 1) * config['GREYBOOK_COMMENT_PER_PAGE']) }}</td>
     <td>
       {% if comment.from_admin %}{{ admin.name }}{% else %}{{ comment.author }}{% endif %}<br>
       {% if comment.site %}

@@ -19,7 +19,6 @@
 <table class="table table-striped">
   <thead>
     <tr>
-      <th>No.</th>
       <th>Name</th>
       <th>Posts</th>
       <th>Actions</th>
@@ -27,7 +26,6 @@
   </thead>
   {% for category in categories %}
   <tr>
-    <td>{{ loop.index }}</td>
     <td>
       <a href="{{ url_for('blog.show_category', category_id=category.id) }}">
         {{ category.name }}
