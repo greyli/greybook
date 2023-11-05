@@ -1,37 +1,29 @@
-from greybook.models import Post, Category, Link, Comment
+from greybook.models import Post
 from greybook.core.extensions import db
 
-from tests.base import BaseTestCase
+from tests import BaseTestCase
 
 
 class BlogTestCase(BaseTestCase):
 
     def setUp(self):
-        super(BlogTestCase, self).setUp()
+        super().setUp()
         self.login()
-
-        category = Category(name='Default')
-        post = Post(title='Hello Post', category=category, body='Blah...')
-        comment = Comment(body='A comment', post=post, from_admin=True, reviewed=True)
-        link = Link(name='GitHub', url='https://github.com/greyli')
-
-        db.session.add_all([category, post, comment, link])
-        db.session.commit()
 
     def test_index_page(self):
         response = self.client.get('/')
         data = response.get_data(as_text=True)
         self.assertIn('Home', data)
-        self.assertIn('Testlog', data)
-        self.assertIn('a test', data)
-        self.assertIn('Hello Post', data)
-        self.assertIn('GitHub', data)
+        self.assertIn('Test Blog Title', data)
+        self.assertIn('Test sub title', data)
+        self.assertIn('Test Post Title', data)
+        self.assertIn('Test Link', data)
 
     def test_post_page(self):
         response = self.client.get('/post/1')
         data = response.get_data(as_text=True)
-        self.assertIn('Hello Post', data)
-        self.assertIn('A comment', data)
+        self.assertIn('Test Post Title', data)
+        self.assertIn('Test comment body', data)
 
     def test_change_theme(self):
         response = self.client.get('/change-theme/default', follow_redirects=True)
@@ -47,14 +39,14 @@ class BlogTestCase(BaseTestCase):
     def test_about_page(self):
         response = self.client.get('/about')
         data = response.get_data(as_text=True)
-        self.assertIn('I am test', data)
+        self.assertIn('Test about page.', data)
         self.assertIn('About', data)
 
     def test_category_page(self):
         response = self.client.get('/category/1')
         data = response.get_data(as_text=True)
-        self.assertIn('Category: Default', data)
-        self.assertIn('Hello Post', data)
+        self.assertIn('Category: Test Category', data)
+        self.assertIn('Test Post Title', data)
 
     def test_new_admin_comment(self):
         response = self.client.post(

@@ -10,7 +10,9 @@
   <link rel="stylesheet"
       href="{{ url_for('static', filename='css/%s.min.css' % request.cookies.get('theme', 'default')) }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+  {% if admin.custom_css %}
   <style>{{ admin.custom_css | safe }}</style>
+  {% endif %}
   {% endblock head %}
 </head>
 <body>
@@ -83,8 +85,8 @@
           {{ admin.custom_footer | safe }}
           {% else %}
           &copy; 2023
-          <a href="https://helloflask.com">HelloFlask</a> -
-          <a href="https://github.com/greyli/greybook">GitHub</a>
+          <a href="{{ url_for('blog.index') }}">{{ admin.name }}</a> ·
+          Powered by <a href="https://github.com/greyli/greybook">Greybook</a>
           {% endif %}
         </small>
       </p>
@@ -107,7 +109,9 @@
   <script src="{{ url_for('static', filename='js/dayjs/plugin/utc.js') }}"></script>
   <script src="{{ url_for('static', filename='js/dayjs/plugin/localizedFormat.js') }}"></script>
   <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  {% if admin.custom_js %}
   <script>{{ admin.custom_js | safe }}</script>
+  {% endif %}
   {% endblock %}
 </body>
 </html>

@@ -90,7 +90,7 @@ def show_post(post_id):
             site=site,
             body=body,
             from_admin=from_admin,
-            post=post,
+            post_id=post_id,
             reviewed=reviewed
         )
         replied_id = request.args.get('reply')

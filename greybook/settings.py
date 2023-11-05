@@ -40,7 +40,7 @@ class BaseConfig:
     }
     GREYBOOK_SLOW_QUERY_THRESHOLD = 1
 
-    GREYBOOK_UPLOAD_PATH = os.path.join(basedir, 'uploads')
+    GREYBOOK_UPLOAD_PATH = os.getenv('GREYBOOK_UPLOAD_PATH', os.path.join(basedir, 'uploads'))
     GREYBOOK_ALLOWED_IMAGE_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif']
 
 
