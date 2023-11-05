@@ -103,9 +103,10 @@ def fake_replies(count=50):
 
 
 def fake_links():
-    facebook = Link(name='GitHub', url='https://github.com/greyli')
+    helloflask = Link(name='HelloFlask', url='https://helloflask.com')
+    github = Link(name='GitHub', url='https://github.com/greyli')
     twitter = Link(name='Twitter', url='https://twitter.com/greylihui')
     linkedin = Link(name='LinkedIn', url='https://www.linkedin.com/in/greyli/')
     google = Link(name='Stack Overflow', url='https://stackoverflow.com/users/5511849/grey-li')
-    db.session.add_all([twitter, facebook, linkedin, google])
+    db.session.add_all([helloflask, github, twitter, linkedin, google])
     db.session.commit()
