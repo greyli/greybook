@@ -1,0 +1,38 @@
+# stage 1: build
+ARG base_image=python:3.12-slim
+FROM ${base_image} AS build
+
+WORKDIR /home/greybook
+RUN apt-get update && apt-get install -y gcc g++
+
+# install dependencies
+COPY requirements.txt requirements.txt
+RUN python3 -m venv venv
+RUN venv/bin/pip install -r requirements.txt
+RUN venv/bin/pip install gunicorn
+
+# stage 2: production
+FROM ${base_image}
+
+RUN groupadd -r greybook && useradd -r -g greybook greybook
+WORKDIR /home/greybook
+
+# copy the installed dependencies from the previous stage
+COPY --from=build /home/greybook/venv/ venv/
+
+# copy the application source code from the previous stage
+COPY greybook greybook
+COPY migrations migrations
+COPY logs logs
+COPY uploads uploads
+COPY app.py .
+
+ENV FLASK_APP app
+ENV FLASK_CONFIG production
+
+RUN chown -R greybook:greybook .
+USER greybook
+
+EXPOSE 5000
+RUN venv/bin/flask db upgrade
+ENTRYPOINT ["venv/bin/gunicorn", "-b", ":5000", "--access-logfile", "-", "--error-logfile", "-", "app:app"]
