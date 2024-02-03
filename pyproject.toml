@@ -25,7 +25,6 @@ authors = [
 dependencies = [
     "flask>=2.2.5",
     "flask-login>=0.6.2",
-    "flask-mail>=0.9.1",
     "flask-wtf>=1.1.1",
     "flask-sqlalchemy>=3.0.3",
     "flask-migrate>=4.0.4",
@@ -36,7 +35,7 @@ dependencies = [
     "python-dotenv>=0.21.1",
     "flask-mailman>=0.3.0",
 ]
-requires-python = ">=3.7"
+requires-python = ">=3.8"
 license = {text = "MIT"}
 
 [build-system]

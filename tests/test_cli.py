@@ -27,7 +27,7 @@ class CommandTestCase(BaseTestCase):
         result = self.cli_runner.invoke(
             args=['init', '--username', 'grey', '--password', '123']
         )
-        self.assertIn('Created the temporary administrator account.', result.output)
+        self.assertIn('Created the administrator account.', result.output)
         self.assertIn('Created the default category.', result.output)
         self.assertEqual(db.session.execute(select(func.count(Admin.id))).scalars().one(), 1)
         self.assertEqual(db.session.execute(select(Admin)).scalar().username, 'grey')
@@ -39,7 +39,7 @@ class CommandTestCase(BaseTestCase):
             args=['init', '--username', 'new grey', '--password', '123']
         )
         self.assertIn('Updated the existing administrator account.', result.output)
-        self.assertNotIn('Created the temporary administrator account.', result.output)
+        self.assertNotIn('Created the administrator account.', result.output)
         self.assertEqual(db.session.execute(select(func.count(Admin.id))).scalars().one(), 1)
         self.assertEqual(db.session.execute(select(Admin)).scalar().username, 'new grey')
         self.assertEqual(db.session.execute(select(Category)).scalar().name, 'Default')

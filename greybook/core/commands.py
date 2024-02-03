@@ -54,7 +54,7 @@ def register_commands(app):
                 about='Anything about you.'
             )
             db.session.add(admin)
-            click.echo('Created the temporary administrator account.')
+            click.echo('Created the administrator account.')
 
         category = db.session.execute(select(Category)).scalar()
         if category is None:
