@@ -1,17 +1,17 @@
 from flask import Flask
 
-from greybook.views.admin import admin_bp
-from greybook.views.auth import auth_bp
-from greybook.views.blog import blog_bp
+from greybook.blueprints.admin import admin_bp
+from greybook.blueprints.auth import auth_bp
+from greybook.blueprints.blog import blog_bp
 from greybook.core.extensions import bootstrap, db, login_manager, csrf, \
     ckeditor, mail, toolbar, migrate
-from greybook.models import Admin, Post, Category, Comment
 from greybook.settings import config
 from greybook.core.commands import register_commands
 from greybook.core.logging import register_logging
 from greybook.core.templating import register_template_handlers
 from greybook.core.request import register_request_handlers
 from greybook.core.errors import register_errors
+from greybook.core.shell import register_shell_handlers
 
 
 def create_app(config_name):
@@ -38,9 +38,6 @@ def create_app(config_name):
     register_errors(app)
     register_template_handlers(app)
     register_request_handlers(app)
-
-    @app.shell_context_processor
-    def make_shell_context():
-        return dict(db=db, Admin=Admin, Post=Post, Category=Category, Comment=Comment)
+    register_shell_handlers(app)
 
     return app
