@@ -1,0 +1,16 @@
+services:
+  greybook:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    ports:
+      - "8000:5000"
+    volumes:
+      - greybook-database:/home/greybook/database
+      - greybook-uploads:/home/greybook/uploads
+
+volumes:
+  greybook-database:
+  greybook-uploads:
