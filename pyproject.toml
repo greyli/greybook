@@ -16,8 +16,8 @@ test = [
 ]
 
 [project]
-name = ""
-version = ""
+name = "greybook"
+version = "1.0.0"
 description = ""
 authors = [
     {name = "Grey Li", email = "withlihui@gmail.com"},
@@ -42,3 +42,7 @@ license = {text = "MIT"}
 [build-system]
 requires = ["pdm-pep517>=1.0.0"]
 build-backend = "pdm.pep517.api"
+
+[[tool.pdm.autoexport]]
+filename = "requirements.txt"
+groups = ["default"]
