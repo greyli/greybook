@@ -1,7 +1,8 @@
 import os
 import sys
+from pathlib import Path
 
-basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+basedir = Path(__file__).resolve().parent.parent
 
 # SQLite URI compatible
 WIN = sys.platform.startswith('win')
@@ -40,12 +41,14 @@ class BaseConfig:
     }
     GREYBOOK_SLOW_QUERY_THRESHOLD = 1
 
-    GREYBOOK_UPLOAD_PATH = os.getenv('GREYBOOK_UPLOAD_PATH', os.path.join(basedir, 'uploads'))
+    GREYBOOK_UPLOAD_PATH = os.getenv('GREYBOOK_UPLOAD_PATH', basedir / 'uploads')
     GREYBOOK_ALLOWED_IMAGE_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif']
+    GREYBOOK_LOGGING_PATH = os.getenv('GREYBOOK_LOGGING_PATH', basedir / 'logs/greybook.log')
+    GREYBOOK_ERROR_EMAIL_SUBJECT = '[Greybook] Application Error'
 
 
 class DevelopmentConfig(BaseConfig):
-    SQLALCHEMY_DATABASE_URI = prefix + os.path.join(basedir, 'data-dev.db')
+    SQLALCHEMY_DATABASE_URI = prefix + str(basedir / 'data-dev.db')
 
 
 class TestingConfig(BaseConfig):
@@ -55,7 +58,7 @@ class TestingConfig(BaseConfig):
 
 
 class ProductionConfig(BaseConfig):
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', prefix + os.path.join(basedir, 'data.db'))
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', prefix + str(basedir / 'data.db'))
 
 
 config = {

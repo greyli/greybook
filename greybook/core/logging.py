@@ -1,14 +1,13 @@
 import logging
-import os
 from logging.handlers import SMTPHandler, RotatingFileHandler
 
 from flask import request
-from flask.logging import default_handler
-
-from greybook.settings import basedir
+from flask.logging import wsgi_errors_stream
 
 
 def register_logging(app):
+    formatter = logging.Formatter('[%(asctime)s] %(levelname)s in %(module)s: %(message)s')
+
     class RequestFormatter(logging.Formatter):
 
         def format(self, record):
@@ -21,10 +20,11 @@ def register_logging(app):
         '%(levelname)s in %(module)s: %(message)s'
     )
 
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-
-    file_handler = RotatingFileHandler(os.path.join(basedir, 'logs/greybook.log'),
-                                       maxBytes=10 * 1024 * 1024, backupCount=10)
+    logging_path = app.config['GREYBOOK_LOGGING_PATH']
+    if logging_path == 'stream':
+        file_handler = logging.StreamHandler(wsgi_errors_stream)
+    else:
+        file_handler = RotatingFileHandler(logging_path, maxBytes=10 * 1024 * 1024, backupCount=10)
     file_handler.setFormatter(formatter)
     file_handler.setLevel(logging.INFO)
 
@@ -32,7 +32,7 @@ def register_logging(app):
         mailhost=app.config['MAIL_SERVER'],
         fromaddr=app.config['MAIL_USERNAME'],
         toaddrs=['ADMIN_EMAIL'],
-        subject='Greybook Application Error',
+        subject=app.config['GREYBOOK_ERROR_EMAIL_SUBJECT'],
         credentials=(app.config['MAIL_USERNAME'], app.config['MAIL_PASSWORD']))
     mail_handler.setLevel(logging.ERROR)
     mail_handler.setFormatter(request_formatter)
@@ -40,6 +40,4 @@ def register_logging(app):
     if not app.debug:
         app.logger.addHandler(mail_handler)
         app.logger.addHandler(file_handler)
-    else:
-        app.logger.setLevel(logging.DEBUG)
-        app.logger.addHandler(default_handler)
+        app.logger.setLevel(logging.INFO)
