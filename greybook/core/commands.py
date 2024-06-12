@@ -9,9 +9,9 @@ from greybook.models import Admin, Category
 
 
 def register_commands(app):
-    @app.cli.command()
+    @app.cli.command(name='init-db')
     @click.option('--drop', is_flag=True, help='Create after drop.')
-    def initdb(drop):
+    def init_db(drop):
         """Initialize the database."""
         if drop:
             click.confirm(
@@ -24,7 +24,7 @@ def register_commands(app):
         click.echo('Initialized the database.')
 
 
-    @app.cli.command()
+    @app.cli.command(name='init-blog')
     @click.option('--username', prompt=True, help='The username used to login.')
     @click.option(
         '--password',
@@ -33,7 +33,7 @@ def register_commands(app):
         confirmation_prompt=True,
         help='The password used to login.'
     )
-    def init(username, password):
+    def init_blog(username, password):
         """Initialize the blog."""
 
         db.create_all()

@@ -11,21 +11,21 @@ class CommandTestCase(BaseTestCase):
         super().setUp()
         db.drop_all()
 
-    def test_initdb_command(self):
-        result = self.cli_runner.invoke(args=['initdb'])
+    def test_init_db_command(self):
+        result = self.cli_runner.invoke(args=['init-db'])
         self.assertIn('Initialized the database.', result.output)
 
-    def test_initdb_command_with_drop(self):
-        result = self.cli_runner.invoke(args=['initdb', '--drop'], input='y\n')
+    def test_init_db_command_with_drop(self):
+        result = self.cli_runner.invoke(args=['init-db', '--drop'], input='y\n')
         self.assertIn(
             'This operation will delete the database, do you want to continue?',
             result.output
         )
         self.assertIn('Dropped tables.', result.output)
 
-    def test_init_command(self):
+    def test_init_blog_command(self):
         result = self.cli_runner.invoke(
-            args=['init', '--username', 'grey', '--password', '123']
+            args=['init-blog', '--username', 'grey', '--password', '123']
         )
         self.assertIn('Created the administrator account.', result.output)
         self.assertIn('Created the default category.', result.output)
@@ -33,10 +33,10 @@ class CommandTestCase(BaseTestCase):
         self.assertEqual(db.session.execute(select(Admin)).scalar().username, 'grey')
         self.assertEqual(db.session.execute(select(Category)).scalar().name, 'Default')
 
-    def test_init_command_with_update(self):
-        self.cli_runner.invoke(args=['init', '--username', 'grey', '--password', '123'])
+    def test_init_blog_command_with_update(self):
+        self.cli_runner.invoke(args=['init-blog', '--username', 'grey', '--password', '123'])
         result = self.cli_runner.invoke(
-            args=['init', '--username', 'new grey', '--password', '123']
+            args=['init-blog', '--username', 'new grey', '--password', '123']
         )
         self.assertIn('Updated the existing administrator account.', result.output)
         self.assertNotIn('Created the administrator account.', result.output)

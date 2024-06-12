@@ -1,0 +1,19 @@
+flask
+flask-login
+flask-mailman
+flask-wtf
+flask-sqlalchemy
+flask-migrate
+flask-debugtoolbar
+bootstrap-flask
+flask-ckeditor
+email-validator
+python-dotenv
+# dev
+pip-tools
+watchdog
+faker
+flake8
+# test
+pytest
+coverage
