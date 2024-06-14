@@ -1,24 +1,7 @@
-[tool.pdm]
-[[tool.pdm.source]]
-url = "https://pypi.org/simple"
-verify_ssl = true
-name = "pypi"
-
-[tool.pdm.dev-dependencies]
-dev = [
-    "watchdog>=3.0.0",
-    "faker>=18.9.0",
-    "flake8>=5.0.4",
-]
-test = [
-    "pytest>=7.3.1",
-    "coverage>=7.2.6",
-]
-
 [project]
-name = ""
-version = ""
-description = ""
+name = "greybook"
+version = "1.0.0"
+description = "A grey blog engine."
 authors = [
     {name = "Grey Li", email = "withlihui@gmail.com"},
 ]
@@ -39,6 +22,25 @@ dependencies = [
 requires-python = ">=3.8"
 license = {text = "MIT"}
 
-[build-system]
-requires = ["pdm-pep517>=1.0.0"]
-build-backend = "pdm.pep517.api"
+[tool.pdm]
+distribution = false
+
+[tool.pdm.dev-dependencies]
+dev = [
+    "watchdog>=3.0.0",
+    "faker>=18.9.0",
+    "flake8>=5.0.4",
+]
+test = [
+    "pytest>=7.3.1",
+    "coverage>=7.2.6",
+]
+
+[[tool.pdm.source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[[tool.pdm.autoexport]]
+filename = "requirements.txt"
+groups = ["default"]

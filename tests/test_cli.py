@@ -51,7 +51,10 @@ class CommandTestCase(BaseTestCase):
         default_reply_count = 50
 
         result = self.cli_runner.invoke(args=['fake'])
-
+        print(result.output)
+        print(result.stdout)
+        print(result.stderr)
+        print(db)
         self.assertEqual(db.session.execute(select(func.count(Admin.id))).scalars().one(), 1)
         self.assertIn('Generated the administrator.', result.output)
 
