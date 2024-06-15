@@ -1,12 +1,20 @@
 from flask_ckeditor import CKEditorField
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, SelectField, TextAreaField, \
-    ValidationError, HiddenField, BooleanField, PasswordField
-from wtforms.validators import DataRequired, Email, Length, Optional, URL
 from sqlalchemy import select
+from wtforms import (
+    BooleanField,
+    HiddenField,
+    PasswordField,
+    SelectField,
+    StringField,
+    SubmitField,
+    TextAreaField,
+    ValidationError,
+)
+from wtforms.validators import URL, DataRequired, Email, Length, Optional
 
-from greybook.models import Category
 from greybook.core.extensions import db
+from greybook.models import Category
 
 
 class LoginForm(FlaskForm):

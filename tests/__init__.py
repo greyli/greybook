@@ -2,11 +2,10 @@ import unittest
 
 from greybook import create_app
 from greybook.core.extensions import db
-from greybook.models import Admin, Post, Category, Link, Comment
+from greybook.models import Admin, Category, Comment, Link, Post
 
 
 class BaseTestCase(unittest.TestCase):
-
     def setUp(self):
         self.app = create_app('testing')
         self.context = self.app.app_context()
@@ -21,7 +20,7 @@ class BaseTestCase(unittest.TestCase):
             password='greybook',
             about='Test about page.',
             blog_title='Test Blog Title',
-            blog_sub_title='Test sub title'
+            blog_sub_title='Test sub title',
         )
         category = Category(name='Test Category')
         post = Post(title='Test Post Title', category=category, body='Test post body')
@@ -35,11 +34,7 @@ class BaseTestCase(unittest.TestCase):
         self.context.pop()
 
     def login(self, username='admin', password='greybook'):
-        return self.client.post(
-            '/auth/login',
-            data=dict(username=username, password=password),
-            follow_redirects=True
-        )
+        return self.client.post('/auth/login', data=dict(username=username, password=password), follow_redirects=True)
 
     def logout(self):
         return self.client.get('/auth/logout', follow_redirects=True)

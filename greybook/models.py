@@ -2,12 +2,11 @@ import os
 import re
 from datetime import datetime
 
-from sqlalchemy import Column, Integer, String, Text, ForeignKey, \
-    Boolean, DateTime
-from sqlalchemy.orm import relationship
-from flask_login import UserMixin
-from werkzeug.security import generate_password_hash, check_password_hash
 from flask import current_app, url_for
+from flask_login import UserMixin
+from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, Text
+from sqlalchemy.orm import relationship
+from werkzeug.security import check_password_hash, generate_password_hash
 
 from greybook.core.extensions import db
 

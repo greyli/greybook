@@ -1,11 +1,9 @@
-from greybook.models import Post
 from greybook.core.extensions import db
-
+from greybook.models import Post
 from tests import BaseTestCase
 
 
 class BlogTestCase(BaseTestCase):
-
     def setUp(self):
         super().setUp()
         self.login()
@@ -49,11 +47,7 @@ class BlogTestCase(BaseTestCase):
         self.assertIn('Test Post Title', data)
 
     def test_new_admin_comment(self):
-        response = self.client.post(
-            '/post/1',
-            data=dict(body='I am an admin comment.'),
-            follow_redirects=True
-        )
+        response = self.client.post('/post/1', data=dict(body='I am an admin comment.'), follow_redirects=True)
         data = response.get_data(as_text=True)
         self.assertIn('Comment published.', data)
         self.assertIn('I am an admin comment.', data)
@@ -68,7 +62,7 @@ class BlogTestCase(BaseTestCase):
                 site='http://greyli.com',
                 body='I am a guest comment.',
             ),
-            follow_redirects=True
+            follow_redirects=True,
         )
         data = response.get_data(as_text=True)
         self.assertIn('Thanks, your comment will be published after reviewed.', data)
@@ -92,9 +86,7 @@ class BlogTestCase(BaseTestCase):
 
     def test_new_admin_reply(self):
         response = self.client.post(
-            '/post/1' + '?reply=1',
-            data=dict(body='I am an admin reply comment.'),
-            follow_redirects=True
+            '/post/1' + '?reply=1', data=dict(body='I am an admin reply comment.'), follow_redirects=True
         )
         data = response.get_data(as_text=True)
         self.assertIn('Comment published.', data)
@@ -104,13 +96,14 @@ class BlogTestCase(BaseTestCase):
     def test_new_guest_reply(self):
         self.logout()
         response = self.client.post(
-            '/post/1' + '?reply=1', data=dict(
+            '/post/1' + '?reply=1',
+            data=dict(
                 author='Guest',
                 email='a@b.com',
                 site='http://greyli.com',
                 body='I am a guest comment.',
             ),
-            follow_redirects=True
+            follow_redirects=True,
         )
         data = response.get_data(as_text=True)
         self.assertIn('Thanks, your comment will be published after reviewed.', data)

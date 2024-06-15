@@ -1,12 +1,11 @@
-from sqlalchemy import select, func
+from sqlalchemy import func, select
 
-from greybook.models import Admin, Post, Category, Comment
 from greybook.core.extensions import db
+from greybook.models import Admin, Category, Comment, Post
 from tests import BaseTestCase
 
 
 class CommandTestCase(BaseTestCase):
-
     def setUp(self):
         super().setUp()
         db.drop_all()
@@ -17,16 +16,11 @@ class CommandTestCase(BaseTestCase):
 
     def test_init_db_command_with_drop(self):
         result = self.cli_runner.invoke(args=['init-db', '--drop'], input='y\n')
-        self.assertIn(
-            'This operation will delete the database, do you want to continue?',
-            result.output
-        )
+        self.assertIn('This operation will delete the database, do you want to continue?', result.output)
         self.assertIn('Dropped tables.', result.output)
 
     def test_init_blog_command(self):
-        result = self.cli_runner.invoke(
-            args=['init-blog', '--username', 'grey', '--password', '123']
-        )
+        result = self.cli_runner.invoke(args=['init-blog', '--username', 'grey', '--password', '123'])
         self.assertIn('Created the administrator account.', result.output)
         self.assertIn('Created the default category.', result.output)
         self.assertEqual(db.session.scalar(select(func.count(Admin.id))), 1)
@@ -35,9 +29,7 @@ class CommandTestCase(BaseTestCase):
 
     def test_init_blog_command_with_update(self):
         self.cli_runner.invoke(args=['init-blog', '--username', 'grey', '--password', '123'])
-        result = self.cli_runner.invoke(
-            args=['init-blog', '--username', 'new grey', '--password', '123']
-        )
+        result = self.cli_runner.invoke(args=['init-blog', '--username', 'new grey', '--password', '123'])
         self.assertIn('Updated the existing administrator account.', result.output)
         self.assertNotIn('Created the administrator account.', result.output)
         self.assertEqual(db.session.scalar(select(func.count(Admin.id))), 1)
@@ -54,22 +46,13 @@ class CommandTestCase(BaseTestCase):
         self.assertEqual(db.session.scalar(select(func.count(Admin.id))), 1)
         self.assertIn('Generated the administrator.', result.output)
 
-        self.assertEqual(
-            db.session.scalar(select(func.count(Post.id))),
-            default_post_count
-        )
+        self.assertEqual(db.session.scalar(select(func.count(Post.id))), default_post_count)
         self.assertIn(f'Generated {default_post_count} posts.', result.output)
 
-        self.assertEqual(db.session.scalar(
-            select(func.count(Category.id))),
-            default_category_count
-        )
+        self.assertEqual(db.session.scalar(select(func.count(Category.id))), default_category_count)
         self.assertIn(f'Generated {default_category_count} categories.', result.output)
 
-        self.assertEqual(
-            db.session.scalar(select(func.count(Comment.id))),
-            default_comment_count + default_reply_count
-        )
+        self.assertEqual(db.session.scalar(select(func.count(Comment.id))), default_comment_count + default_reply_count)
         self.assertIn(f'Generated {default_comment_count} comments.', result.output)
         self.assertIn(f'Generated {default_reply_count} replies.', result.output)
 
@@ -84,32 +67,27 @@ class CommandTestCase(BaseTestCase):
         result = self.cli_runner.invoke(
             args=[
                 'lorem',
-                '--category', category_count,
-                '--post', post_count,
-                '--comment', comment_count,
-                '--reply', reply_count
+                '--category',
+                category_count,
+                '--post',
+                post_count,
+                '--comment',
+                comment_count,
+                '--reply',
+                reply_count,
             ]
         )
 
         self.assertEqual(db.session.scalar(select(func.count(Admin.id))), 1)
         self.assertIn('Generated the administrator.', result.output)
 
-        self.assertEqual(
-            db.session.scalar(select(func.count(Category.id))),
-            category_count
-        )
+        self.assertEqual(db.session.scalar(select(func.count(Category.id))), category_count)
         self.assertIn(f'Generated {category_count} categories.', result.output)
 
-        self.assertEqual(
-            db.session.scalar(select(func.count(Post.id))),
-            post_count
-        )
+        self.assertEqual(db.session.scalar(select(func.count(Post.id))), post_count)
         self.assertIn(f'Generated {post_count} posts.', result.output)
 
-        self.assertEqual(
-            db.session.scalar(select(func.count(Comment.id))),
-            comment_count + reply_count
-        )
+        self.assertEqual(db.session.scalar(select(func.count(Comment.id))), comment_count + reply_count)
         self.assertIn(f'Generated {comment_count} comments.', result.output)
         self.assertIn(f'Generated {reply_count} replies.', result.output)
 

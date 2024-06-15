@@ -2,11 +2,11 @@ import random
 from datetime import datetime
 
 from faker import Faker
+from sqlalchemy import func, select
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy import select, func
 
 from greybook.core.extensions import db
-from greybook.models import Admin, Category, Post, Comment, Link
+from greybook.models import Admin, Category, Comment, Link, Post
 
 fake = Faker()
 
@@ -16,10 +16,10 @@ def fake_admin():
         username='admin',
         password='greybook',
         blog_title='Greybook',
-        blog_sub_title="Just some random thoughts",
+        blog_sub_title='Just some random thoughts',
         name='Grey Li',
         about='Hello, I am Grey Li. This is an example '
-            'Flask project for <a href="https://helloflask.com/book/4/">my book</a>.'
+        'Flask project for <a href="https://helloflask.com/book/4/">my book</a>.',
     )
     db.session.add(admin)
     db.session.commit()
@@ -44,19 +44,17 @@ def fake_posts(count=50):
     for _ in range(count):
         category_count = db.session.execute(select(func.count(Category.id))).scalars().one()
         created_date = fake.date_time_between_dates(
-            datetime_start=datetime(2010, 1, 1),
-            datetime_end=datetime(2020, 1, 1)
+            datetime_start=datetime(2010, 1, 1), datetime_end=datetime(2020, 1, 1)
         )
         updated_date = fake.date_time_between_dates(
-            datetime_start=datetime(2020, 1, 2),
-            datetime_end=datetime(2022, 12, 31)
+            datetime_start=datetime(2020, 1, 2), datetime_end=datetime(2022, 12, 31)
         )
         post = Post(
             title=fake.sentence(),
             body=fake.text(2000),
             category=db.session.get(Category, random.randint(1, category_count)),
             created_at=created_date,
-            updated_at=updated_date
+            updated_at=updated_date,
         )
         db.session.add(post)
     db.session.commit()
@@ -73,7 +71,7 @@ def fake_comments(count=500):
             created_at=fake.date_time_this_year(before_now=True, after_now=False),
             reviewed=random.choice([True, True, True, True, False]),
             from_admin=random.choice([False, False, False, False, True]),
-            post=db.session.get(Post, random.randint(1, post_count))
+            post=db.session.get(Post, random.randint(1, post_count)),
         )
         if comment.from_admin:
             comment.author = 'Grey Li'
@@ -96,7 +94,7 @@ def fake_replies(count=50):
             created_at=fake.date_time_this_year(before_now=False, after_now=True),
             reviewed=True,
             replied=replied,
-            post=replied.post
+            post=replied.post,
         )
         db.session.add(comment)
     db.session.commit()

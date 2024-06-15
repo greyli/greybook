@@ -1,15 +1,14 @@
 import os
 
-from flask import render_template, flash, redirect, url_for, request, \
-    current_app, Blueprint
-from flask_login import login_required, current_user
-from flask_ckeditor import upload_success, upload_fail
+from flask import Blueprint, current_app, flash, redirect, render_template, request, url_for
+from flask_ckeditor import upload_fail, upload_success
+from flask_login import current_user, login_required
 from sqlalchemy import select
 
 from greybook.core.extensions import db
-from greybook.forms import SettingForm, PostForm, CategoryForm, LinkForm
-from greybook.models import Post, Category, Comment, Link
-from greybook.utils import redirect_back, allowed_file, random_filename
+from greybook.forms import CategoryForm, LinkForm, PostForm, SettingForm
+from greybook.models import Category, Comment, Link, Post
+from greybook.utils import allowed_file, random_filename, redirect_back
 
 admin_bp = Blueprint('admin', __name__)
 
@@ -153,9 +152,7 @@ def approve_comment(comment_id):
 @admin_bp.route('/comments/approve', methods=['POST'])
 @login_required
 def approve_all_comment():
-    comments = db.session.execute(
-        select(Comment).filter_by(reviewed=False)
-    ).scalars().all()
+    comments = db.session.execute(select(Comment).filter_by(reviewed=False)).scalars().all()
     for comment in comments:
         comment.reviewed = True
     db.session.commit()
@@ -171,6 +168,7 @@ def delete_comment(comment_id):
     db.session.commit()
     flash('Comment deleted.', 'success')
     return redirect_back()
+
 
 @admin_bp.route('/category/manage')
 @login_required

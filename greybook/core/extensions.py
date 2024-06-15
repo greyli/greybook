@@ -1,11 +1,11 @@
 from flask_bootstrap import Bootstrap5
 from flask_ckeditor import CKEditor
+from flask_debugtoolbar import DebugToolbarExtension
 from flask_login import LoginManager
 from flask_mailman import Mail
+from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import CSRFProtect
-from flask_debugtoolbar import DebugToolbarExtension
-from flask_migrate import Migrate
 
 bootstrap = Bootstrap5()
 db = SQLAlchemy()
@@ -20,6 +20,7 @@ migrate = Migrate()
 @login_manager.user_loader
 def load_user(user_id):
     from greybook.models import Admin
+
     user = db.session.get(Admin, int(user_id))
     return user
 

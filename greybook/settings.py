@@ -5,11 +5,7 @@ from pathlib import Path
 basedir = Path(__file__).resolve().parent.parent
 
 # SQLite URI compatible
-WIN = sys.platform.startswith('win')
-if WIN:
-    prefix = 'sqlite:///'
-else:
-    prefix = 'sqlite:////'
+prefix = 'sqlite:///' if sys.platform.startswith('win') else 'sqlite:////'
 
 
 class BaseConfig:
@@ -35,10 +31,7 @@ class BaseConfig:
     GREYBOOK_MANAGE_POST_PER_PAGE = 15
     GREYBOOK_COMMENT_PER_PAGE = 15
     # ('theme name', 'display name')
-    GREYBOOK_THEMES = {
-        'default': 'Default',
-        'perfect_blue': 'Perfect Blue'
-    }
+    GREYBOOK_THEMES = {'default': 'Default', 'perfect_blue': 'Perfect Blue'}
     GREYBOOK_SLOW_QUERY_THRESHOLD = 1
 
     GREYBOOK_UPLOAD_PATH = os.getenv('GREYBOOK_UPLOAD_PATH', basedir / 'uploads')
@@ -61,8 +54,4 @@ class ProductionConfig(BaseConfig):
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', prefix + str(basedir / 'data.db'))
 
 
-config = {
-    'development': DevelopmentConfig,
-    'testing': TestingConfig,
-    'production': ProductionConfig
-}
+config = {'development': DevelopmentConfig, 'testing': TestingConfig, 'production': ProductionConfig}
