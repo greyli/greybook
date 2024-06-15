@@ -35,7 +35,7 @@ $ source .venv/bin/activate  # use `.venv\Scripts\activate` on Windows
 Generate fake data then run the application:
 
 ```
-$ flask fake
+$ flask lorem
 $ flask run
 * Running on http://127.0.0.1:5000/
 ```
