@@ -29,7 +29,7 @@ class CommandTestCase(BaseTestCase):
         )
         self.assertIn('Created the administrator account.', result.output)
         self.assertIn('Created the default category.', result.output)
-        self.assertEqual(db.session.execute(select(func.count(Admin.id))).scalars().one(), 1)
+        self.assertEqual(db.session.scalar(select(func.count(Admin.id))), 1)
         self.assertEqual(db.session.execute(select(Admin)).scalar().username, 'grey')
         self.assertEqual(db.session.execute(select(Category)).scalar().name, 'Default')
 
@@ -40,7 +40,7 @@ class CommandTestCase(BaseTestCase):
         )
         self.assertIn('Updated the existing administrator account.', result.output)
         self.assertNotIn('Created the administrator account.', result.output)
-        self.assertEqual(db.session.execute(select(func.count(Admin.id))).scalars().one(), 1)
+        self.assertEqual(db.session.scalar(select(func.count(Admin.id))), 1)
         self.assertEqual(db.session.execute(select(Admin)).scalar().username, 'new grey')
         self.assertEqual(db.session.execute(select(Category)).scalar().name, 'Default')
 
@@ -51,23 +51,23 @@ class CommandTestCase(BaseTestCase):
         default_reply_count = 50
 
         result = self.cli_runner.invoke(args=['lorem'])
-        self.assertEqual(db.session.execute(select(func.count(Admin.id))).scalars().one(), 1)
+        self.assertEqual(db.session.scalar(select(func.count(Admin.id))), 1)
         self.assertIn('Generated the administrator.', result.output)
 
         self.assertEqual(
-            db.session.execute(select(func.count(Post.id))).scalars().one(),
+            db.session.scalar(select(func.count(Post.id))),
             default_post_count
         )
         self.assertIn(f'Generated {default_post_count} posts.', result.output)
 
-        self.assertEqual(db.session.execute(
-            select(func.count(Category.id))).scalars().one(),
+        self.assertEqual(db.session.scalar(
+            select(func.count(Category.id))),
             default_category_count
         )
         self.assertIn(f'Generated {default_category_count} categories.', result.output)
 
         self.assertEqual(
-            db.session.execute(select(func.count(Comment.id))).scalars().one(),
+            db.session.scalar(select(func.count(Comment.id))),
             default_comment_count + default_reply_count
         )
         self.assertIn(f'Generated {default_comment_count} comments.', result.output)
@@ -91,23 +91,23 @@ class CommandTestCase(BaseTestCase):
             ]
         )
 
-        self.assertEqual(db.session.execute(select(func.count(Admin.id))).scalars().one(), 1)
+        self.assertEqual(db.session.scalar(select(func.count(Admin.id))), 1)
         self.assertIn('Generated the administrator.', result.output)
 
         self.assertEqual(
-            db.session.execute(select(func.count(Category.id))).scalars().one(),
+            db.session.scalar(select(func.count(Category.id))),
             category_count
         )
         self.assertIn(f'Generated {category_count} categories.', result.output)
 
         self.assertEqual(
-            db.session.execute(select(func.count(Post.id))).scalars().one(),
+            db.session.scalar(select(func.count(Post.id))),
             post_count
         )
         self.assertIn(f'Generated {post_count} posts.', result.output)
 
         self.assertEqual(
-            db.session.execute(select(func.count(Comment.id))).scalars().one(),
+            db.session.scalar(select(func.count(Comment.id))),
             comment_count + reply_count
         )
         self.assertIn(f'Generated {comment_count} comments.', result.output)
