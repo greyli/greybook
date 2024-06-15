@@ -9,9 +9,9 @@ from greybook.models import Admin, Category
 
 
 def register_commands(app):
-    @app.cli.command(name='init-db')
+    @app.cli.command('init-db')
     @click.option('--drop', is_flag=True, help='Create after drop.')
-    def init_db(drop):
+    def init_db_command(drop):
         """Initialize the database."""
         if drop:
             click.confirm(
@@ -24,7 +24,7 @@ def register_commands(app):
         click.echo('Initialized the database.')
 
 
-    @app.cli.command(name='init-blog')
+    @app.cli.command('init-blog')
     @click.option('--username', prompt=True, help='The username used to login.')
     @click.option(
         '--password',
@@ -33,7 +33,7 @@ def register_commands(app):
         confirmation_prompt=True,
         help='The password used to login.'
     )
-    def init_blog(username, password):
+    def init_blog_command(username, password):
         """Initialize the blog."""
 
         db.create_all()
@@ -70,12 +70,12 @@ def register_commands(app):
             click.echo('Created the upload folder.')
 
 
-    @app.cli.command()
+    @app.cli.command('lorem')
     @click.option('--category', default=10, help='Quantity of categories, default is 10.')
     @click.option('--post', default=50, help='Quantity of posts, default is 50.')
     @click.option('--comment', default=500, help='Quantity of comments, default is 500.')
     @click.option('--reply', default=50, help='Quantity of replies, default is 50.')
-    def fake(category, post, comment, reply):
+    def lorem_command(category, post, comment, reply):
         """Generate fake data."""
         from greybook.fakes import fake_admin, fake_categories, fake_posts, \
             fake_comments, fake_replies, fake_links

@@ -225,20 +225,20 @@ files = [
 
 [[package]]
 name = "flask-debugtoolbar"
-version = "0.14.1"
-requires_python = ">=2.7"
+version = "0.15.1"
+requires_python = ">=3.7"
 summary = "A toolbar overlay for debugging Flask applications."
 dependencies = [
     "Blinker",
-    "Flask>=0.8",
+    "Flask>=2.2.0",
     "MarkupSafe",
     "itsdangerous",
     "packaging",
     "werkzeug",
 ]
 files = [
-    {file = "Flask-DebugToolbar-0.14.1.tar.gz", hash = "sha256:ccd6a72119ea4f7c486823591b2b2f4a14dc7fb38d6bd495272e0ebdc08724cd"},
-    {file = "Flask_DebugToolbar-0.14.1-py3-none-any.whl", hash = "sha256:3b938b02c418ac86fc18431f484dcd459f24acf3d0c1e72131c06413863bcf04"},
+    {file = "Flask_DebugToolbar-0.15.1-py3-none-any.whl", hash = "sha256:f3043d96e9fb9bc3b13ee8a02a5ecc531974f2fdceefa19ce3ba4a700ad40f36"},
+    {file = "flask_debugtoolbar-0.15.1.tar.gz", hash = "sha256:8c76666f1553641567da8d91c74fe92caa072cfc01429564aa5e109de10b1806"},
 ]
 
 [[package]]

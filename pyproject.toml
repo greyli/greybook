@@ -43,4 +43,4 @@ name = "pypi"
 
 [[tool.pdm.autoexport]]
 filename = "requirements.txt"
-groups = ["default"]
+groups = ["default", "dev"]

@@ -44,17 +44,13 @@ class CommandTestCase(BaseTestCase):
         self.assertEqual(db.session.execute(select(Admin)).scalar().username, 'new grey')
         self.assertEqual(db.session.execute(select(Category)).scalar().name, 'Default')
 
-    def test_fake_command(self):
+    def test_lorem_command(self):
         default_post_count = 50
         default_category_count = 10
         default_comment_count = 500
         default_reply_count = 50
 
-        result = self.cli_runner.invoke(args=['fake'])
-        print(result.output)
-        print(result.stdout)
-        print(result.stderr)
-        print(db)
+        result = self.cli_runner.invoke(args=['lorem'])
         self.assertEqual(db.session.execute(select(func.count(Admin.id))).scalars().one(), 1)
         self.assertIn('Generated the administrator.', result.output)
 
@@ -79,7 +75,7 @@ class CommandTestCase(BaseTestCase):
 
         self.assertIn('Generated links.', result.output)
 
-    def test_fake_command_with_custom_count(self):
+    def test_lorem_command_with_custom_count(self):
         category_count = 5
         post_count = 20
         comment_count = 100
@@ -87,7 +83,7 @@ class CommandTestCase(BaseTestCase):
 
         result = self.cli_runner.invoke(
             args=[
-                'fake',
+                'lorem',
                 '--category', category_count,
                 '--post', post_count,
                 '--comment', comment_count,
