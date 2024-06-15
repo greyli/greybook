@@ -14,24 +14,16 @@ def register_commands(app):
     def init_db_command(drop):
         """Initialize the database."""
         if drop:
-            click.confirm(
-                'This operation will delete the database, do you want to continue?',
-                abort=True
-            )
+            click.confirm('This operation will delete the database, do you want to continue?', abort=True)
             db.drop_all()
             click.echo('Dropped tables.')
         db.create_all()
         click.echo('Initialized the database.')
 
-
     @app.cli.command('init-blog')
     @click.option('--username', prompt=True, help='The username used to login.')
     @click.option(
-        '--password',
-        prompt=True,
-        hide_input=True,
-        confirmation_prompt=True,
-        help='The password used to login.'
+        '--password', prompt=True, hide_input=True, confirmation_prompt=True, help='The password used to login.'
     )
     def init_blog_command(username, password):
         """Initialize the blog."""
@@ -49,9 +41,9 @@ def register_commands(app):
                 username=username,
                 password=password,
                 blog_title='Blog Title',
-                blog_sub_title="Blog Sub Title",
+                blog_sub_title='Blog Sub Title',
                 name='Admin',
-                about='Anything about you.'
+                about='Anything about you.',
             )
             db.session.add(admin)
             click.echo('Created the administrator account.')
@@ -69,7 +61,6 @@ def register_commands(app):
             os.makedirs(upload_path)
             click.echo('Created the upload folder.')
 
-
     @app.cli.command('lorem')
     @click.option('--category', default=10, help='Quantity of categories, default is 10.')
     @click.option('--post', default=50, help='Quantity of posts, default is 50.')
@@ -77,8 +68,7 @@ def register_commands(app):
     @click.option('--reply', default=50, help='Quantity of replies, default is 50.')
     def lorem_command(category, post, comment, reply):
         """Generate fake data."""
-        from greybook.fakes import fake_admin, fake_categories, fake_posts, \
-            fake_comments, fake_replies, fake_links
+        from greybook.fakes import fake_admin, fake_categories, fake_comments, fake_links, fake_posts, fake_replies
 
         db.drop_all()
         db.create_all()

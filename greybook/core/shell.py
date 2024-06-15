@@ -1,5 +1,5 @@
 from greybook.core.extensions import db
-from greybook.models import Admin, Post, Category, Comment
+from greybook.models import Admin, Category, Comment, Post
 
 
 def register_shell_handlers(app):

@@ -29,7 +29,8 @@ distribution = false
 dev = [
     "watchdog>=3.0.0",
     "faker>=18.9.0",
-    "flake8>=5.0.4",
+    "ruff>=0.4.9",
+    "pre-commit>=3.5.0",
 ]
 test = [
     "pytest>=7.3.1",
@@ -44,3 +45,29 @@ name = "pypi"
 [[tool.pdm.autoexport]]
 filename = "requirements.txt"
 groups = ["default", "dev"]
+
+[tool.ruff]
+extend-exclude = ["migrations"]
+line-length = 120
+
+[tool.ruff.lint]
+select = [
+    # pycodestyle
+    "E",
+    # Pyflakes
+    "F",
+    # pyupgrade
+    "UP",
+    # flake8-bugbear
+    "B",
+    # flake8-simplify
+    "SIM",
+    # isort
+    "I",
+]
+
+[tool.ruff.format]
+quote-style = "single"
+
+[tool.ruff.lint.mccabe]
+max-complexity = 5

@@ -1,6 +1,6 @@
 from threading import Thread
 
-from flask import url_for, current_app
+from flask import current_app, url_for
 from flask_mailman import EmailMessage
 
 
@@ -29,9 +29,9 @@ def send_new_comment_email(post):
     send_mail(
         subject='New comment',
         body=f'<p>New comment in post <i>{post.title}</i>, click the link below to check:</p>'
-             f'<p><a href="{post_url}">{post_url}</a></P>'
-             '<p><small style="color: #868e96">Do not reply this email.</small></p>',
-        to=current_app.config['GREYBOOK_ADMIN_EMAIL']
+        f'<p><a href="{post_url}">{post_url}</a></P>'
+        '<p><small style="color: #868e96">Do not reply this email.</small></p>',
+        to=current_app.config['GREYBOOK_ADMIN_EMAIL'],
     )
 
 
@@ -40,7 +40,7 @@ def send_new_reply_email(comment):
     send_mail(
         subject='New reply',
         body=f'<p>New reply for the comment you left in post <i>{comment.post.title}</i>, '
-             f'click the link below to check: </p><p><a href="{post_url}">{post_url}</a></p>'
-             '<p><small style="color: #868e96">Do not reply this email.</small></p>',
-        to=comment.email
+        f'click the link below to check: </p><p><a href="{post_url}">{post_url}</a></p>'
+        '<p><small style="color: #868e96">Do not reply this email.</small></p>',
+        to=comment.email,
     )

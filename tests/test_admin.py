@@ -1,14 +1,12 @@
 import os
-from unittest.mock import patch, call
+from unittest.mock import call, patch
 
-from greybook.models import Post, Category, Comment
 from greybook.core.extensions import db
-
+from greybook.models import Category, Comment, Post
 from tests import BaseTestCase
 
 
 class AdminTestCase(BaseTestCase):
-
     def setUp(self):
         super().setUp()
         self.login()
@@ -18,11 +16,9 @@ class AdminTestCase(BaseTestCase):
         data = response.get_data(as_text=True)
         self.assertIn('New Post', data)
 
-        response = self.client.post('/admin/post/new', data=dict(
-            title='Something',
-            category=1,
-            body='Hello, world.'
-        ), follow_redirects=True)
+        response = self.client.post(
+            '/admin/post/new', data=dict(title='Something', category=1, body='Hello, world.'), follow_redirects=True
+        )
         data = response.get_data(as_text=True)
         self.assertIn('Post created.', data)
         self.assertIn('Something', data)
@@ -40,12 +36,8 @@ class AdminTestCase(BaseTestCase):
 
         response = self.client.post(
             '/admin/post/1/edit',
-            data=dict(
-                title='Something Edited',
-                category=1,
-                body='New post body.'
-            ),
-            follow_redirects=True
+            data=dict(title='Something Edited', category=1, body='New post body.'),
+            follow_redirects=True,
         )
         data = response.get_data(as_text=True)
         self.assertIn('Post updated.', data)
@@ -56,11 +48,9 @@ class AdminTestCase(BaseTestCase):
         self.assertNotEqual(updated_at_before, updated_post.updated_at)
 
     def test_save_edited_post_when_validation_failed(self):
-        response = self.client.post('/admin/post/1/edit', data=dict(
-            title='Something Edited',
-            category=1,
-            body='  '
-        ), follow_redirects=True)
+        response = self.client.post(
+            '/admin/post/1/edit', data=dict(title='Something Edited', category=1, body='  '), follow_redirects=True
+        )
         data = response.get_data(as_text=True)
         self.assertIn('Edit Post', data)
         self.assertIn('This field is required', data)
@@ -126,13 +116,17 @@ class AdminTestCase(BaseTestCase):
 
     def test_approve_comment(self):
         self.logout()
-        response = self.client.post('/post/1', data=dict(
-            author='Guest',
-            email='a@b.com',
-            site='http://greyli.com',
-            body='I am a guest comment.',
-            post=db.session.get(Post, 1),
-        ), follow_redirects=True)
+        response = self.client.post(
+            '/post/1',
+            data=dict(
+                author='Guest',
+                email='a@b.com',
+                site='http://greyli.com',
+                body='I am a guest comment.',
+                post=db.session.get(Post, 1),
+            ),
+            follow_redirects=True,
+        )
         data = response.get_data(as_text=True)
         self.assertIn('Thanks, your comment will be published after reviewed.', data)
         self.assertNotIn('I am a guest comment.', data)
@@ -177,20 +171,12 @@ class AdminTestCase(BaseTestCase):
         data = response.get_data(as_text=True)
         self.assertIn('New Category', data)
 
-        response = self.client.post(
-            '/admin/category/new',
-            data=dict(name='Tech'),
-            follow_redirects=True
-        )
+        response = self.client.post('/admin/category/new', data=dict(name='Tech'), follow_redirects=True)
         data = response.get_data(as_text=True)
         self.assertIn('Category created.', data)
         self.assertIn('Tech', data)
 
-        response = self.client.post(
-            '/admin/category/new',
-            data=dict(name='Tech'),
-            follow_redirects=True
-        )
+        response = self.client.post('/admin/category/new', data=dict(name='Tech'), follow_redirects=True)
         data = response.get_data(as_text=True)
         self.assertIn('Name already in use.', data)
 
@@ -203,22 +189,14 @@ class AdminTestCase(BaseTestCase):
         self.assertIn('Post Title', data)
 
     def test_edit_category(self):
-        response = self.client.post(
-            '/admin/category/1/edit',
-            data=dict(name='Edited'),
-            follow_redirects=True
-        )
+        response = self.client.post('/admin/category/1/edit', data=dict(name='Edited'), follow_redirects=True)
         data = response.get_data(as_text=True)
         self.assertNotIn('Category updated.', data)
         self.assertIn('Test Category', data)
         self.assertNotIn('Edited', data)
         self.assertIn('You can not edit the default category', data)
 
-        response = self.client.post(
-            '/admin/category/new',
-            data=dict(name='Tech'),
-            follow_redirects=True
-        )
+        response = self.client.post('/admin/category/new', data=dict(name='Tech'), follow_redirects=True)
         data = response.get_data(as_text=True)
         self.assertIn('Category created.', data)
         self.assertIn('Tech', data)
@@ -228,11 +206,7 @@ class AdminTestCase(BaseTestCase):
         self.assertIn('Edit Category', data)
         self.assertIn('Tech', data)
 
-        response = self.client.post(
-            '/admin/category/2/edit',
-            data=dict(name='Life'),
-            follow_redirects=True
-        )
+        response = self.client.post('/admin/category/2/edit', data=dict(name='Life'), follow_redirects=True)
         data = response.get_data(as_text=True)
         self.assertIn('Category updated.', data)
         self.assertIn('Life', data)
@@ -271,12 +245,7 @@ class AdminTestCase(BaseTestCase):
         self.assertIn('New Link', data)
 
         response = self.client.post(
-            '/admin/link/new',
-            data=dict(
-                name='HelloFlask',
-                url='http://helloflask.com'
-            ),
-            follow_redirects=True
+            '/admin/link/new', data=dict(name='HelloFlask', url='http://helloflask.com'), follow_redirects=True
         )
         data = response.get_data(as_text=True)
         self.assertIn('Link created.', data)
@@ -290,12 +259,7 @@ class AdminTestCase(BaseTestCase):
         self.assertIn('http://example.com', data)
 
         response = self.client.post(
-            '/admin/link/1/edit',
-            data=dict(
-                name='Github',
-                url='https://github.com/helloflask'
-            ),
-            follow_redirects=True
+            '/admin/link/1/edit', data=dict(name='Github', url='https://github.com/helloflask'), follow_redirects=True
         )
         data = response.get_data(as_text=True)
         self.assertIn('Link updated.', data)
@@ -344,7 +308,7 @@ class AdminTestCase(BaseTestCase):
                 custom_css='body { color: red; }',
                 custom_js='console.log("Hello");',
             ),
-            follow_redirects=True
+            follow_redirects=True,
         )
         data = response.get_data(as_text=True)
         self.assertIn('Setting updated.', data)

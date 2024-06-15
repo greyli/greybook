@@ -4,7 +4,6 @@ from tests import BaseTestCase
 
 
 class BasicTestCase(BaseTestCase):
-
     def test_app_exist(self):
         self.assertFalse(current_app is None)
 
