@@ -2,10 +2,8 @@ import os
 import sys
 from pathlib import Path
 
-basedir = Path(__file__).resolve().parent.parent
-
-# SQLite URI compatible
-prefix = 'sqlite:///' if sys.platform.startswith('win') else 'sqlite:////'
+BASE_DIR = Path(__file__).resolve().parent.parent
+SQLITE_PREFIX = 'sqlite:///' if sys.platform.startswith('win') else 'sqlite:////'
 
 
 class BaseConfig:
@@ -26,7 +24,7 @@ class BaseConfig:
     MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
     MAIL_DEFAULT_SENDER = f'Greybook <{MAIL_USERNAME}>'
 
-    GREYBOOK_ADMIN_EMAIL = os.getenv('GREYBOOK_ADMIN_EMAIL')
+    GREYBOOK_ADMIN_EMAIL = os.getenv('GREYBOOK_ADMIN_EMAIL', 'admin@helloflask.com')
     GREYBOOK_POST_PER_PAGE = 10
     GREYBOOK_MANAGE_POST_PER_PAGE = 15
     GREYBOOK_COMMENT_PER_PAGE = 15
@@ -34,14 +32,14 @@ class BaseConfig:
     GREYBOOK_THEMES = {'default': 'Default', 'perfect_blue': 'Perfect Blue'}
     GREYBOOK_SLOW_QUERY_THRESHOLD = 1
 
-    GREYBOOK_UPLOAD_PATH = os.getenv('GREYBOOK_UPLOAD_PATH', basedir / 'uploads')
+    GREYBOOK_UPLOAD_PATH = os.getenv('GREYBOOK_UPLOAD_PATH', BASE_DIR / 'uploads')
     GREYBOOK_ALLOWED_IMAGE_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif']
-    GREYBOOK_LOGGING_PATH = os.getenv('GREYBOOK_LOGGING_PATH', basedir / 'logs/greybook.log')
+    GREYBOOK_LOGGING_PATH = os.getenv('GREYBOOK_LOGGING_PATH', BASE_DIR / 'logs/greybook.log')
     GREYBOOK_ERROR_EMAIL_SUBJECT = '[Greybook] Application Error'
 
 
 class DevelopmentConfig(BaseConfig):
-    SQLALCHEMY_DATABASE_URI = prefix + str(basedir / 'data-dev.db')
+    SQLALCHEMY_DATABASE_URI = SQLITE_PREFIX + str(BASE_DIR / 'data-dev.db')
 
 
 class TestingConfig(BaseConfig):
@@ -51,7 +49,7 @@ class TestingConfig(BaseConfig):
 
 
 class ProductionConfig(BaseConfig):
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', prefix + str(basedir / 'data.db'))
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL', SQLITE_PREFIX + str(BASE_DIR / 'data.db'))
 
 
 config = {'development': DevelopmentConfig, 'testing': TestingConfig, 'production': ProductionConfig}

@@ -18,8 +18,7 @@ def fake_admin():
         blog_title='Greybook',
         blog_sub_title='Just some random thoughts',
         name='Grey Li',
-        about='Hello, I am Grey Li. This is an example '
-        'Flask project for <a href="https://helloflask.com/book/4/">my book</a>.',
+        about='This is an example Flask project for <a href="https://helloflask.com/book/4/">this book</a>.',
     )
     db.session.add(admin)
     db.session.commit()
@@ -42,7 +41,7 @@ def fake_categories(count=10):
 
 def fake_posts(count=50):
     for _ in range(count):
-        category_count = db.session.execute(select(func.count(Category.id))).scalars().one()
+        category_count = db.session.scalars(select(func.count(Category.id))).one()
         created_date = fake.date_time_between_dates(
             datetime_start=datetime(2010, 1, 1), datetime_end=datetime(2020, 1, 1)
         )
@@ -62,7 +61,7 @@ def fake_posts(count=50):
 
 def fake_comments(count=500):
     for _ in range(count):
-        post_count = db.session.execute(select(func.count(Post.id))).scalars().one()
+        post_count = db.session.scalars(select(func.count(Post.id))).one()
         comment = Comment(
             author=fake.name(),
             email=fake.email(),
@@ -84,7 +83,7 @@ def fake_comments(count=500):
 
 def fake_replies(count=50):
     for _ in range(count):
-        comment_count = db.session.execute(select(func.count(Comment.id))).scalars().one()
+        comment_count = db.session.scalars(select(func.count(Comment.id))).one()
         replied = db.session.get(Comment, random.randint(1, comment_count))
         comment = Comment(
             author=fake.name(),
