@@ -181,7 +181,7 @@ class AdminTestCase(BaseTestCase):
         self.assertIn('Name already in use.', data)
 
         category = db.session.get(Category, 1)
-        post = Post(title='Post Title', category=category)
+        post = Post(title='Post title', body='Post body', category=category)
         db.session.add(post)
         db.session.commit()
         response = self.client.get('/category/1')
@@ -214,7 +214,7 @@ class AdminTestCase(BaseTestCase):
 
     def test_delete_category(self):
         category = Category(name='Tech')
-        post = Post(title='test', category=category)
+        post = Post(title='Post title', body='Post body', category=category)
         db.session.add(category)
         db.session.add(post)
         db.session.commit()

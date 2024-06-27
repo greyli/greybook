@@ -24,7 +24,9 @@ class BaseTestCase(unittest.TestCase):
         )
         category = Category(name='Test Category')
         post = Post(title='Test Post Title', category=category, body='Test post body')
-        comment = Comment(body='Test comment body', post=post, reviewed=True)
+        comment = Comment(
+            author='Test comment author', email='test@example.com', body='Test comment body', post=post, reviewed=True
+        )
         link = Link(name='Test Link', url='http://example.com')
         db.session.add_all([user, category, post, comment, link])
         db.session.commit()
