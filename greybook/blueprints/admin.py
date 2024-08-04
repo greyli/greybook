@@ -43,10 +43,12 @@ def settings():
 @login_required
 def manage_post():
     page = request.args.get('page', 1, type=int)
+    per_page = current_app.config['GREYBOOK_MANAGE_POST_PER_PAGE']
+    stmt = select(Post).order_by(Post.created_at.desc())
     pagination = db.paginate(
-        select(Post).order_by(Post.created_at.desc()),
+        stmt,
         page=page,
-        per_page=current_app.config['GREYBOOK_MANAGE_POST_PER_PAGE'],
+        per_page=per_page,
         error_out=False,
     )
     if page > pagination.pages:
@@ -127,8 +129,9 @@ def manage_comment():
     else:
         filtered_comments = select(Comment)
 
+    stmt = filtered_comments.order_by(Comment.created_at.desc())
     pagination = db.paginate(
-        filtered_comments.order_by(Comment.created_at.desc()),
+        stmt,
         page=page,
         per_page=per_page,
         error_out=False,
@@ -152,7 +155,8 @@ def approve_comment(comment_id):
 @admin_bp.route('/comments/approve', methods=['POST'])
 @login_required
 def approve_all_comment():
-    comments = db.session.execute(select(Comment).filter_by(reviewed=False)).scalars().all()
+    stmt = select(Comment).filter_by(reviewed=False)
+    comments = db.session.scalars(stmt).all()
     for comment in comments:
         comment.reviewed = True
     db.session.commit()
