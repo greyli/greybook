@@ -68,7 +68,7 @@ def register_commands(app):
     @click.option('--reply', default=50, help='Quantity of replies, default is 50.')
     def lorem_command(category, post, comment, reply):
         """Generate fake data."""
-        from greybook.fakes import fake_admin, fake_categories, fake_comments, fake_links, fake_posts, fake_replies
+        from greybook.lorem import fake_admin, fake_categories, fake_comments, fake_links, fake_posts, fake_replies
 
         db.drop_all()
         db.create_all()
