@@ -29,7 +29,7 @@ class BaseConfig:
     GREYBOOK_MANAGE_POST_PER_PAGE = 15
     GREYBOOK_COMMENT_PER_PAGE = 15
     # ('theme name', 'display name')
-    GREYBOOK_THEMES = {'default': 'Default', 'perfect_blue': 'Perfect Blue'}
+    GREYBOOK_THEMES = {'default': 'Default', 'bluelog': 'Bluelog'}
     GREYBOOK_SLOW_QUERY_THRESHOLD = 1
 
     GREYBOOK_UPLOAD_PATH = os.getenv('GREYBOOK_UPLOAD_PATH', BASE_DIR / 'uploads')
