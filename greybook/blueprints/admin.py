@@ -1,6 +1,6 @@
 import os
 
-from flask import Blueprint, current_app, flash, redirect, render_template, request, url_for
+from flask import Blueprint, abort, current_app, flash, redirect, render_template, request, url_for
 from flask_ckeditor import upload_fail, upload_success
 from flask_login import current_user, login_required
 from sqlalchemy import select
@@ -77,7 +77,7 @@ def new_post():
 @login_required
 def edit_post(post_id):
     form = PostForm()
-    post = db.get_or_404(Post, post_id)
+    post = db.session.get(Post, post_id) or abort(404)
     if form.validate_on_submit():
         post.title = form.title.data
         post.body = form.body.data
@@ -95,7 +95,7 @@ def edit_post(post_id):
 @admin_bp.route('/post/<int:post_id>/delete', methods=['POST'])
 @login_required
 def delete_post(post_id):
-    post = db.get_or_404(Post, post_id)
+    post = db.session.get(Post, post_id) or abort(404)
     post.delete()
     flash('Post deleted.', 'success')
     return redirect_back()
@@ -104,7 +104,7 @@ def delete_post(post_id):
 @admin_bp.route('/post/<int:post_id>/set-comment', methods=['POST'])
 @login_required
 def set_comment(post_id):
-    post = db.get_or_404(Post, post_id)
+    post = db.session.get(Post, post_id) or abort(404)
     if post.can_comment:
         post.can_comment = False
         flash('Comment disabled.', 'success')
@@ -145,7 +145,7 @@ def manage_comment():
 @admin_bp.route('/comment/<int:comment_id>/approve', methods=['POST'])
 @login_required
 def approve_comment(comment_id):
-    comment = db.get_or_404(Comment, comment_id)
+    comment = db.session.get(Comment, comment_id) or abort(404)
     comment.reviewed = True
     db.session.commit()
     flash('Comment published.', 'success')
@@ -167,7 +167,7 @@ def approve_all_comment():
 @admin_bp.route('/comment/<int:comment_id>/delete', methods=['POST'])
 @login_required
 def delete_comment(comment_id):
-    comment = db.get_or_404(Comment, comment_id)
+    comment = db.session.get(Comment, comment_id) or abort(404)
     db.session.delete(comment)
     db.session.commit()
     flash('Comment deleted.', 'success')
@@ -198,7 +198,7 @@ def new_category():
 @login_required
 def edit_category(category_id):
     form = CategoryForm()
-    category = db.get_or_404(Category, category_id)
+    category = db.session.get(Category, category_id) or abort(404)
     if category.id == 1:
         flash('You can not edit the default category.', 'warning')
         return redirect(url_for('blog.index'))
@@ -216,7 +216,7 @@ def edit_category(category_id):
 @admin_bp.route('/category/<int:category_id>/delete', methods=['POST'])
 @login_required
 def delete_category(category_id):
-    category = db.get_or_404(Category, category_id)
+    category = db.session.get(Category, category_id) or abort(404)
     if category.id == 1:
         flash('You can not delete the default category.', 'warning')
         return redirect(url_for('blog.index'))
@@ -250,7 +250,7 @@ def new_link():
 @login_required
 def edit_link(link_id):
     form = LinkForm()
-    link = db.get_or_404(Link, link_id)
+    link = db.session.get(Link, link_id) or abort(404)
     if form.validate_on_submit():
         link.name = form.name.data
         link.url = form.url.data
@@ -266,7 +266,7 @@ def edit_link(link_id):
 @admin_bp.route('/link/<int:link_id>/delete', methods=['POST'])
 @login_required
 def delete_link(link_id):
-    link = db.get_or_404(Link, link_id)
+    link = db.session.get(Link, link_id) or abort(404)
     db.session.delete(link)
     db.session.commit()
     flash('Link deleted.', 'success')

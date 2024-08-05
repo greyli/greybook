@@ -40,7 +40,7 @@ def about():
 
 @blog_bp.route('/category/<int:category_id>')
 def show_category(category_id):
-    category = db.get_or_404(Category, category_id)
+    category = db.session.get(Category, category_id) or abort(404)
     page = request.args.get('page', 1, type=int)
     per_page = current_app.config['GREYBOOK_POST_PER_PAGE']
     stmt = select(Post).filter(with_parent(category, Category.posts)).order_by(Post.created_at.desc())
@@ -51,7 +51,7 @@ def show_category(category_id):
 
 @blog_bp.route('/post/<int:post_id>', methods=['GET', 'POST'])
 def show_post(post_id):
-    post = db.get_or_404(Post, post_id)
+    post = db.session.get(Post, post_id) or abort(404)
     page = request.args.get('page', 1, type=int)
     per_page = current_app.config['GREYBOOK_COMMENT_PER_PAGE']
     stmt = (
@@ -85,7 +85,7 @@ def show_post(post_id):
         )
         replied_id = request.args.get('reply')
         if replied_id:
-            replied_comment = db.get_or_404(Comment, replied_id)
+            replied_comment = comment = db.session.get(Comment, replied_id) or abort(404)
             comment.replied = replied_comment
             send_new_reply_email(replied_comment)
         db.session.add(comment)
@@ -101,7 +101,7 @@ def show_post(post_id):
 
 @blog_bp.route('/reply/comment/<int:comment_id>')
 def reply_comment(comment_id):
-    comment = db.get_or_404(Comment, comment_id)
+    comment = db.session.get(Comment, comment_id) or abort(404)
     if not comment.post.can_comment:
         flash('Comment is disabled.', 'warning')
         return redirect(url_for('.show_post', post_id=comment.post.id))
