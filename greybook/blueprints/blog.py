@@ -27,11 +27,8 @@ blog_bp = Blueprint('blog', __name__)
 def index():
     page = request.args.get('page', 1, type=int)
     per_page = current_app.config['GREYBOOK_POST_PER_PAGE']
-    pagination = db.paginate(
-        select(Post).order_by(Post.created_at.desc()),
-        page=page,
-        per_page=per_page,
-    )
+    stmt = select(Post).order_by(Post.created_at.desc())
+    pagination = db.paginate(stmt, page=page, per_page=per_page)
     posts = pagination.items
     return render_template('blog/index.html', pagination=pagination, posts=posts)
 
@@ -43,31 +40,27 @@ def about():
 
 @blog_bp.route('/category/<int:category_id>')
 def show_category(category_id):
-    category = db.get_or_404(Category, category_id)
+    category = db.session.get(Category, category_id) or abort(404)
     page = request.args.get('page', 1, type=int)
     per_page = current_app.config['GREYBOOK_POST_PER_PAGE']
-    pagination = db.paginate(
-        select(Post).filter(with_parent(category, Category.posts)).order_by(Post.created_at.desc()),
-        page=page,
-        per_page=per_page,
-    )
+    stmt = select(Post).filter(with_parent(category, Category.posts)).order_by(Post.created_at.desc())
+    pagination = db.paginate(stmt, page=page, per_page=per_page)
     posts = pagination.items
     return render_template('blog/category.html', category=category, pagination=pagination, posts=posts)
 
 
 @blog_bp.route('/post/<int:post_id>', methods=['GET', 'POST'])
 def show_post(post_id):
-    post = db.get_or_404(Post, post_id)
+    post = db.session.get(Post, post_id) or abort(404)
     page = request.args.get('page', 1, type=int)
     per_page = current_app.config['GREYBOOK_COMMENT_PER_PAGE']
-    pagination = db.paginate(
+    stmt = (
         select(Comment)
         .filter(with_parent(post, Post.comments))
         .filter_by(reviewed=True)
-        .order_by(Comment.created_at.asc()),
-        page=page,
-        per_page=per_page,
+        .order_by(Comment.created_at.asc())
     )
+    pagination = db.paginate(stmt, page=page, per_page=per_page)
     comments = pagination.items
 
     if current_user.is_authenticated:
@@ -92,7 +85,7 @@ def show_post(post_id):
         )
         replied_id = request.args.get('reply')
         if replied_id:
-            replied_comment = db.get_or_404(Comment, replied_id)
+            replied_comment = db.session.get(Comment, replied_id) or abort(404)
             comment.replied = replied_comment
             send_new_reply_email(replied_comment)
         db.session.add(comment)
@@ -108,7 +101,7 @@ def show_post(post_id):
 
 @blog_bp.route('/reply/comment/<int:comment_id>')
 def reply_comment(comment_id):
-    comment = db.get_or_404(Comment, comment_id)
+    comment = db.session.get(Comment, comment_id) or abort(404)
     if not comment.post.can_comment:
         flash('Comment is disabled.', 'warning')
         return redirect(url_for('.show_post', post_id=comment.post.id))

@@ -29,7 +29,7 @@ def register_logging(app):
     mail_handler = SMTPHandler(
         mailhost=app.config['MAIL_SERVER'],
         fromaddr=app.config['MAIL_USERNAME'],
-        toaddrs=['ADMIN_EMAIL'],
+        toaddrs=['GREYBOOK_ADMIN_EMAIL'],
         subject=app.config['GREYBOOK_ERROR_EMAIL_SUBJECT'],
         credentials=(app.config['MAIL_USERNAME'], app.config['MAIL_PASSWORD']),
     )

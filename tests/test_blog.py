@@ -27,11 +27,11 @@ class BlogTestCase(BaseTestCase):
         response = self.client.get('/change-theme/default', follow_redirects=True)
         data = response.get_data(as_text=True)
         self.assertIn('css/default.min.css', data)
-        self.assertNotIn('css/perfect_blue.min.css', data)
+        self.assertNotIn('css/bluelog.min.css', data)
 
-        response = self.client.get('/change-theme/perfect_blue', follow_redirects=True)
+        response = self.client.get('/change-theme/bluelog', follow_redirects=True)
         data = response.get_data(as_text=True)
-        self.assertIn('css/perfect_blue.min.css', data)
+        self.assertIn('css/bluelog.min.css', data)
         self.assertNotIn('css/default.min.css', data)
 
     def test_about_page(self):

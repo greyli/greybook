@@ -43,7 +43,7 @@ class PostForm(FlaskForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        categories = db.session.execute(select(Category).order_by(Category.name)).scalars()
+        categories = db.session.scalars(select(Category).order_by(Category.name))
         self.category.choices = [(category.id, category.name) for category in categories]
 
 
@@ -52,7 +52,7 @@ class CategoryForm(FlaskForm):
     submit = SubmitField()
 
     def validate_name(self, field):
-        if db.session.execute(select(Category).filter_by(name=field.data)).scalar():
+        if db.session.scalar(select(Category).filter_by(name=field.data)):
             raise ValidationError('Name already in use.')
 
 

@@ -31,7 +31,7 @@ def register_commands(app):
         db.create_all()
         click.echo('Initialized the database.')
 
-        admin = db.session.execute(select(Admin)).scalar()
+        admin = db.session.scalar(select(Admin))
         if admin is not None:
             admin.username = username
             admin.password = password
@@ -48,7 +48,7 @@ def register_commands(app):
             db.session.add(admin)
             click.echo('Created the administrator account.')
 
-        category = db.session.execute(select(Category)).scalar()
+        category = db.session.scalar(select(Category))
         if category is None:
             category = Category(name='Default')
             db.session.add(category)
@@ -68,7 +68,7 @@ def register_commands(app):
     @click.option('--reply', default=50, help='Quantity of replies, default is 50.')
     def lorem_command(category, post, comment, reply):
         """Generate fake data."""
-        from greybook.fakes import fake_admin, fake_categories, fake_comments, fake_links, fake_posts, fake_replies
+        from greybook.lorem import fake_admin, fake_categories, fake_comments, fake_links, fake_posts, fake_replies
 
         db.drop_all()
         db.create_all()
