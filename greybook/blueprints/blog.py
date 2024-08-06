@@ -85,7 +85,7 @@ def show_post(post_id):
         )
         replied_id = request.args.get('reply')
         if replied_id:
-            replied_comment = comment = db.session.get(Comment, replied_id) or abort(404)
+            replied_comment = db.session.get(Comment, replied_id) or abort(404)
             comment.replied = replied_comment
             send_new_reply_email(replied_comment)
         db.session.add(comment)

@@ -20,7 +20,7 @@ def login():
         username = form.username.data
         password = form.password.data
         remember = form.remember.data
-        admin = db.session.execute(select(Admin)).scalar()
+        admin = db.session.scalar(select(Admin))
         if admin:
             if username == admin.username and admin.validate_password(password):
                 login_user(admin, remember)
