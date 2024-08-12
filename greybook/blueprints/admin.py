@@ -1,5 +1,3 @@
-import os
-
 from flask import Blueprint, abort, current_app, flash, redirect, render_template, request, url_for
 from flask_ckeditor import upload_fail, upload_success
 from flask_login import current_user, login_required
@@ -280,6 +278,6 @@ def upload_image():
     if not allowed_file(f.filename):
         return upload_fail('Image only!')
     filename = random_filename(f.filename)
-    f.save(os.path.join(current_app.config['GREYBOOK_UPLOAD_PATH'], filename))
+    f.save(current_app.config['GREYBOOK_UPLOAD_PATH'] / filename)
     url = url_for('blog.get_image', filename=filename)
     return upload_success(url, filename)
