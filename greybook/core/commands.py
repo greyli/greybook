@@ -1,5 +1,3 @@
-import os
-
 import click
 from flask import current_app
 from sqlalchemy import select
@@ -56,9 +54,9 @@ def register_commands(app):
 
         db.session.commit()
 
-        upload_path = os.path.join(current_app.config['GREYBOOK_UPLOAD_PATH'])
-        if not os.path.exists(upload_path):
-            os.makedirs(upload_path)
+        upload_path = current_app.config['GREYBOOK_UPLOAD_PATH']
+        if not upload_path.exists():
+            upload_path.mkdir(parents=True, exist_ok=True)
             click.echo('Created the upload folder.')
 
     @app.cli.command('lorem')

@@ -1,4 +1,3 @@
-import os
 import re
 from datetime import datetime, timezone
 from typing import List, Optional
@@ -88,9 +87,9 @@ class Post(db.Model):
         upload_url = url_for('blog.get_image', filename='')
         images = re.findall(rf'<img.*?src="{upload_url}(.*?)"', self.body)
         for image in images:
-            file_path = os.path.join(upload_path, image)
-            if os.path.exists(file_path):
-                os.remove(file_path)
+            file_path = upload_path / image
+            if file_path.exists():
+                file_path.unlink()
         db.session.delete(self)
         db.session.commit()
 

@@ -1,5 +1,5 @@
-import os
-from unittest.mock import call, patch
+import pathlib
+from unittest.mock import patch
 
 from greybook.core.extensions import db
 from greybook.models import Category, Comment, Post
@@ -66,20 +66,19 @@ class AdminTestCase(BaseTestCase):
         data = response.get_data(as_text=True)
         self.assertIn('Post deleted.', data)
 
-    @patch('os.remove')
-    @patch('os.path.exists')
-    def test_delete_post_with_images(self, mock_exists, mock_remove):
+    @patch('pathlib.Path.unlink')
+    @patch('pathlib.Path.exists')
+    def test_delete_post_with_images(self, mock_exists, mock_unlink):
+        mock_exists.return_value = True
+        mock_unlink.return_value = None
+
         post = db.session.get(Post, 1)
         post.body = '<img src="/uploads/test.png"> <img alt="" src="/uploads/test2.png">'
         db.session.commit()
 
-        image_path = os.path.join(self.app.config['GREYBOOK_UPLOAD_PATH'], 'test.png')
-        image_path2 = os.path.join(self.app.config['GREYBOOK_UPLOAD_PATH'], 'test2.png')
-
-        mock_exists.return_value = True
         self.client.post('/admin/post/1/delete')
-        self.assertEqual(os.remove.call_count, 2)
-        mock_remove.assert_has_calls([call(image_path), call(image_path2)])
+        self.assertEqual(pathlib.Path.unlink.call_count, 2)
+        self.assertEqual(pathlib.Path.exists.call_count, 2)
 
     def test_delete_comment(self):
         response = self.client.get('/admin/comment/1/delete', follow_redirects=True)

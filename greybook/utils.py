@@ -1,5 +1,5 @@
-import os
 import uuid
+from pathlib import Path
 from urllib.parse import urljoin, urlparse
 
 from flask import current_app, redirect, request, url_for
@@ -28,6 +28,6 @@ def allowed_file(filename):
 
 
 def random_filename(old_filename):
-    ext = os.path.splitext(old_filename)[1]
+    ext = Path(old_filename).suffix
     new_filename = uuid.uuid4().hex + ext
     return new_filename
