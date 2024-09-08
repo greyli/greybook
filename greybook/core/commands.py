@@ -3,6 +3,7 @@ from flask import current_app
 from sqlalchemy import select
 
 from greybook.core.extensions import db
+from greybook.lorem import fake_admin, fake_categories, fake_comments, fake_links, fake_posts, fake_replies
 from greybook.models import Admin, Category
 
 
@@ -25,7 +26,6 @@ def register_commands(app):
     )
     def init_blog_command(username, password):
         """Initialize the blog."""
-
         db.create_all()
         click.echo('Initialized the database.')
 
@@ -66,8 +66,6 @@ def register_commands(app):
     @click.option('--reply', default=50, help='Quantity of replies, default is 50.')
     def lorem_command(category, post, comment, reply):
         """Generate fake data."""
-        from greybook.lorem import fake_admin, fake_categories, fake_comments, fake_links, fake_posts, fake_replies
-
         db.drop_all()
         db.create_all()
 
