@@ -1,4 +1,3 @@
-import pathlib
 from unittest.mock import patch
 
 from greybook.core.extensions import db
@@ -76,9 +75,14 @@ class AdminTestCase(BaseTestCase):
         post.body = '<img src="/uploads/test.png"> <img alt="" src="/uploads/test2.png">'
         db.session.commit()
 
+        expected_images = ['test.png', 'test2.png']
+        with patch('greybook.models.url_for', return_value='/uploads/'):
+            extracted_images = post.extract_images()
+        self.assertEqual(extracted_images, expected_images)
+
         self.client.post('/admin/post/1/delete')
-        self.assertEqual(pathlib.Path.unlink.call_count, 2)
-        self.assertEqual(pathlib.Path.exists.call_count, 2)
+        self.assertEqual(mock_exists.call_count, 2)
+        self.assertEqual(mock_unlink.call_count, 2)
 
     def test_delete_comment(self):
         response = self.client.get('/admin/comment/1/delete', follow_redirects=True)
