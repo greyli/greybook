@@ -21,10 +21,7 @@ def redirect_back(default='blog.index', **kwargs):
 
 
 def allowed_file(filename):
-    return (
-        '.' in filename
-        and filename.rsplit('.', 1)[1].lower() in current_app.config['GREYBOOK_ALLOWED_IMAGE_EXTENSIONS']
-    )
+    return '.' in filename and Path(filename).suffix.lower() in current_app.config['GREYBOOK_ALLOWED_IMAGE_EXTENSIONS']
 
 
 def random_filename(old_filename):

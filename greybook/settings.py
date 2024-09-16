@@ -33,7 +33,7 @@ class BaseConfig:
     GREYBOOK_SLOW_QUERY_THRESHOLD = 1
 
     GREYBOOK_UPLOAD_PATH = os.getenv('GREYBOOK_UPLOAD_PATH', BASE_DIR / 'uploads')
-    GREYBOOK_ALLOWED_IMAGE_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif']
+    GREYBOOK_ALLOWED_IMAGE_EXTENSIONS = ['.png', '.jpg', '.jpeg', '.gif']
     GREYBOOK_LOGGING_PATH = os.getenv('GREYBOOK_LOGGING_PATH', BASE_DIR / 'logs/greybook.log')
     GREYBOOK_ERROR_EMAIL_SUBJECT = '[Greybook] Application Error'
 

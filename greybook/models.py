@@ -84,14 +84,17 @@ class Post(db.Model):
 
     def delete(self):
         upload_path = current_app.config['GREYBOOK_UPLOAD_PATH']
-        upload_url = url_for('blog.get_image', filename='')
-        images = re.findall(rf'<img.*?src="{upload_url}(.*?)"', self.body)
+        images = self.extract_images()
         for image in images:
             file_path = upload_path / image
             if file_path.exists():
                 file_path.unlink()
         db.session.delete(self)
         db.session.commit()
+
+    def extract_images(self):
+        upload_url = url_for('blog.get_image', filename='')
+        return re.findall(rf'<img.*?src="{upload_url}(.*?)"', self.body)
 
 
 class Comment(db.Model):
