@@ -214,6 +214,14 @@ class AdminTestCase(BaseTestCase):
         self.assertIn('Category updated.', data)
         self.assertIn('Life', data)
         self.assertNotIn('Tech', data)
+        # test name already in use
+        response = self.client.post('/admin/category/2/edit', data=dict(name='Test Category'), follow_redirects=True)
+        data = response.get_data(as_text=True)
+        self.assertIn('Name already in use.', data)
+        # test use current name
+        response = self.client.post('/admin/category/2/edit', data=dict(name='Life'), follow_redirects=True)
+        data = response.get_data(as_text=True)
+        self.assertIn('Category updated.', data)
 
     def test_delete_category(self):
         category = Category(name='Tech')

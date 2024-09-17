@@ -67,7 +67,7 @@ def show_post(post_id):
         form = AdminCommentForm()
         form.author.data = current_user.name
         form.email.data = current_app.config['GREYBOOK_ADMIN_EMAIL']
-        form.site.data = url_for('.index')
+        form.site.data = url_for('.index', _external=True)
         from_admin = True
         reviewed = True
     else:

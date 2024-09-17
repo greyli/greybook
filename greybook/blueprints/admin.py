@@ -4,7 +4,7 @@ from flask_login import current_user, login_required
 from sqlalchemy import select
 
 from greybook.core.extensions import db
-from greybook.forms import CategoryForm, LinkForm, PostForm, SettingForm
+from greybook.forms import EditCategoryForm, LinkForm, NewCategoryForm, PostForm, SettingForm
 from greybook.models import Category, Comment, Link, Post
 from greybook.utils import allowed_file, random_filename, redirect_back
 
@@ -181,7 +181,7 @@ def manage_category():
 @admin_bp.route('/category/new', methods=['GET', 'POST'])
 @login_required
 def new_category():
-    form = CategoryForm()
+    form = NewCategoryForm()
     if form.validate_on_submit():
         name = form.name.data
         category = Category(name=name)
@@ -195,8 +195,8 @@ def new_category():
 @admin_bp.route('/category/<int:category_id>/edit', methods=['GET', 'POST'])
 @login_required
 def edit_category(category_id):
-    form = CategoryForm()
     category = db.session.get(Category, category_id) or abort(404)
+    form = EditCategoryForm(current_name=category.name)
     if category.id == 1:
         flash('You can not edit the default category.', 'warning')
         return redirect(url_for('blog.index'))
