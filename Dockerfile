@@ -18,9 +18,9 @@ COPY app.py docker-entrypoint.sh ./
 RUN chown -R greybook:greybook .
 USER greybook
 
-ENV FLASK_APP app.py
-ENV FLASK_CONFIG production
-ENV GREYBOOK_LOGGING_PATH stream
+ENV FLASK_APP=app.py
+ENV FLASK_CONFIG=production
+ENV GREYBOOK_LOGGING_PATH=stream
 
 EXPOSE 5000
 ENTRYPOINT ["./docker-entrypoint.sh"]
