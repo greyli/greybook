@@ -1,49 +1,52 @@
 # Greybook
 
-> Example application for *[Python Web Development with Flask](https://helloflask.com/en/book/1)* (《[Flask Web 开发实战](https://helloflask.com/book/4)》).
+A blog engine built with Python and Flask. The example application for the book *[Python Web Development with Flask](https://helloflask.com/en/book/1)* (《[Flask Web 开发实战（第 2 版）](https://helloflask.com/book/4)》).
 
 Demo: http://greybook.helloflask.com
 
-![Screenshot](https://helloflask.com/screenshots/greybook.png)
+![Screenshot](demo.png)
 
 ## Installation
 
 Clone the repo:
 
 ```
-$ git clone https://github.com/greyli/greybook.git
-$ cd greybook
+$ git clone https://github.com/greyli/greybook
+$ cd moments
 ```
 
-Create & activate virtual env then install dependency:
-
-with venv + pip:
-
-```
-$ python3 -m venv .venv  # use `python ...` on Windows
-$ source .venv/bin/activate  # use `.venv\Scripts\activate` on Windows
-$ pip install -r requirements.txt
-```
-
-or with PDM (you need to [install PDM](https://pdm.fming.dev/latest/#installation) first):
+Install dependencies with [PDM](https://pdm.fming.dev):
 
 ```
 $ pdm install
-$ source .venv/bin/activate  # use `.venv\Scripts\activate` on Windows
 ```
 
-Generate fake data then run the application:
+> [!TIP]
+> If you don't have PDM installed, you can create a virtual environment with `venv` and install dependencies with `pip install -r requirements.txt`.
+
+To initialize the app, run the `flask init-blog` command:
 
 ```
-$ flask lorem
-$ flask run
-* Running on http://127.0.0.1:5000/
+$ pdm run flask init-blog
 ```
 
-Test account:
+If you just want to try it out, generate fake data with `flask lorem` command:
+
+```
+$ pdm run flask lorem
+```
+
+It will create a test account:
 
 * username: `admin`
 * password: `greybook`
+
+Now you can run the app:
+
+```
+$ pdm run flask run
+* Running on http://127.0.0.1:5000/
+```
 
 ## License
 
