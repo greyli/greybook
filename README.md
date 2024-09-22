@@ -12,7 +12,7 @@ Clone the repo:
 
 ```
 $ git clone https://github.com/greyli/greybook
-$ cd moments
+$ cd greybook
 ```
 
 Install dependencies with [PDM](https://pdm.fming.dev):
