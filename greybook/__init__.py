@@ -7,7 +7,7 @@ from greybook.core.commands import register_commands
 from greybook.core.errors import register_errors
 from greybook.core.extensions import bootstrap, ckeditor, csrf, db, login_manager, mail, migrate, toolbar
 from greybook.core.logging import register_logging
-from greybook.core.request import register_request_handlers
+from greybook.core.request import CustomRequest, register_request_handlers
 from greybook.core.shell import register_shell_handlers
 from greybook.core.templating import register_template_handlers
 from greybook.settings import config
@@ -16,6 +16,7 @@ from greybook.settings import config
 def create_app(config_name):
     app = Flask('greybook')
     app.config.from_object(config[config_name])
+    app.request_class = CustomRequest
 
     # blueprints
     app.register_blueprint(blog_bp)
