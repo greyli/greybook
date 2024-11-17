@@ -196,10 +196,10 @@ def new_category():
 @login_required
 def edit_category(category_id):
     category = db.session.get(Category, category_id) or abort(404)
-    form = EditCategoryForm(current_name=category.name)
     if category.id == 1:
         flash('You can not edit the default category.', 'warning')
         return redirect(url_for('blog.index'))
+    form = EditCategoryForm(current_name=category.name)
     if form.validate_on_submit():
         category.name = form.name.data
         db.session.commit()
