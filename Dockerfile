@@ -4,9 +4,9 @@ RUN groupadd -r greybook && useradd -r -g greybook greybook
 
 WORKDIR /home/greybook
 
-COPY pyproject.toml pdm.lock ./
 RUN pip install -U pdm
 ENV PDM_CHECK_UPDATE=false
+COPY pyproject.toml pdm.lock ./
 RUN pdm install --check --prod --no-editable
 ENV PATH="/home/greybook/.venv/bin:$PATH"
 

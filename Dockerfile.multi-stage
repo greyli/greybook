@@ -5,9 +5,9 @@ FROM ${base_image} AS build
 WORKDIR /home/greybook
 
 # install dependencies
-COPY pyproject.toml pdm.lock ./
 RUN pip install -U pdm
 ENV PDM_CHECK_UPDATE=false
+COPY pyproject.toml pdm.lock ./
 RUN pdm install --check --prod --no-editable
 
 # stage 2: production
