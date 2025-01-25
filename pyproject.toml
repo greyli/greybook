@@ -19,7 +19,7 @@ dependencies = [
     "flask-mailman>=0.3.0",
     "gunicorn>=22.0.0",
 ]
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 license = {text = "MIT"}
 
 [tool.pdm]
