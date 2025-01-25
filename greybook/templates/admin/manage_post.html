@@ -52,14 +52,12 @@
     </td>
     <td>{{ post.body|striptags|length }}</td>
     <td>
-      <form class="inline" method="post"
-          action="{{ url_for('.set_comment', post_id=post.id, next=request.full_path) }}">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-        <button type="submit"
-            class="btn {% if post.can_comment %}btn-outline-warning{% else %}btn-outline-success{% endif %} btn-sm">
-          {% if post.can_comment %}Disable{% else %}Enable{% endif %} Comment
-        </button>
-      </form>
+      {{ render_inline_form(
+        action=url_for('.set_comment', post_id=post.id, next=request.full_path),
+        button_style='outline-warning' if post.can_comment else 'outline-success',
+        button_text='Disable Comment' if post.can_comment else 'Enable Comment',
+        confirm=None,
+      ) }}
       <a class="btn btn-outline-info btn-sm"
           href="{{ url_for('.edit_post', post_id=post.id) }}">
         Edit

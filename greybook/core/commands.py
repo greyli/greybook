@@ -70,8 +70,8 @@ def register_commands(app):
         db.drop_all()
         db.create_all()
 
-        click.echo('Generated the administrator.')
         fake_admin()
+        click.echo('Generated the administrator.')
 
         fake_categories(category)
         click.echo(f'Generated {category} categories.')

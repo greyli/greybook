@@ -75,7 +75,7 @@ def show_post(post_id):
         from_admin = False
         reviewed = False
 
-    if form.validate_on_submit():
+    if post.can_comment and form.validate_on_submit():
         author = form.author.data
         email = form.email.data
         site = form.site.data

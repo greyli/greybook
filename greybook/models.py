@@ -1,6 +1,6 @@
 import re
 from datetime import datetime, timezone
-from typing import List, Optional
+from typing import Optional
 
 from flask import current_app, url_for
 from flask_login import UserMixin
@@ -46,7 +46,7 @@ class Category(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(30), unique=True)
 
-    posts: Mapped[List['Post']] = relationship(back_populates='category')
+    posts: Mapped[list['Post']] = relationship(back_populates='category')
 
     def __repr__(self):
         return f'<Category {self.id}: {self.name}>'
@@ -73,7 +73,7 @@ class Post(db.Model):
     category_id: Mapped[int] = mapped_column(ForeignKey('category.id'))
 
     category: Mapped['Category'] = relationship(back_populates='posts')
-    comments: Mapped[List['Comment']] = relationship(back_populates='post', cascade='all, delete-orphan')
+    comments: Mapped[list['Comment']] = relationship(back_populates='post', cascade='all, delete-orphan')
 
     def __repr__(self):
         return f'<Post {self.id}: {self.title}>'
@@ -113,7 +113,7 @@ class Comment(db.Model):
     post_id: Mapped[int] = mapped_column(ForeignKey('post.id'))
 
     post: Mapped['Post'] = relationship(back_populates='comments')
-    replies: Mapped[List['Comment']] = relationship(back_populates='replied', cascade='all, delete-orphan')
+    replies: Mapped[list['Comment']] = relationship(back_populates='replied', cascade='all, delete-orphan')
     replied: Mapped['Comment'] = relationship(back_populates='replies', remote_side=[id])
 
     def __repr__(self):
